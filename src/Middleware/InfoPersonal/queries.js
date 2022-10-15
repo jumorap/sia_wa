@@ -1,7 +1,7 @@
 const queries = {
     user: `
         {
-          user(username: "test") {
+          user(username: "jumorap") {
             nombre_usuario
             nombre_completo
             documento_identidad
