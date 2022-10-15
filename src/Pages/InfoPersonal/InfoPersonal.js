@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHouseUser } from 'react-icons/fa';
 
-import { getUser } from "../../Middleware/InfoPersonal/get-api";
+import { getUser } from "../../Middleware";
 
 
 const styles = {
