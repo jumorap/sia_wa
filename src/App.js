@@ -5,6 +5,7 @@ import {
     Route
 } from "react-router-dom";
 import InfoPersonal from "./Pages/InfoPersonal";
+import {BuscadorCursos} from "./Pages"
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <>
             <Router>
                 <Route path="/info_personal" component={InfoPersonal}/>
+                <Route path="/buscador_cursos" component={BuscadorCursos}/>
             </Router>
         </>
     );
