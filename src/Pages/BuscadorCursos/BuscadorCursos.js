@@ -1,10 +1,11 @@
-import { Box } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 import { minWidth } from "@mui/system";
 import React, { useState } from "react";
 import Asignatura from "./Asignatura";
 import AutocompleteInput from "./Autocomplete";
 import SelectInput from "./SelectInput";
 import useStackChips from "./StackChips";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 function getOptionLabelCourse(option) {
   return option.nombre_asignatura;
@@ -31,8 +32,10 @@ export default function BuscadorCursos() {
 
   const recentlyAdded = useStackChips(getOptionLabelCourse);
 
+  const [openAdvancedOptions, setOpenAdvancedOptions] = useState(false);
+
   return (
-    <Box sx = {{m:1}} display = {"flex"} flexDirection = {"column"} gap = {1}>
+    <Box sx={{ m: 1 }} display={"flex"} flexDirection={"column"} gap={1}>
       <AutocompleteInput
         value={selectedCourse}
         onChange={(e, newValue) => {
@@ -43,65 +46,80 @@ export default function BuscadorCursos() {
         getOptionLabel={getOptionLabelCourse}
         label={"Buscador de cursos"}
       />
-      <Box display={"flex"} justifyContent = {"flex-start"} alignItems = {"center"} gap = {1}>
-        <SelectInput
-          getOptionLabel={getOptionLabelSede}
-          getOptionValue={getOptionValueSede}
-          label={"Sedes"}
-          values={sedes}
-          handleChange={(e, newValue) => {
-            setSelectedSede(newValue);
-          }}
-        />
-        <SelectInput
-          getOptionLabel={getOptionLabelSede}
-          getOptionValue={getOptionValueSede}
-          label={"Tipo de grado"}
-          values={sedes}
-          handleChange={(e, newValue) => {
-            setSelectedSede(newValue);
-          }}
-          minWidth={240}
-        />
-        <AutocompleteInput
-          value={selectedCourse}
-          onChange={(e, newValue) => {
-            recentlyAdded.add(newValue);
-            setSelectedCourse(newValue);
-          }}
-          style={{ width: 300 }}
-          options={asignaturas}
-          getOptionLabel={getOptionLabelCourse}
-          label={"Facultad"}
-        />
-        <AutocompleteInput
-          value={selectedCourse}
-          onChange={(e, newValue) => {
-            recentlyAdded.add(newValue);
-            setSelectedCourse(newValue);
-          }}
-          style={{ width: 300 }}
-          options={asignaturas}
-          getOptionLabel={getOptionLabelCourse}
-          label={"Programa"}
-        />
-      </Box>
+      {openAdvancedOptions && (
+        <Box
+          display={"flex"}
+          justifyContent={"flex-start"}
+          alignItems={"center"}
+          gap={1}
+        >
+          <SelectInput
+            getOptionLabel={getOptionLabelSede}
+            getOptionValue={getOptionValueSede}
+            label={"Sedes"}
+            values={sedes}
+            handleChange={(e, newValue) => {
+              setSelectedSede(newValue);
+            }}
+          />
+          <SelectInput
+            getOptionLabel={getOptionLabelSede}
+            getOptionValue={getOptionValueSede}
+            label={"Tipo de grado"}
+            values={sedes}
+            handleChange={(e, newValue) => {
+              setSelectedSede(newValue);
+            }}
+            minWidth={240}
+          />
+          <AutocompleteInput
+            value={selectedCourse}
+            onChange={(e, newValue) => {
+              recentlyAdded.add(newValue);
+              setSelectedCourse(newValue);
+            }}
+            style={{ width: 300 }}
+            options={asignaturas}
+            getOptionLabel={getOptionLabelCourse}
+            label={"Facultad"}
+          />
+          <AutocompleteInput
+            value={selectedCourse}
+            onChange={(e, newValue) => {
+              recentlyAdded.add(newValue);
+              setSelectedCourse(newValue);
+            }}
+            style={{ width: 300 }}
+            options={asignaturas}
+            getOptionLabel={getOptionLabelCourse}
+            label={"Programa"}
+          />
+        </Box>
+      )}
+      <IconButton
+        sx={{ width: 7, height: 2 }}
+        onClick={() => {
+          setOpenAdvancedOptions((prev) => !prev);
+        }}
+      >
+        <MoreHorizIcon fontSize="small" />
+      </IconButton>
       {recentlyAdded.component}
-      <Asignatura asignatura={Asignatura1}/>
+      <Asignatura asignatura={Asignatura1} />
     </Box>
   );
 }
 
 const Asignatura1 = {
   codigo_asignatura: "A001",
-    nombre_asignatura: "Ingenieria de software",
-    creditos: "3",
-    descripcion: "lorem30",
-    tipo : {
-      id_tipologia: "001",
-      nombre_tipologia: "Libre eleccion"
-    }
-}
+  nombre_asignatura: "Ingenieria de software",
+  creditos: "3",
+  descripcion: "lorem30",
+  tipo: {
+    id_tipologia: "001",
+    nombre_tipologia: "Libre eleccion",
+  },
+};
 
 const sedes = [
   {
