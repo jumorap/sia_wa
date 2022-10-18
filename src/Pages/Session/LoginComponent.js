@@ -6,11 +6,12 @@ import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { auth } from '../../Middleware/Session/get-api';
 import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
+
+import { auth } from '../../Middleware/Session/get-api';
 
 /**
  * mui es una mierda :v solo bootstrap loks
