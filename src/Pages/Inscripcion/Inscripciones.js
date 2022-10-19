@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import { Divider, Grid } from "@mui/material";
 
 import { FaBook, FaBookOpen } from "react-icons/fa";
 
@@ -11,7 +13,8 @@ import {
   getCursosByMateria,
 } from "../../Middleware";
 import styles from "./styles";
-
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 /**
  * Generate a title card with an icon
  * @param IconTitle Icon to show in the title
@@ -20,14 +23,13 @@ import styles from "./styles";
  */
 const titleCard = (IconTitle, title) => {
   return (
-    <Card sx={[styles.cards, { width: "100%" }]}>
-      <CardContent>
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          <IconTitle style={{ fontSize: "20px", color: "var(--softGray)" }} />
-          &nbsp; {title}
-        </Typography>
-      </CardContent>
-    </Card>
+    <div>
+      <Typography variant="h5" sx={{ fontWeight: "bold", padding: "10px" }}>
+        <IconTitle style={{ fontSize: "20px", color: "var(--softGray)" }} />
+        &nbsp; {title}
+      </Typography>
+      <Divider />
+    </div>
   );
 };
 
@@ -38,13 +40,9 @@ const titleCard = (IconTitle, title) => {
  */
 const subtitleCard = (subtitle) => {
   return (
-    <Card sx={[styles.cards, { width: "100%" }]}>
-      <CardContent>
-        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-          {subtitle}
-        </Typography>
-      </CardContent>
-    </Card>
+    <Typography variant="h6" sx={{ fontWeight: "bold", padding: "5px" }}>
+      {subtitle}
+    </Typography>
   );
 };
 
@@ -71,20 +69,30 @@ const materiaCard = (materia) => {
   const cursos = getCursos(materia.codigo_asignatura);
 
   return (
-    <Card
-      key={materia.codigo_asignatura}
-      sx={[styles.cards, { width: "100%" }]}
-    >
-      <CardContent>
-        <Typography variant="body1">
-          {materia.codigo_asignatura} - {materia.nombre_asignatura}
-        </Typography>
-        <Typography variant="body2" sx={{ color: "var(--softGray)" }}>
-          {materia.creditos} créditos
-        </Typography>
-        <Cursos materia={materia} />
-      </CardContent>
-    </Card>
+    <Grid item md={12}>
+      <Accordion
+        key={materia.codigo_asignatura}
+        sx={[styles.cards, { width: "100%" }]}
+      >
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+        >
+          <Typography variant="body1" sx={{ width: "90%" }}>
+            {materia.codigo_asignatura} - {materia.nombre_asignatura}
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{ color: "var(--softGray)", float: "right" }}
+          >
+            {materia.creditos} créditos
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Cursos materia={materia} />
+        </AccordionDetails>
+      </Accordion>
+    </Grid>
   );
 };
 
@@ -115,18 +123,20 @@ const horarioCard = (horario) => {
 
 const cursoCard = (curso) => {
   return (
-    <Card key={curso.id_curso} sx={[styles.cards, { width: "100%" }]}>
-      <CardContent>
-        <Typography variant="body3">
-          Grupo: {curso.grupo}
-          <br />
-          cupos disponibles: {curso.cupos_disponibles}/{curso.cupos_totales}
-        </Typography>
-        <Typography variant="body2" sx={{ color: "var(--softGray)" }}>
-          {horarioCard(curso.horarios)}
-        </Typography>
-      </CardContent>
-    </Card>
+    <Grid item md={2.5} xs={12} sx={{ padding: "7px" }}>
+      <Card key={curso.id_curso} sx={[styles.cards, { width: "100%" }]}>
+        <CardContent>
+          <Typography variant="body3">
+            Grupo: {curso.grupo}
+            <br />
+            cupos disponibles: {curso.cupos_disponibles}/{curso.cupos_totales}
+          </Typography>
+          <Typography variant="body2" sx={{ color: "var(--softGray)" }}>
+            {horarioCard(curso.horarios)}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 };
 
@@ -152,9 +162,11 @@ const Cursos = (materia) => {
 
   return (
     <div>
-      {cursos.map((curso) => {
-        return cursoCard(curso);
-      })}
+      <Grid container>
+        {cursos.map((curso) => {
+          return cursoCard(curso);
+        })}
+      </Grid>
     </div>
   );
 };
@@ -168,13 +180,39 @@ const Materias = () => {
   }, []);
 
   return (
-    <div>
-      {titleCard(FaBookOpen, "Materias Disponibles")}
-      {subtitleCard("Materias obligatorias")}
-      {materias.map((materia) => materiaCard(materia))}
-      {subtitleCard("Materias de libre elección")}
-      {materiasLibreEleccion.map((materia) => materiaCard(materia))}
-    </div>
+    <Grid item xs={12} sx={{ padding: "20px" }}>
+      <Card sx={[styles.cards, { width: "100%" }]}>
+        <CardContent>
+          <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
+          <div>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1bh-content"
+              >
+                {subtitleCard("Materias obligatorias")}
+              </AccordionSummary>
+              <AccordionDetails>
+                {materias.map((materia) => materiaCard(materia))}
+              </AccordionDetails>
+            </Accordion>
+          </div>
+          <div>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1bh-content"
+              >
+                {subtitleCard("Materias de libre elección")}
+              </AccordionSummary>
+              <AccordionDetails>
+                {materiasLibreEleccion.map((materia) => materiaCard(materia))}
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        </CardContent>
+      </Card>
+    </Grid>
   );
 };
 
@@ -184,14 +222,18 @@ const Materias = () => {
  */
 const Inscripciones = () => {
   return (
-    <>
-      <div style={styles.container}>{titleCard(FaBook, "Inscripciones")}</div>
-      <div style={styles.container}>
-        <div style={styles.cardsContainer}>
-          <Materias />
+    <Grid container sx={{ padding: "20px" }}>
+      <Grid item xs={12}>
+        <div style={styles.container}>{titleCard(FaBook, "Inscripciones")}</div>
+      </Grid>
+      <Grid item xs={12}>
+        <div style={styles.container}>
+          <div style={styles.cardsContainer}>
+            <Materias />
+          </div>
         </div>
-      </div>
-    </>
+      </Grid>
+    </Grid>
   );
 };
 
