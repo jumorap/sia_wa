@@ -19,10 +19,10 @@ import styles from "./styles";
  */
 const titleCard = (IconTitle, title) => {
     return (
-        <Card sx={[styles.cards, { width: "100%" }]}>
+        <Card sx={[styles.cards, styles.cardsLong]}>
             <CardContent>
-                <Typography variant="h5" sx={{ fontWeight: "bold"}}>
-                    <IconTitle style={{ fontSize: "20px", color: "var(--softGray)" }}/>
+                <Typography variant="h5" sx={[styles.typoTitle, styles.typoIconTitle]}>
+                    <IconTitle style={styles.typoText}/>
                     &nbsp; {title}
                 </Typography>
             </CardContent>
@@ -37,9 +37,9 @@ const titleCard = (IconTitle, title) => {
  */
 const subtitleCard = (subtitle) => {
     return (
-        <Card sx={[styles.cards, { width: "100%" }]}>
+        <Card sx={[styles.cards, styles.cardsLong]}>
             <CardContent>
-                <Typography variant="body2" sx={{ fontWeight: "bold"}}>
+                <Typography variant="body2" sx={styles.typoTitle}>
                     {subtitle}
                 </Typography>
             </CardContent>
@@ -55,9 +55,9 @@ const subtitleCard = (subtitle) => {
  */
 const cardGenerator = (title, data) => {
     return (
-        <Card sx={[styles.cards, { width: "50%" }]}>
+        <Card sx={[styles.cards, styles.cardsShort]}>
             <CardContent>
-                <Typography variant="body1" sx={{ color: "var(--softGray)" }}>
+                <Typography variant="body1" sx={styles.typoText}>
                     {title}
                 </Typography>
                 <Typography variant="body2">

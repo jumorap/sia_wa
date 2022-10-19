@@ -24,7 +24,22 @@ const styles = {
     },
     inputEdit: {
         width: '100%',
-    }
+    },
+    typoText: {
+        color: 'var(--softGray)',
+    },
+    typoTitle: {
+        fontWeight: "bold",
+    },
+    typoIconTitle: {
+        fontSize: "20px",
+    },
+    cardsLong: {
+        width: "100%",
+    },
+    cardsShort: {
+        width: "50%",
+    },
 }
 
 export default styles
