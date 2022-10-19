@@ -14,9 +14,6 @@ const styles = {
         height: '100px',
         display: 'flex',
         zIndex: 10,
-    },
-    textStl: {
-
     }
 }
 

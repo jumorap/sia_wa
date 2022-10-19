@@ -12,19 +12,21 @@ import General from "./Pages/General";
 
 function App() {
     return (
-        <Router>
-            <Switch>
-                <Route exact path="/" component={ Login } />
+        <>
+            <General />
+            <Router>
+                <Switch>
+                    <Route exact path="/" component={ Login } />
 
-                <PrivateRoute exact path="/general" component={ General } />
-                <PrivateRoute exact path="/info_personal" component={ InfoPersonal } />
-                <PrivateRoute exact path="/inscripciones" component={ Inscripciones } />
-                <PrivateRoute path="/mis_calificaciones" component={ CalificacionesEst }/>
-                <PrivateRoute path="/ingreso_calificaciones" component={ CalificacionesDoc }/>
+                    <PrivateRoute exact path="/info_personal" component={ InfoPersonal } />
+                    <PrivateRoute exact path="/inscripciones" component={ Inscripciones } />
+                    <PrivateRoute path="/mis_calificaciones" component={ CalificacionesEst }/>
+                    <PrivateRoute path="/ingreso_calificaciones" component={ CalificacionesDoc }/>
 
-                <Route path="/*" component={() => { return <h1>404 NOT FOUND</h1> }}></Route>
-            </Switch>
-        </Router>
+                    <Route path="/*" component={() => { return <h1>404 NOT FOUND</h1> }}></Route>
+                </Switch>
+            </Router>
+        </>
     );
 }
 

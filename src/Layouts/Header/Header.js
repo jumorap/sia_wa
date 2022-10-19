@@ -2,7 +2,7 @@ import React from "react";
 import AppBar from '@mui/material/AppBar';
 
 import styles from "./styles";
-import logoMinW from "../../Assets/Images/logoMinW.png";
+import escudo from "../../Assets/Images/escudo.png";
 
 
 const Header = () => {
@@ -10,7 +10,7 @@ const Header = () => {
         <AppBar position="sticky" sx={styles.bar}>
             <center>
                 TEST
-                <img src={logoMinW} alt="Logo" style={styles.logo} />
+                <img src={escudo} alt="Logo" style={styles.logo} />
                 TEST
             </center>
         </AppBar>
