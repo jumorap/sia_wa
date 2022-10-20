@@ -1,14 +1,10 @@
 import React from "react";
-import General from "../General";
+import { General } from "../../Components";
 import Box from "@mui/material/Box";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { PrivateRoute } from "../../Routes";
-import Login from "../Session";
-import InfoPersonal from "../InfoPersonal";
-import Inscripciones from "../Inscripcion";
-import CalificacionesEst from "../Calificaciones/Estudiante";
-import CalificacionesDoc from "../Calificaciones/Docente";
-import Footer from "../../Layouts/Footer";
+import { Footer } from "../../Layouts";
+import { InfoPersonal, Login, Inscripciones, CalificacionesEst, CalificacionesDoc, BuscadorCursos, Error404 } from "../../Pages";
 import styles from "./styles"
 
 
@@ -25,8 +21,9 @@ const All = () => {
                         <PrivateRoute exact path="/inscripciones" component={ Inscripciones } />
                         <PrivateRoute path="/mis_calificaciones" component={ CalificacionesEst }/>
                         <PrivateRoute path="/ingreso_calificaciones" component={ CalificacionesDoc }/>
+                        <PrivateRoute path="/buscador_cursos" component={ BuscadorCursos }/>
 
-                        <Route path="/*" component={() => { return <h1>404 NOT FOUND</h1> }}></Route>
+                        <Route path="/*" component={ Error404 }></Route>
                     </Switch>
                 </Router>
             </Box>
