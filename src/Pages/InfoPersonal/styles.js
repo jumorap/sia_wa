@@ -17,7 +17,8 @@ const styles = {
         justifyContent: 'space-between',
         flexDirection: 'row',
         boxSizing: "border-box",
-        flexFlow: "wrap"
+        flexFlow: "wrap",
+        flexWrap: "wrap",
     },
     buttonEdit: {
         backgroundColor: 'var(--blueSeoul)',
@@ -46,7 +47,7 @@ const styles = {
         border: "none",
     },
     cardsShort: {
-        width: "50%",
+        flex: "max(250px, 100vw/3)"
     },
 }
 

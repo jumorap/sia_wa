@@ -22,7 +22,8 @@ const styles = {
         display: 'flex',
         justifyContent: "space-between",
         paddingLeft: "5%",
-        paddingRight: "5%"
+        paddingRight: "5%",
+        overflow: "hidden",
     },
     logo: {
         height: '100%',

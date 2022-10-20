@@ -11,9 +11,10 @@ import styles from "./styles"
 const All = () => {
     return (
         <>
-            <General />
-            <Box sx={styles.boxContainer}>
-                <Router>
+            <Router>
+                <General />
+                <Box sx={styles.boxContainer}>
+
                     <Switch>
                         <Route exact path="/" component={ Login } />
 
@@ -25,8 +26,9 @@ const All = () => {
 
                         <Route path="/*" component={ Error404 }></Route>
                     </Switch>
-                </Router>
-            </Box>
+                </Box>
+            </Router>
+
             <Footer />
         </>
     )
