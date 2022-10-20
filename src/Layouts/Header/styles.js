@@ -1,17 +1,17 @@
 const styles = {
     logo: {
-        height: '80px',
+        height: '12vh',
         width: 'auto',
         position: 'relative',
-        top: '25px',
+        top: '4vh',
         paddingLeft: '20px',
         paddingRight: '20px',
     },
     bar: {
         backgroundColor: 'var(--blueSeoul)',
         justifyContent: 'center',
-        paddingBottom: '53px',
-        height: '100px',
+        paddingBottom: '7vh',
+        height: '15vh',
         display: 'flex',
         zIndex: 10,
     }

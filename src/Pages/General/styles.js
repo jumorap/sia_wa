@@ -14,11 +14,12 @@ const styles = {
         alignItems: 'center',
         flexDirection: 'column',
         filter: 'blur(3px)',
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0,
         zIndex: -1,
         overflow: 'hidden',
+        boxSizing: "border-box",
     },
 }
 

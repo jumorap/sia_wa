@@ -1,4 +1,9 @@
 const styles = {
+    generalContainer: {
+        backgroundColor: "#FFF",
+        padding: "20px",
+        borderRadius: "10px"
+    },
     cards: {
         borderRadius: 0,
         display: 'flex',
@@ -21,6 +26,8 @@ const styles = {
     buttonContainer: {
         width: '100%',
         justifyContent: 'right',
+        border: "none",
+        borderBottom: '1px solid var(--translucentGray)',
     },
     inputEdit: {
         width: '100%',
@@ -36,6 +43,7 @@ const styles = {
     },
     cardsLong: {
         width: "100%",
+        border: "none",
     },
     cardsShort: {
         width: "50%",

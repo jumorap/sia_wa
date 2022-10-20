@@ -1,28 +1,32 @@
 const styles = {
     footerView: {
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
         backgroundColor: 'var(--darkBlueSeoul)',
+        height: '12vh',
+        margin: "auto",
+        borderRadius: 0,
+        boxSizing: "border-box",
     },
     footer: {
-        color: '#ffffff',
-        height: '100px',
+        color: '#FFF',
         width: '100%',
+        height: '100%',
         paddingTop: '10px',
         paddingBottom: '10px',
         display: 'flex',
+        boxSizing: "border-box",
     },
     bottomNav: {
         backgroundColor: 'var(--darkBlueSeoul)',
         width: '100%',
         height: '100%',
         display: 'flex',
+        justifyContent: "space-between",
+        paddingLeft: "5%",
+        paddingRight: "5%"
     },
     logo: {
-        height: '100px',
-        width: 'auto'
+        height: '100%',
+        width: 'auto',
     }
 }
 

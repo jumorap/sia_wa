@@ -9,6 +9,7 @@ import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHo
 
 import { getUser, updateUser } from "../../Middleware";
 import styles from "./styles";
+import Box from "@mui/material/Box";
 
 
 /**
@@ -61,7 +62,7 @@ const cardGenerator = (title, data) => {
                     {title}
                 </Typography>
                 <Typography variant="body2">
-                    {!data ? "NO APLICA" : data}
+                    {!data ? "-" : data}
                 </Typography>
             </CardContent>
         </Card>
@@ -115,7 +116,7 @@ const InfoPersonal = () => {
     })
 
     return (
-        <>
+        <Box sx={styles.generalContainer}>
             <Card sx={[styles.cards, styles.buttonContainer]}>
                 <CardContent>
                     {/** Button to edit the information enabling the text fields and lunching the GraphQL update function */}
@@ -180,7 +181,7 @@ const InfoPersonal = () => {
                 {titleCard(FaAward, "Información de Militar")}
                 {editOrCardGenerator("Situación militar", data?.situacion_militar, edit)}
             </div>
-        </>
+        </Box>
     )
 }
 
