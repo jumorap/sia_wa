@@ -7,6 +7,8 @@ import {
   getMateriasLibreEleccion,
 } from "./Inscripcion/get-api";
 
+import { getHistoriaAcademica } from "./InfoAcademica/get-api";
+
 export {
   getUser,
   updateUser,
@@ -15,4 +17,6 @@ export {
   getCursoInscrito,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
+
+  getHistoriaAcademica,
 };
