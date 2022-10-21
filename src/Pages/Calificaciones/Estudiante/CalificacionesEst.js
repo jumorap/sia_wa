@@ -15,7 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { ListItem } from "@mui/material";
+import { Box, ListItem } from "@mui/material";
 
 const getCustomOptions = () => {
   const items = [
@@ -37,7 +37,7 @@ const getCustomOptions = () => {
     {
       id: 4,
       name_course: "Trabajo de Grado",
-      grades: '{"Parcial 1": [0.2, 4.5], "Parcial 2": [0.3,5], "Parcial 3": [0.3,4], "Parcial 4": [0.3,4], "Parcial 5": [0.3,4]}',
+      grades: '{"Parcial 1": [0.2, 4.5], "Parcial 2": [0.3,5], "Parcial 3": [0.3,4], "Parcial 4": [0.3,4], "Parcial 5": [0.3,4], "Parcial 6": [0.3,4], "Parcial 7": [0.3,4], "Parcial 8": [0.3,4]}',
     },
   ];
   return items;
@@ -50,16 +50,21 @@ const styles = {
     paddingBottom: "10px",
     borderRadius: "10px",
     background: "var(--reallySoftGray)",
-    boxShadow: 2
+    boxShadow: 2,
   },
 
   card: {
     marginRight: "15px",
-    width: "auto",
+    width: "150px",
     height: "80px",
+    alignItems: "center"
   },
 }
 
+const flexContainer = {
+  display: 'flex',
+  flexDirection: 'row',
+};
 
 const formatData = (data) => {
   return JSON.parse(data);
@@ -103,18 +108,18 @@ const cards = (grades) => {
   let names = Object.keys(fgrades);
 
   return (
-    <>
+    <List style={flexContainer}>
     {names.map((name) => {
       return (
         <Card sx={[styles.card]}>
           <CardContent>
-            <Typography sx={{display:'flex', justifyContent:'center'}}>{name+": "+fgrades[name][0]*100+"%"}</Typography>
+            <Typography sx={{display:'flex', justifyContent: 'center'}}>{name+': '+fgrades[name][0]*100+'%'}</Typography>
             <Typography sx={{display:'flex', justifyContent:'center'}}>{fgrades[name][1]}</Typography>
           </CardContent>
         </Card>
       );
     })}
-    </>
+    </List>
   );
 }
 
@@ -139,7 +144,7 @@ function CalificacionesEst() {
             </ListItem>
             <Collapse in={open[item.id]} timeout="auto" unmountOnExit>
               <List component="div" justify="center">
-                <ListItem className="pl-4">
+                <ListItem className="pl-4" sx={{overflow: 'auto'}}>
                   {cards(item.grades)}
                 </ListItem>
               </List>
