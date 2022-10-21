@@ -7,7 +7,7 @@ const styles = {
         borderRadius: "20px",
         minHeight: "73vh",
         boxSizing: "border-box",
-    }
+    },
 }
 
 

@@ -1,5 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
+import styles from "./styles";
+import Box from "@mui/material/Box";
 
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
@@ -13,13 +15,15 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
             render={routeProps =>
                 isUser ? (
                     /*<RouteComponent {...routeProps} />*/
-                    <RouteComponent />
+                    <Box sx={styles.generalContainer}>
+                        <RouteComponent />
+                    </Box>
                 ) : (
                     <Redirect to={"/"} />
                 )
             }
         />
-    );
+    )
 }
 
 export default PrivateRoute

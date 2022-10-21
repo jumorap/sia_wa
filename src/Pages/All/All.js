@@ -1,6 +1,6 @@
 import React from "react";
-import { General } from "../../Components";
 import Box from "@mui/material/Box";
+import { General } from "../../Components";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { PrivateRoute } from "../../Routes";
 import { Footer } from "../../Layouts";
@@ -14,7 +14,6 @@ const All = () => {
             <Router>
                 <General />
                 <Box sx={styles.boxContainer}>
-
                     <Switch>
                         <Route exact path="/" component={ Login } />
 

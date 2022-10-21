@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Button from "@mui/material/Button";
-
+import React, {useState, useEffect, useRef} from "react";
+import { Card, CardContent, Typography, TextField, Button } from '@mui/material';
 import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHouseUser } from 'react-icons/fa';
 
 import { getUser, updateUser } from "../../Middleware";
@@ -52,9 +47,27 @@ const subtitleCard = (subtitle) => {
  * Generate a card with a title and a value to show in the page
  * @param title Type of information to show
  * @param data Data to show in the card
+ * @param edit Boolean to know if the card is editable
+ * @param disableOption Boolean to know if the card is disabled
  * @returns {JSX.Element} Card with the title and data
  */
-const cardGenerator = (title, data) => {
+const cardGenerator = (title, data, edit=false, disableOption=false) => {
+    const Editable = () => {
+        return (
+            <TextField
+                ref={useRef()}
+                rows={1}
+                defaultValue={data}
+                variant="outlined"
+                size="small"
+                disabled={disableOption}
+                fullWidth
+            />
+        )
+    }
+
+    if (!data) data = "-"
+
     return (
         <Card sx={[styles.cards, styles.cardsShort]}>
             <CardContent>
@@ -62,35 +75,10 @@ const cardGenerator = (title, data) => {
                     {title}
                 </Typography>
                 <Typography variant="body2">
-                    {!data ? "-" : data}
+                    {!edit ? data : <Editable />}
                 </Typography>
             </CardContent>
         </Card>
-    )
-}
-
-/**
- * Generate a card with a title and a value to show in the page
- * @param title Type of information to show
- * @param data Data to show in the card
- * @param edit Boolean to know if the card is editable
- * @returns {JSX.Element}
- */
-const editOrCardGenerator = (title, data, edit) => {
-    return (
-        <>
-            {!edit ? (cardGenerator(title, data)) :
-                cardGenerator(title,
-                    (
-                        <TextField
-                            rows={1}
-                            defaultValue={data}
-                            variant="outlined"
-                            size="small"
-                            sx={styles.inputEdit}
-                        />
-            ))}
-        </>
     )
 }
 
@@ -113,10 +101,10 @@ const InfoPersonal = () => {
     useEffect(() => {
         // Make a single request to the API
         if (!data) getUser().then((response) => setData(response.user))
-    })
+    }, [data])
 
     return (
-        <Box sx={styles.generalContainer}>
+        <>
             <Card sx={[styles.cards, styles.buttonContainer]}>
                 <CardContent>
                     {/** Button to edit the information enabling the text fields and lunching the GraphQL update function */}
@@ -132,16 +120,16 @@ const InfoPersonal = () => {
                 </CardContent>
             </Card>
 
-            <div style={styles.container}>
+            <Box style={styles.container}>
                 {titleCard(FaUserAlt, "Información Básica")}
                 {cardGenerator("NOMBRES", data?.nombre_completo)}
                 {cardGenerator("DOCUMENTO", data?.documento_identidad)}
-                {editOrCardGenerator("EXPEDIDO EN", data?.lugar_expedicion, edit)}
+                {cardGenerator("EXPEDIDO EN", data?.lugar_expedicion, edit, buttonEnabled)}
                 {cardGenerator("SEXO", data?.sexo)}
                 {cardGenerator("ETNIA", data?.etnia)}
-                {editOrCardGenerator("EMAIL", data?.email_personal, edit)}
+                {cardGenerator("EMAIL", data?.email_personal, edit, buttonEnabled)}
                 {cardGenerator("EMAIL INSTITUCIONAL", data?.email_institucional)}
-                {editOrCardGenerator("TELÉFONO", data?.telefono_movil, edit)}
+                {cardGenerator("TELÉFONO", data?.telefono_movil, edit, buttonEnabled)}
 
                 {titleCard(FaBirthdayCake, "Información de Nacimiento")}
                 {cardGenerator("FECHA", data?.fecha_nacimiento)}
@@ -150,7 +138,7 @@ const InfoPersonal = () => {
 
                 {titleCard(FaFileMedical, "Información de Salud")}
                 {cardGenerator("Tipo de sangre", data?.tipo_sangre)}
-                {editOrCardGenerator("EPS", data?.eps, edit)}
+                {cardGenerator("EPS", data?.eps, edit, buttonEnabled)}
 
                 {titleCard(FaPeopleArrows, "Responsables")}
                 {subtitleCard("Responsable 1")}
@@ -172,16 +160,16 @@ const InfoPersonal = () => {
                 {cardGenerator("ESTRATO", data?.vivienda[0]?.vivienda_estrato)}
                 {cardGenerator("TELÉFONO", data?.vivienda[0]?.vivienda_telefono)}
                 {subtitleCard("Vivienda Actual")}
-                {editOrCardGenerator("DIRECCIÓN", data?.vivienda[1]?.vivienda_direccion, edit)}
-                {editOrCardGenerator("DEPARTAMENTO", data?.vivienda[1]?.vivienda_departamento, edit)}
-                {editOrCardGenerator("CÓDIGO POSTAL", data?.vivienda[1]?.vivienda_codigo_postal, edit)}
-                {editOrCardGenerator("ESTRATO", data?.vivienda[1]?.vivienda_estrato, edit)}
-                {editOrCardGenerator("TELÉFONO", data?.vivienda[1]?.vivienda_telefono, edit)}
+                {cardGenerator("DIRECCIÓN", data?.vivienda[1]?.vivienda_direccion, edit, buttonEnabled)}
+                {cardGenerator("DEPARTAMENTO", data?.vivienda[1]?.vivienda_departamento, edit, buttonEnabled)}
+                {cardGenerator("CÓDIGO POSTAL", data?.vivienda[1]?.vivienda_codigo_postal, edit, buttonEnabled)}
+                {cardGenerator("ESTRATO", data?.vivienda[1]?.vivienda_estrato, edit, buttonEnabled)}
+                {cardGenerator("TELÉFONO", data?.vivienda[1]?.vivienda_telefono, edit, buttonEnabled)}
 
                 {titleCard(FaAward, "Información de Militar")}
-                {editOrCardGenerator("Situación militar", data?.situacion_militar, edit)}
-            </div>
-        </Box>
+                {cardGenerator("Situación militar", data?.situacion_militar, edit, buttonEnabled)}
+            </Box>
+        </>
     )
 }
 
