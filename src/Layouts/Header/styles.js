@@ -31,6 +31,21 @@ const styles = {
             },
         },
     },
+    closeSesion: {
+        display: "inline-block",
+        display: "block",
+        marginTop: "10px",
+        marginLeft: "auto",
+        marginRight: "auto",
+        textAlign: "center",
+        width:"10%",
+        padding:"5px",
+        borderColor:"#1F2D52",
+        backgroundColor: "#ffff",
+        borderRadius:"5px",
+        color: "#1F2D52",
+        fontWeight: "bold",
+    }
 }
 
 export default styles

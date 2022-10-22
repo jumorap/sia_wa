@@ -11,7 +11,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 
-import { auth } from '../../Middleware/Session/get-api';
+import { Redirect } from "react-router-dom";
+
+
+import { auth, auth_refresh} from '../../Middleware/Session/get-api';
 
 /**
  * mui es una mierda :v solo bootstrap loks
@@ -51,17 +54,44 @@ export default function Login(props) {
     const [passwordInput, setPasswordInput] = React.useState("");
     const [labesPasswordState, changeLabelSatus] = React.useState("Mostrar");
     const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(true); // set some state for loading
+    const [isUser, setUser] = React.useState(false); 
+
+    React.useEffect(() => {
+        auth_refresh({auth_token: sessionStorage.getItem('TOKEN')})
+            .then((new_token) => {
+                setLoading(false);
+                console.log(new_token);
+                if (new_token?.refreshToken?.auth_token) {
+                    sessionStorage.setItem('USER', new_token.refreshToken.nombre_usuario);
+                    sessionStorage.setItem('TOKEN', new_token.refreshToken.auth_token);
+                    setUser(true);
+                }
+            });
+    }, [])
+
+    if (loading) return <h1>Cargando ...</h1>; // <-- render loading UI
+     
+    if(isUser){
+        return <Redirect to={'/info_personal'}/>
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const user = { nombre_usuario: data.get('nombre_usuario'), contrasena: data.get('password') };
-        const token = await auth(user);
-        if (token?.getToken?.auth_token) {
+        var token = await auth(user);
+
+        if (token?.getToken?.auth_token && token?.getToken?.rol) {
+            sessionStorage.setItem('USER', user.nombre_usuario);
             sessionStorage.setItem('TOKEN', token.getToken.auth_token);
+            token.getToken.rol.forEach(element => {
+                sessionStorage.setItem(element.tipo_rol, 'true');
+            });
             console.log(token.getToken);
-            //Redireccionar a otra ruta?
+            setUser(true);
         } else {
+            sessionStorage.clear();
             setOpen(true);
         }
     };
@@ -97,6 +127,7 @@ export default function Login(props) {
                         name="nombre_usuario"
                         variant='filled'
                         autoFocus
+                        error={open}
                     />
                     <TextField
                         sx={styles.textfield}
@@ -111,6 +142,7 @@ export default function Login(props) {
                         value={passwordInput}
                         onChange={handlePasswordChange}
                         autoComplete="current-password"
+                        error={open}
                     />
                     <FormControlLabel
                         sx={styles.controlLabel}
@@ -127,25 +159,25 @@ export default function Login(props) {
                         Iniciar sesión
                     </Button>
                     <Collapse in={open}>
-                    <Alert
-                        severity="error"
-                        action={
-                            <IconButton
-                                aria-label="close"
+                        <Alert
+                            severity="error"
+                            action={
+                                <IconButton
+                                    aria-label="close"
 
-                                size="small"
-                                onClick={() => {
-                                    setOpen(false);
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                        sx={{ mb: 2 }}
-                    >
-                        Usuario y contraseña incorrectos
-                    </Alert>
-                </Collapse>
+                                    size="small"
+                                    onClick={() => {
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                            Usuario y contraseña incorrectos
+                        </Alert>
+                    </Collapse>
                 </Box>
             </Box>
         </Container>
