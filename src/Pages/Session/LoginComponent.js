@@ -14,7 +14,7 @@ import Collapse from '@mui/material/Collapse';
 import { Redirect } from "react-router-dom";
 
 
-import { auth } from '../../Middleware/Session/get-api';
+import { auth, auth_refresh} from '../../Middleware/Session/get-api';
 
 /**
  * mui es una mierda :v solo bootstrap loks
@@ -54,7 +54,27 @@ export default function Login(props) {
     const [passwordInput, setPasswordInput] = React.useState("");
     const [labesPasswordState, changeLabelSatus] = React.useState("Mostrar");
     const [open, setOpen] = React.useState(false);
-    const [redirected, redirection] = React.useState(false);
+    const [loading, setLoading] = React.useState(true); // set some state for loading
+    const [isUser, setUser] = React.useState(false); 
+
+    React.useEffect(() => {
+        auth_refresh({auth_token: sessionStorage.getItem('TOKEN')})
+            .then((new_token) => {
+                setLoading(false);
+                console.log(new_token);
+                if (new_token?.refreshToken?.auth_token) {
+                    sessionStorage.setItem('USER', new_token.refreshToken.nombre_usuario);
+                    sessionStorage.setItem('TOKEN', new_token.refreshToken.auth_token);
+                    setUser(true);
+                }
+            });
+    }, [])
+
+    if (loading) return <h1>Cargando ...</h1>; // <-- render loading UI
+     
+    if(isUser){
+        return <Redirect to={'/info_personal'}/>
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -69,7 +89,7 @@ export default function Login(props) {
                 sessionStorage.setItem(element.tipo_rol, 'true');
             });
             console.log(token.getToken);
-            redirection(true);
+            setUser(true);
         } else {
             sessionStorage.clear();
             setOpen(true);
@@ -88,10 +108,6 @@ export default function Login(props) {
 
     const handlePasswordChange = (evnt) => {
         setPasswordInput(evnt.target.value);
-    }
-
-    if(redirected){
-        return <Redirect to={'/info_personal'}/>
     }
 
     return (
