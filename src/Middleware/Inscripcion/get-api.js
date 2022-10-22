@@ -2,7 +2,7 @@ import apiUrl from "../api-url";
 import queryAsset from "../queryAsset";
 import queries from "./queries";
 
-export const getCursosByMateria = async (codigo_asignatura) => {
+export const getCursosByPrograma = async (codigo_asignatura) => {
   // return queryAsset(queries.curso, apiUrl.Inscripciones.get);
 
   return [
@@ -15,7 +15,7 @@ export const getCursosByMateria = async (codigo_asignatura) => {
           dia: 1,
           hora_inicio: 8,
           hora_fin: 10,
-          salon: "A-101",
+          salon: "Salón 401-204 - Facultad de Ingeniería",
           documento_profesor: "123456789",
           tipo: "Clase teórica",
         },
@@ -23,7 +23,7 @@ export const getCursosByMateria = async (codigo_asignatura) => {
           dia: 3,
           hora_inicio: 8,
           hora_fin: 10,
-          salon: "A-101",
+          salon: "Salón 401-204 - Facultad de Ingeniería",
           documento_profesor: "123456789",
           tipo: "Clase teórica",
         },
@@ -41,7 +41,7 @@ export const getCursosByMateria = async (codigo_asignatura) => {
           dia: 3,
           hora_inicio: 15,
           hora_fin: 17,
-          salon: "A-401",
+          salon: "Salón 404-404 - Facultad de Arquitectura",
           documento_profesor: "123456789",
           tipo: "Clase teórica",
         },
@@ -49,7 +49,7 @@ export const getCursosByMateria = async (codigo_asignatura) => {
           dia: 5,
           hora_inicio: 15,
           hora_fin: 17,
-          salon: "A-401",
+          salon: "Salón 404-404 - Facultad de Arquitectura",
           documento_profesor: "123456789",
           tipo: "Laboratorio",
         },

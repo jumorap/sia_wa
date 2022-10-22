@@ -5,6 +5,11 @@ const styles = {
   buttonContainer: {},
   inputEdit: {},
   cardsContainer: {},
+  buttonInscribir: {
+    backgroundColor: "var(--blueSeoul)",
+    fontWeight: "bold",
+    width: "100%",
+  },
 };
 
 export default styles;
