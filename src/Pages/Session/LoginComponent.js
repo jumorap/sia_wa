@@ -56,12 +56,20 @@ export default function Login(props) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const user = { nombre_usuario: data.get('nombre_usuario'), contrasena: data.get('password') };
-        const token = await auth(user);
+        var token;
+        
+        try{
+            token = await auth(user);
+        }catch(e){
+            token = null;
+        }
+        
         if (token?.getToken?.auth_token) {
             sessionStorage.setItem('TOKEN', token.getToken.auth_token);
             console.log(token.getToken);
             //Redireccionar a otra ruta?
         } else {
+            sessionStorage.clear();
             setOpen(true);
         }
     };
@@ -97,6 +105,7 @@ export default function Login(props) {
                         name="nombre_usuario"
                         variant='filled'
                         autoFocus
+                        error={open}
                     />
                     <TextField
                         sx={styles.textfield}
@@ -111,6 +120,7 @@ export default function Login(props) {
                         value={passwordInput}
                         onChange={handlePasswordChange}
                         autoComplete="current-password"
+                        error={open}
                     />
                     <FormControlLabel
                         sx={styles.controlLabel}
@@ -127,25 +137,25 @@ export default function Login(props) {
                         Iniciar sesión
                     </Button>
                     <Collapse in={open}>
-                    <Alert
-                        severity="error"
-                        action={
-                            <IconButton
-                                aria-label="close"
+                        <Alert
+                            severity="error"
+                            action={
+                                <IconButton
+                                    aria-label="close"
 
-                                size="small"
-                                onClick={() => {
-                                    setOpen(false);
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                        sx={{ mb: 2 }}
-                    >
-                        Usuario y contraseña incorrectos
-                    </Alert>
-                </Collapse>
+                                    size="small"
+                                    onClick={() => {
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                            Usuario y contraseña incorrectos
+                        </Alert>
+                    </Collapse>
                 </Box>
             </Box>
         </Container>
