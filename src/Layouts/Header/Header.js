@@ -22,7 +22,6 @@ const Header = () => {//Missing to hide elements when session is no active
                     </Box>
                 </center>
             </AppBar>
-            <Link style={styles.closeSesion} onClick={() => { sessionStorage.clear(); }} to={"/"}>Cerrar sesión</Link>
         </>
     )
 }
