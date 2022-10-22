@@ -2,7 +2,7 @@ import apiUrl from "../api-url";
 import queryAsset from "../queryAsset";
 import queries from "./queries";
 
-export const getCursosByPrograma = async (codigo_asignatura) => {
+export const getCursosByPrograma = async (codigo_aprograma) => {
   // return queryAsset(queries.curso, apiUrl.Inscripciones.get);
 
   return [

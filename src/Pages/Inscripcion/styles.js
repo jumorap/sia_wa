@@ -10,6 +10,11 @@ const styles = {
     fontWeight: "bold",
     width: "100%",
   },
+  buttonEliminar: {
+    backgroundColor: "#76232F",
+    fontWeight: "bold",
+    width: "100%",
+  },
 };
 
 export default styles;
