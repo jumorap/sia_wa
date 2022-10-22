@@ -13,5 +13,11 @@ export const auth = async (userData) => {
 }
 
 export const auth_refresh = async (token) => {
-    return queryAsset(queries('refresh', token), apiUrl.Session.get)
+    var token;
+    try {
+        token = await queryAsset(queries('refresh', token), apiUrl.Session.get);
+    } catch (e) {
+        token = null;
+    }
+    return token;
 }
