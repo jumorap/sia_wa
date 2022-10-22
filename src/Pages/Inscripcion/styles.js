@@ -15,6 +15,19 @@ const styles = {
     fontWeight: "bold",
     width: "100%",
   },
+  materiaInscrita: {
+    backgroundColor: "var(--blueSeoul)",
+    borderRadius: "3px",
+    color: "#FFFAFA",
+  },
+  creditosInscritos: {
+    color: "#FFFAFA",
+    float: "right",
+  },
+  creditosDisponibles: {
+    color: "var(--softGray)",
+    float: "right",
+  },
 };
 
 export default styles;

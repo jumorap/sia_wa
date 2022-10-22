@@ -20,6 +20,12 @@ export const Materias = () => {
   const [materias, setMaterias] = useState([]);
   const [materiasLibreEleccion, setMateriasLibreEleccion] = useState([]);
   const [cursos, setCursos] = useState([]);
+  let creditosAInscribir = calcularCreditos(
+    materias.filter((materia) => {
+      return materiasAInscribir.includes(materia.codigo_asignatura);
+    })
+  );
+  console.log("creditos", creditosAInscribir);
 
   useEffect(() => {
     const fetchMaterias = async () => {
@@ -41,6 +47,7 @@ export const Materias = () => {
   Tarjeta que muestra toda la materia con sus cursos
   */
   const materiaCard = (materia) => {
+    const isInscrita = materiasAInscribir.includes(materia.codigo_asignatura);
     return (
       <Grid key={materia.codigo_asignatura} item md={12}>
         <Accordion
@@ -48,15 +55,33 @@ export const Materias = () => {
           sx={[styles.cards, { width: "100%" }]}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={
+              <ExpandMoreIcon
+                sx={!isInscrita ? { color: "gray" } : { color: "white" }}
+              />
+            }
             aria-controls="panel1bh-content"
+            sx={isInscrita ? styles.materiaInscrita : {}}
           >
-            <Typography variant="body1" sx={{ width: "90%" }}>
+            <Typography
+              variant="body1"
+              sx={{ width: "80%", fontWeight: "bold" }}
+            >
               {materia.codigo_asignatura} - {materia.nombre_asignatura}
             </Typography>
             <Typography
               variant="body1"
-              sx={{ color: "var(--softGray)", float: "right" }}
+              sx={{ width: "10%", "font-style": "italic" }}
+            >
+              {isInscrita ? "Añadida" : ""}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={
+                isInscrita
+                  ? styles.creditosInscritos
+                  : styles.creditosDisponibles
+              }
             >
               {materia.creditos} créditos
             </Typography>
@@ -82,7 +107,14 @@ export const Materias = () => {
     <Grid item xs={12} sx={{ padding: "20px" }}>
       <Card sx={[styles.cards, { width: "100%" }]}>
         <CardContent>
-          <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
+          <div>
+            <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
+            <br />
+            <Typography variant="body3" sx={{ fontWeight: "bold" }}>
+              Créditos totales seleccionados: {creditosAInscribir}
+            </Typography>
+          </div>
+
           <div>
             <Accordion>
               <AccordionSummary
@@ -111,7 +143,7 @@ export const Materias = () => {
           </div>
         </CardContent>
         <Button variant="contained" sx={styles.buttonInscribir}>
-          Inscribir seleccionadas
+          Inscribir {creditosAInscribir} créditos
         </Button>
       </Card>
     </Grid>
@@ -146,7 +178,6 @@ const getCursos = async (setCursos) => {
 const cursoCard = (curso, setCursos) => {
   return (
     <Grid key={curso.id_curso} item md={3} xs={12} sx={{ padding: "7px" }}>
-      <div>{curso.inscrito ? "Inscrito" : "No Inscrito"}</div>
       <Card sx={[styles.cards, { width: "100%" }]}>
         <CardContent>
           <Typography variant="body3">
@@ -158,6 +189,13 @@ const cursoCard = (curso, setCursos) => {
         </CardContent>
       </Card>
       <Button
+        disabled={
+          curso.cupos_disponibles === 0 ||
+          curso.cupos_disponibles === null ||
+          curso.cupos_disponibles === undefined ||
+          (!curso.inscrito &&
+            materiasAInscribir.includes(curso.codigo_asignatura))
+        }
         variant="contained"
         color={curso.inscrito ? "error" : "primary"}
         sx={curso.inscrito ? styles.buttonEliminar : styles.buttonInscribir}
@@ -233,6 +271,12 @@ const addCursoACola = (curso, setCursos) => {
   });
 };
 
+/**
+ * Función que elimina un curso y su materia de la cola de inscripción
+ * @param {*} curso curso a eliminar
+ * @param {*} setCursos función para setear el estado de cursos
+ * @returns
+ * */
 const removeCursoDeCola = (curso, setCursos) => {
   let prevCurso = { ...curso };
 
@@ -254,4 +298,12 @@ const removeCursoDeCola = (curso, setCursos) => {
   materiasAInscribir = materiasAInscribir.filter(
     (id) => id !== curso.codigo_asignatura
   );
+};
+
+const calcularCreditos = (materias) => {
+  let creditos = 0;
+  materias.forEach((materia) => {
+    creditos += materia.creditos;
+  });
+  return creditos;
 };
