@@ -56,14 +56,8 @@ export default function Login(props) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const user = { nombre_usuario: data.get('nombre_usuario'), contrasena: data.get('password') };
-        var token;
-        
-        try{
-            token = await auth(user);
-        }catch(e){
-            token = null;
-        }
-        
+        var token = await auth(user);
+
         if (token?.getToken?.auth_token) {
             sessionStorage.setItem('TOKEN', token.getToken.auth_token);
             console.log(token.getToken);
