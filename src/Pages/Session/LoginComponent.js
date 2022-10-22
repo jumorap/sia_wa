@@ -11,6 +11,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 
+import { Redirect } from "react-router-dom";
+
+
 import { auth } from '../../Middleware/Session/get-api';
 
 /**
@@ -51,6 +54,7 @@ export default function Login(props) {
     const [passwordInput, setPasswordInput] = React.useState("");
     const [labesPasswordState, changeLabelSatus] = React.useState("Mostrar");
     const [open, setOpen] = React.useState(false);
+    const [redirected, redirection] = React.useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -58,10 +62,14 @@ export default function Login(props) {
         const user = { nombre_usuario: data.get('nombre_usuario'), contrasena: data.get('password') };
         var token = await auth(user);
 
-        if (token?.getToken?.auth_token) {
+        if (token?.getToken?.auth_token && token?.getToken?.rol) {
+            sessionStorage.setItem('USER', user.nombre_usuario);
             sessionStorage.setItem('TOKEN', token.getToken.auth_token);
+            token.getToken.rol.forEach(element => {
+                sessionStorage.setItem(element.tipo_rol, 'true');
+            });
             console.log(token.getToken);
-            //Redireccionar a otra ruta?
+            redirection(true);
         } else {
             sessionStorage.clear();
             setOpen(true);
@@ -80,6 +88,10 @@ export default function Login(props) {
 
     const handlePasswordChange = (evnt) => {
         setPasswordInput(evnt.target.value);
+    }
+
+    if(redirected){
+        return <Redirect to={'/info_personal'}/>
     }
 
     return (
