@@ -1,46 +1,85 @@
 const styles = {
-    cards: {
-        borderRadius: 0,
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        boxShadow: 'none',
-        borderTop: '1px solid var(--translucentGray)',
+    list: {
+      display: "flex",
+      flexDirection: "column",
+      borderRadius: "10px",
+      background: "var(--reallySoftGray)",
+      boxShadow: 2,
+      width: "100%"
+  
     },
-    container: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        boxSizing: "border-box",
-        flexFlow: "wrap",
-        flexWrap: "wrap",
+  
+    card: {
+      display: "flex",
+      flexDirection: "row",
+  
+      width: "100%",
+      height: "auto",
+      // alignItems: "center"
+  
     },
-    buttonEdit: {
-        backgroundColor: 'var(--blueSeoul)',
-        fontWeight: 'bold',
+  
+    CardContent: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: 'space-between',
+      width: "100%",
+  
     },
-    buttonContainer: {
-        width: '100%',
-        justifyContent: 'right',
-        border: "none",
-        borderBottom: '1px solid var(--translucentGray)',
+  
+    card_left: {
+      display: "flex",
+      flexDirection: "column",
+      width: "80%"
     },
-    typoText: {
-        color: 'var(--softGray)',
+  
+    card_right: {
+      display: "flex",
+      flexDirection: "column",
+      width: "20%",
+      justifyContent: "center",
+      alignItems: "center",
+      // flexWrap: "wrap",
+      
     },
-    typoTitle: {
-        fontWeight: "bold",
+  
+    infoBasica: {
+      display: "flex",
+      flexDirection:"row",
+      width: "100%",
+  
+      marginTop: "30px",
+      marginBottom: "15px",
+  
+      paddingTop: "20px",
+      paddingBottom: "20px",
     },
-    typoIconTitle: {
-        fontSize: "20px",
+  
+    infoBasica_left: {
+      display: "flex",
+      flexDirection:"column",
+      width: "60",
     },
-    cardsLong: {
-        width: "100%",
-        border: "none",
+  
+    infoBasica_right: {
+      display: "flex",
+      flexDirection:"row",
+      width: "100%",
+      // flexWrap: "wrap",
+      justifyContent: "space-around",
+  
+  
+      paddingTop: "5px",
+      paddingBottom: "5px",
     },
-    cardsShort: {
-        flex: "max(250px, 100vw/3)"
+  
+    infoBasica_right_card: {
+        display: "flex",
+        flexDirection: "column",
+        width: "30",
+        justifyContent: "center",
+        alignItems: "center",
     },
-}
+  }
 
-export default styles
+  export default styles
