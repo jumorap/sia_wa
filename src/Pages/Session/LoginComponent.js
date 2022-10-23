@@ -15,6 +15,7 @@ import { Redirect } from "react-router-dom";
 
 
 import { auth, auth_refresh} from '../../Middleware/Session/get-api';
+import { Loading } from "../../Components";
 
 /**
  * mui es una mierda :v solo bootstrap loks
@@ -70,7 +71,7 @@ export default function Login(props) {
             });
     }, [])
 
-    if (loading) return <h1>Cargando ...</h1>; // <-- render loading UI
+    if (loading) return <Loading />; // <-- render loading UI
      
     if(isUser){
         return <Redirect to={'/info_personal'}/>
