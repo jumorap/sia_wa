@@ -2,7 +2,16 @@ import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Button, Grid } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  Fade,
+  Grid,
+  Modal,
+} from "@mui/material";
 
 import { FaBookOpen } from "react-icons/fa";
 
@@ -15,11 +24,14 @@ import styles from "./styles";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { titleCard, subtitleCard } from "./Inscripciones";
+import { Box } from "@mui/system";
 
 export const Materias = () => {
   const [materias, setMaterias] = useState([]);
   const [materiasLibreEleccion, setMateriasLibreEleccion] = useState([]);
   const [cursos, setCursos] = useState([]);
+  const [open, setOpen] = useState(false);
+
   let creditosAInscribir = calcularCreditos(
     materias.filter((materia) => {
       return materiasAInscribir.includes(materia.codigo_asignatura);
@@ -40,6 +52,9 @@ export const Materias = () => {
     };
     fetchCursos();
   }, []);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   console.log(cursos);
 
@@ -110,10 +125,13 @@ export const Materias = () => {
           <div>
             <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
             <br />
-            <Typography variant="body3" sx={{ fontWeight: "bold" }}>
-              Créditos totales seleccionados: {creditosAInscribir}
-            </Typography>
+            <div sx={{ textAlign: "right" }}>
+              <Typography variant="body3" sx={{ fontWeight: "bold" }}>
+                Créditos totales seleccionados: {creditosAInscribir}
+              </Typography>
+            </div>
           </div>
+          <br />
 
           <div>
             <Accordion>
@@ -142,9 +160,66 @@ export const Materias = () => {
             </Accordion>
           </div>
         </CardContent>
-        <Button variant="contained" sx={styles.buttonInscribir}>
+        <Button
+          variant="contained"
+          sx={styles.buttonInscribir}
+          onClick={handleOpen}
+          disabled={creditosAInscribir === 0}
+        >
           Inscribir {creditosAInscribir} créditos
         </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={open}>
+            <Box sx={styles.modal}>
+              <Typography
+                id="transition-modal-title"
+                variant="h6"
+                component="h2"
+                sx={{ color: "black" }}
+              >
+                Inscripción de materias
+              </Typography>
+              <Divider />
+              <Typography
+                id="transition-modal-description"
+                sx={{ color: "black", mt: 2 }}
+              >
+                ¿Está seguro que desea inscribir las materias seleccionadas?
+              </Typography>
+              <div sx={{ position: "absolute", left: "50%", top: "50%" }}>
+                <Button
+                  variant="contained"
+                  onClick={handleClose}
+                  sx={{ backgroundColor: "var(--blueSeoul)", mt: 2, mr: 1 }}
+                >
+                  aceptar
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleClose}
+                  sx={{
+                    backgroundColor: "#76232F",
+                    mt: 2,
+                    mr: 1,
+                  }}
+                >
+                  cancelar
+                </Button>
+              </div>
+            </Box>
+          </Fade>
+        </Modal>
       </Card>
     </Grid>
   );

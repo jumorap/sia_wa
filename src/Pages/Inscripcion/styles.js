@@ -28,6 +28,17 @@ const styles = {
     color: "var(--softGray)",
     float: "right",
   },
+  modal: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "20%",
+    bgcolor: "white",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: "5px",
+  },
 };
 
 export default styles;
