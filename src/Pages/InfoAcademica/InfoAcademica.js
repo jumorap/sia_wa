@@ -123,6 +123,8 @@ const cards = (asignatura) => {
 
 const InfoAcademica = () => {
 
+  console.log(getHistoriaAcademica)
+
   let historiaAcademica = getData()
 
     return (
