@@ -7,6 +7,10 @@ const styles = {
         borderRadius: "20px",
         minHeight: "73vh",
         boxSizing: "border-box",
+        transition: "all 0.5s ease",
+        "@media (max-width: 800px)": {
+            width: "95%",
+        }
     },
 }
 

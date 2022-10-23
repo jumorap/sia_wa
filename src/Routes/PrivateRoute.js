@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { auth_refresh } from "../Middleware/Session/get-api";
 import { Loading } from "../Components";
 import styles from "./styles";
+import {Button} from "@mui/material";
 
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
@@ -32,7 +33,12 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
                 isUser ? (
                     /*<RouteComponent {...routeProps} />*/
                     <>
-                        <Link style={styles.closeSesion} onClick={() => { sessionStorage.clear(); }} to={"/"}>Cerrar sesión</Link>
+                        <Link onClick={() => { sessionStorage.clear(); }} to={"/"}>
+                            <Button style={styles.closeSesion}>
+                                Cerrar sesión
+                            </Button>
+                        </Link>
+
                         <Box sx={styles.generalContainer}>
                             <RouteComponent />
                         </Box>

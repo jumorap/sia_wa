@@ -1,18 +1,7 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
-
+import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Container, Alert, IconButton, Collapse } from '@mui/material';
 import { Redirect } from "react-router-dom";
-
 
 import { auth, auth_refresh} from '../../Middleware/Session/get-api';
 import { Loading } from "../../Components";
@@ -39,12 +28,13 @@ const styles = {
         mt: 3,
         mb: 2,
         fontWeight: 'bold',
-        color: '#1F2D52',
+        color: 'var(--blueSeoul)',
         bgcolor: '#FFF',
+        border: 1,
         '&:hover': {
             border: 1,
             color: '#FFF',
-            bgcolor: '#1F2D52',
+            bgcolor: 'var(--blueSeoul)',
             marginColor: '#FFFFFF'
         }
     }
@@ -81,7 +71,7 @@ export default function Login(props) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const user = { nombre_usuario: data.get('nombre_usuario'), contrasena: data.get('password') };
-        var token = await auth(user);
+        let token = await auth(user);
 
         if (token?.getToken?.auth_token && token?.getToken?.rol) {
             sessionStorage.setItem('USER', user.nombre_usuario);
