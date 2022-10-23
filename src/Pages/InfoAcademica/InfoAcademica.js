@@ -19,21 +19,47 @@ import Box from "@mui/material/Box";
 
 const InfoAcademica = () => {
     return (
-        <>
-        <Card sx={[styles.cards, styles.buttonContainer]}>
-            <CardContent>
-        {/** Button to edit the information enabling the text fields and lunching the GraphQL update function */}
-                <Button variant="contained" disabled={buttonEnabled} sx={styles.buttonEdit}
-                    onClick={() =>
-                      {edit ?
-                            enableDisableButton() :
-                            setEdit(!edit)
-                      }
-                    }>
-                    {edit ? "GUARDAR": "MODIFICAR"}
-                </Button>
-            </CardContent>
-        </Card> 
+    <>
+    
+      <nav aria-label="main mailbox folders">
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary="Inbox" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <DraftsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Drafts" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </nav>
+
+      <Divider />
+
+
+      <nav aria-label="secondary mailbox folders">
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemText primary="Trash" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component="a" href="#simple-list">
+              <ListItemText primary="Spam" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </nav>
+    
     </>
     )
 }
