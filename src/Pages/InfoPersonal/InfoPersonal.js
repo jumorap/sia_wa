@@ -121,7 +121,7 @@ const InfoPersonal = () => {
             </Card>
 
             <Box style={styles.container}>
-                {titleCard(FaUserAlt, "Información Básica")}
+                    {titleCard(FaUserAlt, "Información Básica")}
                 {cardGenerator("NOMBRES", data?.nombre_completo)}
                 {cardGenerator("DOCUMENTO", data?.documento_identidad)}
                 {cardGenerator("EXPEDIDO EN", data?.lugar_expedicion, edit, buttonEnabled)}
@@ -131,43 +131,43 @@ const InfoPersonal = () => {
                 {cardGenerator("EMAIL INSTITUCIONAL", data?.email_institucional)}
                 {cardGenerator("TELÉFONO", data?.telefono_movil, edit, buttonEnabled)}
 
-                {titleCard(FaBirthdayCake, "Información de Nacimiento")}
+                    {titleCard(FaBirthdayCake, "Información de Nacimiento")}
                 {cardGenerator("FECHA", data?.fecha_nacimiento)}
                 {cardGenerator("LUGAR", data?.lugar_nacimiento)}
                 {cardGenerator("NACIONALIDAD", data?.nacionalidad)}
 
-                {titleCard(FaFileMedical, "Información de Salud")}
-                {cardGenerator("Tipo de sangre", data?.tipo_sangre)}
+                    {titleCard(FaFileMedical, "Información de Salud")}
+                {cardGenerator("TIPO SANGRE", data?.tipo_sangre)}
                 {cardGenerator("EPS", data?.eps, edit, buttonEnabled)}
 
-                {titleCard(FaPeopleArrows, "Responsables")}
-                {subtitleCard("Responsable 1")}
-                {cardGenerator("NOMBRES R1", data?.responsables[0]?.responsable_nombre)}
-                {cardGenerator("TIPO DOCUMENTO R1", data?.responsables[0]?.responsable_tipo_doc)}
-                {cardGenerator("DOCUMENTO R1", data?.responsables[0]?.responsable_numero_doc)}
-                {cardGenerator("TELÉFONO R1", data?.responsables[0]?.responsable_telefono)}
-                {subtitleCard("Responsable 2")}
-                {cardGenerator("NOMBRES R2", data?.responsables[1]?.responsable_nombre)}
-                {cardGenerator("TIPO DOCUMENTO R2", data?.responsables[1]?.responsable_tipo_doc)}
-                {cardGenerator("DOCUMENTO R2", data?.responsables[1]?.responsable_numero_doc)}
-                {cardGenerator("TELÉFONO R2", data?.responsables[1]?.responsable_telefono)}
+                    {titleCard(FaPeopleArrows, "Responsables")}
+                        {subtitleCard("Responsable 1")}
+                {cardGenerator("NOMBRES", data?.responsables[0]?.responsable_nombre)}
+                {cardGenerator("TIPO DOCUMENTO", data?.responsables[0]?.responsable_tipo_doc)}
+                {cardGenerator("DOCUMENTO", data?.responsables[0]?.responsable_numero_doc)}
+                {cardGenerator("TELÉFONO", data?.responsables[0]?.responsable_telefono)}
+                        {subtitleCard("Responsable 2")}
+                {cardGenerator("NOMBRES", data?.responsables[1]?.responsable_nombre)}
+                {cardGenerator("TIPO DOCUMENTO", data?.responsables[1]?.responsable_tipo_doc)}
+                {cardGenerator("DOCUMENTO", data?.responsables[1]?.responsable_numero_doc)}
+                {cardGenerator("TELÉFONO", data?.responsables[1]?.responsable_telefono)}
 
-                {titleCard(FaHouseUser, "Vivienda")}
-                {subtitleCard("Vivienda Previa")}
+                    {titleCard(FaHouseUser, "Vivienda")}
+                        {subtitleCard("Vivienda Previa")}
                 {cardGenerator("DIRECCIÓN", data?.vivienda[0]?.vivienda_direccion)}
                 {cardGenerator("DEPARTAMENTO", data?.vivienda[0]?.vivienda_departamento)}
                 {cardGenerator("CÓDIGO POSTAL", data?.vivienda[0]?.vivienda_codigo_postal)}
                 {cardGenerator("ESTRATO", data?.vivienda[0]?.vivienda_estrato)}
                 {cardGenerator("TELÉFONO", data?.vivienda[0]?.vivienda_telefono)}
-                {subtitleCard("Vivienda Actual")}
+                        {subtitleCard("Vivienda Actual")}
                 {cardGenerator("DIRECCIÓN", data?.vivienda[1]?.vivienda_direccion, edit, buttonEnabled)}
                 {cardGenerator("DEPARTAMENTO", data?.vivienda[1]?.vivienda_departamento, edit, buttonEnabled)}
                 {cardGenerator("CÓDIGO POSTAL", data?.vivienda[1]?.vivienda_codigo_postal, edit, buttonEnabled)}
                 {cardGenerator("ESTRATO", data?.vivienda[1]?.vivienda_estrato, edit, buttonEnabled)}
                 {cardGenerator("TELÉFONO", data?.vivienda[1]?.vivienda_telefono, edit, buttonEnabled)}
 
-                {titleCard(FaAward, "Información de Militar")}
-                {cardGenerator("Situación militar", data?.situacion_militar, edit, buttonEnabled)}
+                    {titleCard(FaAward, "Información de Militar")}
+                {cardGenerator("SIT. MILITAR", data?.situacion_militar, edit, buttonEnabled)}
             </Box>
         </>
     )
