@@ -1,63 +1,71 @@
 import apiUrl from "../api-url";
 import queryAsset from "../queryAsset";
-import queries from "./queries";
+import { queryCursosByCodigoAsignatura } from "./queries";
 
-export const getCursosByPrograma = async (codigo_aprograma) => {
-  // return queryAsset(queries.curso, apiUrl.Inscripciones.get);
+export const getCursosByAsignatura = async (codigo_asignatura) => {
+  console.log("getCursosByAsignatura", codigo_asignatura);
+  console.log(
+    "Estructura Query",
+    queryCursosByCodigoAsignatura(codigo_asignatura)
+  );
+  return queryAsset(
+    queryCursosByCodigoAsignatura(codigo_asignatura),
+    apiUrl.Inscripciones.get
+  );
 
-  return [
-    {
-      id_curso: "1",
-      codigo_asignatura: 1,
-      grupo: 1,
-      horarios: [
-        {
-          dia: 1,
-          hora_inicio: 8,
-          hora_fin: 10,
-          salon: "Salón 401-204 - Facultad de Ingeniería",
-          documento_profesor: "123456789",
-          tipo: "Clase teórica",
-        },
-        {
-          dia: 3,
-          hora_inicio: 8,
-          hora_fin: 10,
-          salon: "Salón 401-204 - Facultad de Ingeniería",
-          documento_profesor: "123456789",
-          tipo: "Clase teórica",
-        },
-      ],
-      cupos_disponibles: 10,
-      cupos_totales: 20,
-    },
+  // return [
+  //   {
+  //     id_curso: "1",
+  //     codigo_asignatura: 1,
+  //     grupo: 1,
+  //     horarios: [
+  //       {
+  //         dia: 1,
+  //         hora_inicio: 8,
+  //         hora_fin: 10,
+  //         salon: "Salón 401-204 - Facultad de Ingeniería",
+  //         documento_profesor: "123456789",
+  //         tipo: "Clase teórica",
+  //       },
+  //       {
+  //         dia: 3,
+  //         hora_inicio: 8,
+  //         hora_fin: 10,
+  //         salon: "Salón 401-204 - Facultad de Ingeniería",
+  //         documento_profesor: "123456789",
+  //         tipo: "Clase teórica",
+  //       },
+  //     ],
+  //     cupos_disponibles: 10,
+  //     cupos_totales: 20,
+  //   },
 
-    {
-      id_curso: "2",
-      codigo_asignatura: 1,
-      grupo: 2,
-      horarios: [
-        {
-          dia: 3,
-          hora_inicio: 15,
-          hora_fin: 17,
-          salon: "Salón 404-404 - Facultad de Arquitectura",
-          documento_profesor: "123456789",
-          tipo: "Clase teórica",
-        },
-        {
-          dia: 5,
-          hora_inicio: 15,
-          hora_fin: 17,
-          salon: "Salón 404-404 - Facultad de Arquitectura",
-          documento_profesor: "123456789",
-          tipo: "Laboratorio",
-        },
-      ],
-      cupos_disponibles: 10,
-      cupos_totales: 20,
-    },
-  ];
+  //   {
+  //     id_curso: "2",
+  //     codigo_asignatura: 1,
+  //     grupo: 2,
+  //     horarios: [
+  //       {
+  //         dia: 3,
+  //         hora_inicio: 15,
+  //         hora_fin: 17,
+  //         salon: "Salón 404-404 - Facultad de Arquitectura",
+  //         documento_profesor: "123456789",
+  //         tipo: "Clase teórica",
+  //       },
+  //       {
+  //         dia: 5,
+  //         hora_inicio: 15,
+  //         hora_fin: 17,
+  //         salon: "Salón 404-404 - Facultad de Arquitectura",
+  //         documento_profesor: "123456789",
+  //         tipo: "Laboratorio",
+  //       },
+  //     ],
+  //     cupos_disponibles: 10,
+  //     cupos_totales: 20,
+  //   },
+  // ];
 };
 
 export const inscribirCurso = async () => {

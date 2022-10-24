@@ -18,7 +18,7 @@ import { FaBookOpen } from "react-icons/fa";
 import {
   getMateriasByPrograma,
   getMateriasLibreEleccion,
-  getCursosByPrograma,
+  getCursosByAsignatura,
 } from "../../Middleware";
 import styles from "./styles";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
@@ -26,11 +26,20 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { titleCard, subtitleCard } from "./Inscripciones";
 import { Box } from "@mui/system";
 
+let cursosGlobal = [];
+
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => value + 1); // update the state to force render
+}
+
 export const Materias = () => {
   const [materias, setMaterias] = useState([]);
   const [materiasLibreEleccion, setMateriasLibreEleccion] = useState([]);
   const [cursos, setCursos] = useState([]);
   const [open, setOpen] = useState(false);
+
+  const forceUpdate = useForceUpdate();
 
   let creditosAInscribir = calcularCreditos(
     materias.filter((materia) => {
@@ -47,16 +56,46 @@ export const Materias = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCursos = async () => {
-      await getCursos(setCursos);
-    };
-    fetchCursos();
+    const tempmaterias = [
+      {
+        codigo_asignatura: 1,
+        nombre_asignatura: "Arquitectura de Computadores",
+        creditos: 4,
+      },
+      {
+        codigo_asignatura: 2,
+        nombre_asignatura: "Arquitectura de Software",
+        creditos: 4,
+      },
+      {
+        codigo_asignatura: 3,
+        nombre_asignatura:
+          "Introducción a la Teoría de la Información y Sistemas de comunicación",
+        creditos: 3,
+      },
+      {
+        codigo_asignatura: 4,
+        nombre_asignatura: "Programación Orientada a Objetos",
+        creditos: 3,
+      },
+      {
+        codigo_asignatura: 5,
+        nombre_asignatura: "Ingeniería de Software",
+        creditos: 3,
+      },
+    ];
+    if (cursos.length === 0)
+      getCursos(tempmaterias).then((cursos) => {
+        console.log("Cursos mamdos", cursos);
+        forceUpdate();
+        setCursos(cursos);
+      });
   }, []);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  console.log(cursos);
+  console.log("Cursos hook", cursos);
 
   /*
   Tarjeta que muestra toda la materia con sus cursos
@@ -105,7 +144,9 @@ export const Materias = () => {
             <div>
               <Grid container>
                 {cursos.map((curso) => {
-                  if (curso.codigo_asignatura === materia.codigo_asignatura) {
+                  console.log("curso desde card", curso);
+                  console.log("materia desde card", materia.codigo_asignatura);
+                  if (curso.codigo_asignatura == materia.codigo_asignatura) {
                     return cursoCard(curso, setCursos);
                   }
                   return null;
@@ -124,6 +165,7 @@ export const Materias = () => {
         <CardContent>
           <div>
             <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
+            <Button onClick={forceUpdate}>Refrescar</Button>
             <br />
             <div sx={{ textAlign: "right" }}>
               <Typography variant="body3" sx={{ fontWeight: "bold" }}>
@@ -237,9 +279,76 @@ const getMaterias = async (setMaterias, setMateriasLibreEleccion) => {
   setMateriasLibreEleccion(materiasLibreEleccion);
 };
 
-const getCursos = async (setCursos) => {
-  const cursos = await getCursosByPrograma("5");
-  setCursos(cursos);
+const getCursos = async (materias) => {
+  console.log("Materias", materias);
+  const cursos2 = [
+    {
+      id_curso: "1",
+      codigo_asignatura: 1,
+      grupo: 1,
+      horarios: [
+        {
+          dia: 1,
+          hora_inicio: 8,
+          hora_fin: 10,
+          salon: "Salón 401-204 - Facultad de Ingeniería",
+          documento_profesor: "123456789",
+          tipo: "Clase teórica",
+        },
+        {
+          dia: 3,
+          hora_inicio: 8,
+          hora_fin: 10,
+          salon: "Salón 401-204 - Facultad de Ingeniería",
+          documento_profesor: "123456789",
+          tipo: "Clase teórica",
+        },
+      ],
+      cupos_disponibles: 10,
+      cupos_totales: 20,
+    },
+
+    {
+      id_curso: "2",
+      codigo_asignatura: 1,
+      grupo: 2,
+      horarios: [
+        {
+          dia: 3,
+          hora_inicio: 15,
+          hora_fin: 17,
+          salon: "Salón 404-404 - Facultad de Arquitectura",
+          documento_profesor: "123456789",
+          tipo: "Clase teórica",
+        },
+        {
+          dia: 5,
+          hora_inicio: 15,
+          hora_fin: 17,
+          salon: "Salón 404-404 - Facultad de Arquitectura",
+          documento_profesor: "123456789",
+          tipo: "Laboratorio",
+        },
+      ],
+      cupos_disponibles: 10,
+      cupos_totales: 20,
+    },
+  ];
+
+  let cursos = [];
+  const fillCursos = async () => {
+    materias.map(async (materia) => {
+      console.log("Materia", materia);
+      const tempcursos = await getCursosByAsignatura(materia.codigo_asignatura);
+      console.log("TempCursos", tempcursos);
+      tempcursos.cursosByCodigoAsignatura.forEach((curso) => {
+        cursos.push({ ...curso });
+      });
+    });
+  };
+  await fillCursos();
+  console.log("Cursos eeend", cursos);
+  return cursos;
 };
 
 //------------------------------Elementos para mostrar cursos----------------------------------//
@@ -251,6 +360,7 @@ const getCursos = async (setCursos) => {
  */
 
 const cursoCard = (curso, setCursos) => {
+  console.log("Curso desde cursoCard", curso);
   return (
     <Grid key={curso.id_curso} item md={3} xs={12} sx={{ padding: "7px" }}>
       <Card sx={[styles.cards, { width: "100%" }]}>
