@@ -5,15 +5,16 @@ import Typography from "@mui/material/Typography";
 import {
   Backdrop,
   Button,
-  DialogContentText,
-  DialogTitle,
   Divider,
   Fade,
   Grid,
   Modal,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary
 } from "@mui/material";
 
-import { FaBookOpen } from "react-icons/fa";
+import {FaBookOpen} from "react-icons/fa";
 
 import {
   getMateriasByPrograma,
@@ -21,17 +22,10 @@ import {
   getCursosByAsignaturas,
 } from "../../Middleware";
 import styles from "./styles";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { titleCard, subtitleCard } from "./Inscripciones";
+import { titleCard, SubtitleCard } from "./Inscripciones";
 import { Box } from "@mui/system";
 
-let cursosGlobal = [];
-
-function useForceUpdate() {
-  const [value, setValue] = useState(0); // integer state
-  return () => setValue((value) => value + 1); // update the state to force render
-}
 
 export const Materias = () => {
   const [materias, setMaterias] = useState(null);
@@ -39,18 +33,18 @@ export const Materias = () => {
   const [cursos, setCursos] = useState(null);
   const [open, setOpen] = useState(false);
 
-  const forceUpdate = useForceUpdate();
-
   useEffect(() => {
     console.log("materias");
-    if (!materias) {
-      getMateriasByPrograma(["5"]).then((data) => {
-        setMaterias(data?.asignaturasInscribibles);
-      });
+    if (!materias) getMateriasByPrograma(["5"]).then((data) => setMaterias(data?.asignaturasInscribibles))
+
+    if (!cursos && materias) {
+      console.log(materias, cursos);
+      getCursosByAsignaturas(materias).then((data) => {
+        console.log("cursos", data);
+        setCursos(data)
+      })
     }
-    if (!cursos && materias)
-      getCursosByAsignaturas(materias).then((data) => setCursos(data));
-  });
+  })
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -58,25 +52,31 @@ export const Materias = () => {
   let creditosAInscribir = calcularCreditos(
     materias
       ? materias?.filter((materia) => {
-          return materiasAInscribir.includes(materia.codigo_asignatura);
+          return materiasAInscribir.includes(materia.codigo_asignatura)
         })
       : []
-  );
+  )
 
   const mapMaterias = (m) => {
-    console.log("Materias", m);
-    return m ? m.map((materia) => materiaCard(materia)) : null;
-  };
+    return m ? m.map((materia) => <MateriaCard mat={materia} />) : null
+  }
+
+  const mapCursos = (c, m) => {
+    return c ? c.map((curso) => {
+      if (curso.codigo_asignatura === m.codigo_asignatura) return cursoCard(curso, setCursos)
+      return null;
+    }) : null
+  }
 
   /*
   Tarjeta que muestra toda la materia con sus cursos
   */
-  const materiaCard = (materia) => {
-    const isInscrita = materiasAInscribir.includes(materia.codigo_asignatura);
+  const MateriaCard = (props) => {
+    const isInscrita = materiasAInscribir.includes(props.mat.codigo_asignatura);
     return (
-      <Grid key={materia.codigo_asignatura} item md={12}>
+      <Grid key={props.mat.codigo_asignatura} item md={12}>
         <Accordion
-          key={materia.codigo_asignatura}
+          key={props.mat.codigo_asignatura}
           sx={[styles.cards, { width: "100%" }]}
         >
           <AccordionSummary
@@ -92,7 +92,7 @@ export const Materias = () => {
               variant="body1"
               sx={{ width: "80%", fontWeight: "bold" }}
             >
-              {materia.codigo_asignatura} - {materia.nombre_asignatura}
+              {props.mat.codigo_asignatura} - {props.mat.nombre_asignatura}
             </Typography>
             <Typography
               variant="body1"
@@ -108,20 +108,13 @@ export const Materias = () => {
                   : styles.creditosDisponibles
               }
             >
-              {materia.creditos} créditos
+              {props.mat.creditos} créditos
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <div>
               <Grid container>
-                {cursos?.map((curso) => {
-                  console.log("curso desde card", curso);
-                  console.log("materia desde card", materia.codigo_asignatura);
-                  if (curso.codigo_asignatura === materia.codigo_asignatura) {
-                    return cursoCard(curso, setCursos);
-                  }
-                  return null;
-                })}
+                {mapCursos(cursos, props.mat)}
               </Grid>
             </div>
           </AccordionDetails>
@@ -136,9 +129,9 @@ export const Materias = () => {
         <CardContent>
           <div>
             <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
-            <Button onClick={forceUpdate}>Refrescar</Button>
-            <br />
+
             <div sx={{ textAlign: "right" }}>
+              <p />
               <Typography variant="body3" sx={{ fontWeight: "bold" }}>
                 Créditos totales seleccionados: {creditosAInscribir}
               </Typography>
@@ -147,23 +140,23 @@ export const Materias = () => {
           <br />
 
           <div>
-            <Accordion>
+            <Accordion sx={ styles.acordionPerMateria }>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1bh-content"
               >
-                {subtitleCard("Materias obligatorias")}
+                <SubtitleCard subtitle={"Materias obligatorias"} />
               </AccordionSummary>
               <AccordionDetails>{mapMaterias(materias)}</AccordionDetails>
             </Accordion>
           </div>
           <div>
-            <Accordion>
+            <Accordion sx={ styles.acordionPerMateria }>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1bh-content"
               >
-                {subtitleCard("Materias de libre elección")}
+                <SubtitleCard subtitle={"Materias de libre elección"} />
               </AccordionSummary>
               <AccordionDetails>
                 {mapMaterias(materiasLibreEleccion)}
@@ -332,7 +325,7 @@ const cursoCard = (curso, setCursos) => {
   console.log("Curso desde cursoCard", curso);
   return (
     <Grid key={curso.id_curso} item md={3} xs={12} sx={{ padding: "7px" }}>
-      <Card sx={[styles.cards, { width: "100%" }]}>
+      <Card sx={[styles.cards, styles.groupsContainer, { width: "100%" }]}>
         <CardContent>
           <Typography variant="body3">
             Grupo: {curso.grupo}
@@ -341,28 +334,30 @@ const cursoCard = (curso, setCursos) => {
           </Typography>
           <div>{horarioCard(curso.horarios)}</div>
         </CardContent>
+
+
+        <Button
+            disabled={
+                curso.cupos_disponibles === 0 ||
+                curso.cupos_disponibles === null ||
+                curso.cupos_disponibles === undefined ||
+                (!curso.inscrito &&
+                    materiasAInscribir.includes(curso.codigo_asignatura))
+            }
+            variant="contained"
+            color={curso.inscrito ? "error" : "primary"}
+            sx={[styles.buttonActionAdd, curso.inscrito ? styles.buttonEliminar : styles.buttonInscribir]}
+            onClick={() => {
+              if (curso.inscrito) {
+                removeCursoDeCola(curso, setCursos);
+              } else {
+                addCursoACola(curso, setCursos);
+              }
+            }}
+        >
+          {!curso.inscrito ? "Añadir" : "Eliminar"}
+        </Button>
       </Card>
-      <Button
-        disabled={
-          curso.cupos_disponibles === 0 ||
-          curso.cupos_disponibles === null ||
-          curso.cupos_disponibles === undefined ||
-          (!curso.inscrito &&
-            materiasAInscribir.includes(curso.codigo_asignatura))
-        }
-        variant="contained"
-        color={curso.inscrito ? "error" : "primary"}
-        sx={curso.inscrito ? styles.buttonEliminar : styles.buttonInscribir}
-        onClick={() => {
-          if (curso.inscrito) {
-            removeCursoDeCola(curso, setCursos);
-          } else {
-            addCursoACola(curso, setCursos);
-          }
-        }}
-      >
-        {!curso.inscrito ? "Añadir" : "Eliminar"}
-      </Button>
     </Grid>
   );
 };
@@ -375,7 +370,7 @@ const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
  **/
 const horarioCard = (horario) => {
   return (
-    <Card sx={[styles.cards, { width: "100%" }]}>
+    <Card sx={[styles.cards, styles.groupsCard, { width: "100%" }]}>
       <CardContent>
         <Typography variant="body1">Horario</Typography>
         <div>

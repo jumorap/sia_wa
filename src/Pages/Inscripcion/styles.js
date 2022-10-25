@@ -5,6 +5,21 @@ const styles = {
   buttonContainer: {},
   inputEdit: {},
   cardsContainer: {},
+  groupsCard: {
+    boxShadow: "none",
+    borderTop: "1px solid var(--softGray)",
+    borderRadius: "0px",
+    marginTop: "10px",
+  },
+  acordionPerMateria: {
+    marginBottom: "10px",
+    marginTop: "10px",
+    backgroundColor: "#fafafa",
+  },
+  buttonActionAdd: {
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
+  },
   buttonInscribir: {
     backgroundColor: "var(--blueSeoul)",
     fontWeight: "bold",

@@ -1,20 +1,13 @@
-import React, { useState, useEffect } from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import React from "react";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import { Button, Divider, Grid } from "@mui/material";
+import { Divider, Grid } from "@mui/material";
 
-import { FaBook, FaBookOpen } from "react-icons/fa";
+import { FaBook } from "react-icons/fa";
 
-import {
-  getMateriasByPrograma,
-  getMateriasLibreEleccion,
-} from "../../Middleware";
-import styles from "./styles";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Materias } from "./Materias";
+import styles from "./styles";
+
+
 /**
  * Generate a title card with an icon
  * @param IconTitle Icon to show in the title
@@ -35,13 +28,13 @@ export const titleCard = (IconTitle, title) => {
 
 /**
  * Generate a subtitle card
- * @param subtitle Subtitle to show in the card
  * @returns {JSX.Element}
+ * @param props
  */
-export const subtitleCard = (subtitle) => {
+export const SubtitleCard = (props) => {
   return (
     <Typography variant="h6" sx={{ fontWeight: "bold", padding: "5px" }}>
-      {subtitle}
+      {props.subtitle}
     </Typography>
   );
 };

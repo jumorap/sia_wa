@@ -7,26 +7,15 @@ import {
 
 export const getCursosByAsignaturas = async (asignaturas) => {
   console.log("getCursosByAsignaturas: ", asignaturas);
-  let cursos = [];
-  await asignaturas.forEach(async (materia) => {
-    await queryAsset(
-      queryCursosByCodigoAsignatura(materia.codigo_asignatura),
-      apiUrl.Inscripciones.get
-    )
-      .then((response) => {
-        console.log(
-          "getCursosByAsignaturas: ",
-          response.cursosByCodigoAsignatura
-        );
-        cursos.push(...response?.cursosByCodigoAsignatura);
-      })
 
-      .catch((error) => {
-        console.log("Error: ", error);
-      });
-  });
-  console.log("GET CURSOS POR FIN: ", cursos);
-  return cursos;
+  return Promise.all(asignaturas.map(async (materia) => {
+    return queryAsset(queryCursosByCodigoAsignatura(materia.codigo_asignatura), apiUrl.Inscripciones.get)
+      .then((response) => {
+        for (const element of response.cursosByCodigoAsignatura) {
+          return element;
+        }
+      })
+  }))
 
   // return [
   //   {
@@ -88,10 +77,7 @@ export const inscribirCurso = async () => {
 };
 
 export const getMateriasByPrograma = async (id_programa) => {
-  return await queryAsset(
-    queryMateriasByPrograma([1]),
-    apiUrl.BuscadorCursos.get
-  );
+  return queryAsset(queryMateriasByPrograma([1]), apiUrl.BuscadorCursos.get);
   // return [
   //   {
   //     codigo_asignatura: 1,
