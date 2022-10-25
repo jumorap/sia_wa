@@ -7,6 +7,6 @@ export const getUser = async () => {
     return queryAsset(queries.user, apiUrl.InfoPersonal.get)
 }
 
-export const updateUser = async () => {
-    return queryAsset(queries.updateUser, apiUrl.InfoPersonal.get)
+export const updateUser = async (query=queries.updateUser) => {
+    return queryAsset(query, apiUrl.InfoPersonal.get)
 }

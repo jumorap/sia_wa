@@ -5,19 +5,14 @@ const styles = {
         borderRadius: "10px"
     },
     closeSesion: {
-        display: "inline-block",
         display: "block",
+        margin: "auto",
         marginTop: "5px",
-        marginLeft: "auto",
-        marginRight: "auto",
         marginBottom: "10px",
-        textAlign: "center",
-        width:"10%",
-        padding:"5px",
-        borderColor:"#1F2D52",
+        width:"min(50%, 200px)",
+        borderColor:"var(--blueSeoul)",
         backgroundColor: "#ffff",
-        borderRadius:"5px",
-        color: "#1F2D52",
+        color: "var(--blueSeoul)",
         fontWeight: "bold",
     }
 }

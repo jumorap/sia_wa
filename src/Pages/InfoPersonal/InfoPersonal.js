@@ -1,25 +1,23 @@
-import React, {useState, useEffect, useRef} from "react";
-import { Card, CardContent, Typography, TextField, Button } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, Typography, TextField, Button, Box } from '@mui/material';
 import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHouseUser } from 'react-icons/fa';
 
-import { getUser, updateUser } from "../../Middleware";
+import { getUser, updateUser, updateUserQuery } from "../../Middleware";
 import styles from "./styles";
-import Box from "@mui/material/Box";
 
 
 /**
  * Generate a title card with an icon
- * @param IconTitle Icon to show in the title
- * @param title Title to show in the card
+ * @param props props.IconTitle Icon to show in the title and props.title Ttile to show in the card
  * @returns {JSX.Element}
  */
-const titleCard = (IconTitle, title) => {
+const TitleCard = (props) => {
     return (
         <Card sx={[styles.cards, styles.cardsLong]}>
             <CardContent>
                 <Typography variant="h5" sx={[styles.typoTitle, styles.typoIconTitle]}>
-                    <IconTitle style={styles.typoText}/>
-                    &nbsp; {title}
+                    <props.IconTitle style={styles.typoText}/>
+                    &nbsp; {props.title}
                 </Typography>
             </CardContent>
         </Card>
@@ -28,15 +26,15 @@ const titleCard = (IconTitle, title) => {
 
 /**
  * Generate a subtitle card
- * @param subtitle Subtitle to show in the card
+ * @param props props.subtitle Subtitle to show in the card
  * @returns {JSX.Element}
  */
-const subtitleCard = (subtitle) => {
+const SubtitleCard = (props) => {
     return (
         <Card sx={[styles.cards, styles.cardsLong]}>
             <CardContent>
                 <Typography variant="body2" sx={styles.typoTitle}>
-                    {subtitle}
+                    {props.subtitle}
                 </Typography>
             </CardContent>
         </Card>
@@ -45,42 +43,24 @@ const subtitleCard = (subtitle) => {
 
 /**
  * Generate a card with a title and a value to show in the page
- * @param title Type of information to show
- * @param data Data to show in the card
- * @param edit Boolean to know if the card is editable
- * @param disableOption Boolean to know if the card is disabled
  * @returns {JSX.Element} Card with the title and data
+ * @param props Props of the component with the title and data
  */
-const cardGenerator = (title, data, edit=false, disableOption=false) => {
-    const Editable = () => {
-        return (
-            <TextField
-                ref={useRef()}
-                rows={1}
-                defaultValue={data}
-                variant="outlined"
-                size="small"
-                disabled={disableOption}
-                fullWidth
-            />
-        )
-    }
-
-    if (!data) data = "-"
-
+const CardGenerator = (props) => {
     return (
         <Card sx={[styles.cards, styles.cardsShort]}>
             <CardContent>
                 <Typography variant="body1" sx={styles.typoText}>
-                    {title}
+                    {props.title}
                 </Typography>
                 <Typography variant="body2">
-                    {!edit ? data : <Editable />}
+                    {props.data}
                 </Typography>
             </CardContent>
         </Card>
     )
 }
+
 
 /**
  * Page to show the personal information of the user
@@ -90,18 +70,84 @@ const InfoPersonal = () => {
     const [data, setData] = useState(null)
     const [edit, setEdit] = useState(false)
     const [buttonEnabled, setButtonEnabled] = useState(false)
-
-    const enableDisableButton = () => {
-        setButtonEnabled(true)
-        updateUser()
-            .then(() => setEdit(!edit))
-            .then(() => setButtonEnabled(false))
-    }
+    const [details, setDetails] = useState({})
 
     useEffect(() => {
         // Make a single request to the API
         if (!data) getUser().then((response) => setData(response.user))
     }, [data])
+
+    /**
+     * Get the user information from the API and set the data state
+     */
+    const getUserInfo = () => {
+        setDetails({
+            nombre_usuario: data?.nombre_usuario,
+            lugar_expedicion: data?.lugar_expedicion,
+            email_personal: data?.email_personal,
+            telefono_movil: data?.telefono_movil,
+            eps: data?.eps,
+            vivienda_direccion: data?.vivienda[1]?.vivienda_direccion,
+            vivienda_departamento: data?.vivienda[1]?.vivienda_departamento,
+            vivienda_codigo_postal: data?.vivienda[1]?.vivienda_codigo_postal,
+            vivienda_estrato: data?.vivienda[1]?.vivienda_estrato,
+            vivienda_telefono: data?.vivienda[1]?.vivienda_telefono,
+            situacion_militar: data?.situacion_militar,
+        })
+    }
+
+    /**
+     * Put the edited data in the state
+     * @param e Event of the input
+     */
+    const handleChanges = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        setDetails((prev) => {
+            return {...prev, [name]: value}
+        })
+    }
+
+    /**
+     * Change the view from plain text to editable text and vice versa
+     * @param titleGet Title of the data to get from the state
+     * @param dataGet Data to show in the input
+     * @param editableGet If the input is editable or not
+     * @returns {JSX.Element|string}
+     */
+    const editableGenerator = (titleGet, dataGet, editableGet=false) => {
+        if (!dataGet) dataGet = "-"
+        if (!edit || !editableGet) return (dataGet)
+
+        if (editableGet) {
+            return (
+                <TextField
+                    // Remove blank spaces
+                    name={titleGet}
+                    rows={1}
+                    defaultValue={dataGet}
+                    variant={"outlined"}
+                    size={"small"}
+                    fullWidth
+                    autoComplete={"off"}
+                    disabled={buttonEnabled}
+                    onChange={handleChanges}
+                />
+            )}
+    }
+
+    /**
+     * Save the changes in the state to the API updating the user info and enabling/disabling the edit mode
+     */
+    const updateAndEnableDisableButton = () => {
+        setButtonEnabled(true)
+        const query = updateUserQuery(details)
+        updateUser(query)
+            .then(() => setEdit(!edit))
+            .then(() => setButtonEnabled(false))
+            .then(() => getUser().then((response) => setData(response.user)))
+            .then(() => getUserInfo())
+    }
 
     return (
         <>
@@ -111,7 +157,8 @@ const InfoPersonal = () => {
                     <Button variant="contained" disabled={buttonEnabled} sx={styles.buttonEdit}
                             onClick={() =>
                                 {edit ?
-                                    enableDisableButton() :
+                                    updateAndEnableDisableButton() :
+                                    getUserInfo()
                                     setEdit(!edit)
                                 }
                             }>
@@ -121,53 +168,53 @@ const InfoPersonal = () => {
             </Card>
 
             <Box style={styles.container}>
-                {titleCard(FaUserAlt, "Información Básica")}
-                {cardGenerator("NOMBRES", data?.nombre_completo)}
-                {cardGenerator("DOCUMENTO", data?.documento_identidad)}
-                {cardGenerator("EXPEDIDO EN", data?.lugar_expedicion, edit, buttonEnabled)}
-                {cardGenerator("SEXO", data?.sexo)}
-                {cardGenerator("ETNIA", data?.etnia)}
-                {cardGenerator("EMAIL", data?.email_personal, edit, buttonEnabled)}
-                {cardGenerator("EMAIL INSTITUCIONAL", data?.email_institucional)}
-                {cardGenerator("TELÉFONO", data?.telefono_movil, edit, buttonEnabled)}
+                <TitleCard IconTitle={FaUserAlt} title="Información Básica"/>
+                <CardGenerator title="NOMBRES" data={editableGenerator("nombrecompleto", data?.nombre_completo)}/>
+                <CardGenerator title="DOCUMENTO" data={editableGenerator("documentoidentidad", data?.documento_identidad)}/>
+                <CardGenerator title="EXPEDIDO EN" data={editableGenerator("lugar_expedicion", data?.lugar_expedicion, true)}/>
+                <CardGenerator title="SEXO" data={editableGenerator("sexo", data?.sexo)}/>
+                <CardGenerator title="ETNIA" data={editableGenerator("etnia", data?.etnia)}/>
+                <CardGenerator title="EMAIL PERSONAL" data={editableGenerator("email_personal", data?.email_personal, true)}/>
+                <CardGenerator title="EMAIL INSTITUCIONAL" data={editableGenerator("emailinstitucional", data?.email_institucional)}/>
+                <CardGenerator title="TELÉFONO MÓVIL" data={editableGenerator("telefono_movil", data?.telefono_movil, true)}/>
 
-                {titleCard(FaBirthdayCake, "Información de Nacimiento")}
-                {cardGenerator("FECHA", data?.fecha_nacimiento)}
-                {cardGenerator("LUGAR", data?.lugar_nacimiento)}
-                {cardGenerator("NACIONALIDAD", data?.nacionalidad)}
+                <TitleCard IconTitle={FaBirthdayCake} title="Información de Nacimiento"/>
+                <CardGenerator title="FECHA" data={editableGenerator("fechanacimiento", data?.fecha_nacimiento)}/>
+                <CardGenerator title="LUGAR" data={editableGenerator("lugarnacimiento", data?.lugar_nacimiento)}/>
+                <CardGenerator title="NACIONALIDAD" data={editableGenerator("nacionalidad", data?.nacionalidad)}/>
 
-                {titleCard(FaFileMedical, "Información de Salud")}
-                {cardGenerator("Tipo de sangre", data?.tipo_sangre)}
-                {cardGenerator("EPS", data?.eps, edit, buttonEnabled)}
+                <TitleCard IconTitle={FaFileMedical} title="Información de Salud"/>
+                <CardGenerator title="TIPO SANGRE" data={editableGenerator("tiposangre", data?.tipo_sangre)}/>
+                <CardGenerator title="EPS" data={editableGenerator("eps", data?.eps, true)}/>
 
-                {titleCard(FaPeopleArrows, "Responsables")}
-                {subtitleCard("Responsable 1")}
-                {cardGenerator("NOMBRES R1", data?.responsables[0]?.responsable_nombre)}
-                {cardGenerator("TIPO DOCUMENTO R1", data?.responsables[0]?.responsable_tipo_doc)}
-                {cardGenerator("DOCUMENTO R1", data?.responsables[0]?.responsable_numero_doc)}
-                {cardGenerator("TELÉFONO R1", data?.responsables[0]?.responsable_telefono)}
-                {subtitleCard("Responsable 2")}
-                {cardGenerator("NOMBRES R2", data?.responsables[1]?.responsable_nombre)}
-                {cardGenerator("TIPO DOCUMENTO R2", data?.responsables[1]?.responsable_tipo_doc)}
-                {cardGenerator("DOCUMENTO R2", data?.responsables[1]?.responsable_numero_doc)}
-                {cardGenerator("TELÉFONO R2", data?.responsables[1]?.responsable_telefono)}
+                <TitleCard IconTitle={FaPeopleArrows} title="Responsables"/>
+                <SubtitleCard subtitle="Responsable 1"/>
+                <CardGenerator title="NOMBRES" data={editableGenerator("responsablenombres", data?.responsables[0]?.responsable_nombre)}/>
+                <CardGenerator title="TIPO DOCUMENTO" data={editableGenerator("responsabletipodocumento", data?.responsables[0]?.responsable_tipo_doc)}/>
+                <CardGenerator title="DOCUMENTO" data={editableGenerator("responsabledocumento", data?.responsables[0]?.responsable_numero_doc)}/>
+                <CardGenerator title="TELÉFONO" data={editableGenerator("responsabletelefono", data?.responsables[0]?.responsable_telefono)}/>
+                <SubtitleCard subtitle="Responsable 2"/>
+                <CardGenerator title="NOMBRES" data={editableGenerator("responsablenombres", data?.responsables[1]?.responsable_nombre)}/>
+                <CardGenerator title="TIPO DOCUMENTO" data={editableGenerator("responsabletipodocumento", data?.responsables[1]?.responsable_tipo_doc)}/>
+                <CardGenerator title="DOCUMENTO" data={editableGenerator("responsabledocumento", data?.responsables[1]?.responsable_numero_doc)}/>
+                <CardGenerator title="TELÉFONO" data={editableGenerator("responsabletelefono", data?.responsables[1]?.responsable_telefono)}/>
 
-                {titleCard(FaHouseUser, "Vivienda")}
-                {subtitleCard("Vivienda Previa")}
-                {cardGenerator("DIRECCIÓN", data?.vivienda[0]?.vivienda_direccion)}
-                {cardGenerator("DEPARTAMENTO", data?.vivienda[0]?.vivienda_departamento)}
-                {cardGenerator("CÓDIGO POSTAL", data?.vivienda[0]?.vivienda_codigo_postal)}
-                {cardGenerator("ESTRATO", data?.vivienda[0]?.vivienda_estrato)}
-                {cardGenerator("TELÉFONO", data?.vivienda[0]?.vivienda_telefono)}
-                {subtitleCard("Vivienda Actual")}
-                {cardGenerator("DIRECCIÓN", data?.vivienda[1]?.vivienda_direccion, edit, buttonEnabled)}
-                {cardGenerator("DEPARTAMENTO", data?.vivienda[1]?.vivienda_departamento, edit, buttonEnabled)}
-                {cardGenerator("CÓDIGO POSTAL", data?.vivienda[1]?.vivienda_codigo_postal, edit, buttonEnabled)}
-                {cardGenerator("ESTRATO", data?.vivienda[1]?.vivienda_estrato, edit, buttonEnabled)}
-                {cardGenerator("TELÉFONO", data?.vivienda[1]?.vivienda_telefono, edit, buttonEnabled)}
+                <TitleCard IconTitle={FaHouseUser} title="Vivienda"/>
+                <SubtitleCard subtitle="Vivienda Previa"/>
+                <CardGenerator title="DIRECCIÓN" data={editableGenerator("viviendadireccion", data?.vivienda[0]?.vivienda_direccion)}/>
+                <CardGenerator title="DEPARTAMENTO" data={editableGenerator("viviendadepartamento", data?.vivienda[0]?.vivienda_departamento)}/>
+                <CardGenerator title="CÓDIGO POSTAL" data={editableGenerator("viviendacodigopostal", data?.vivienda[0]?.vivienda_codigo_postal)}/>
+                <CardGenerator title="ESTRATO" data={editableGenerator("viviendaestrato", data?.vivienda[0]?.vivienda_estrato)}/>
+                <CardGenerator title="TELÉFONO" data={editableGenerator("viviendatelefono", data?.vivienda[0]?.vivienda_telefono)}/>
+                <SubtitleCard subtitle="Vivienda Actual"/>
+                <CardGenerator title="DIRECCIÓN" data={editableGenerator("vivienda_direccion", data?.vivienda[1]?.vivienda_direccion, true)}/>
+                <CardGenerator title="DEPARTAMENTO" data={editableGenerator("vivienda_departamento", data?.vivienda[1]?.vivienda_departamento, true)}/>
+                <CardGenerator title="CÓDIGO POSTAL" data={editableGenerator("vivienda_codigo_postal", data?.vivienda[1]?.vivienda_codigo_postal, true)}/>
+                <CardGenerator title="ESTRATO" data={editableGenerator("vivienda_estrato", data?.vivienda[1]?.vivienda_estrato, true)}/>
+                <CardGenerator title="TELÉFONO" data={editableGenerator("vivienda_telefono", data?.vivienda[1]?.vivienda_telefono, true)}/>
 
-                {titleCard(FaAward, "Información de Militar")}
-                {cardGenerator("Situación militar", data?.situacion_militar, edit, buttonEnabled)}
+                <TitleCard IconTitle={FaAward} title="Información Militar"/>
+                <CardGenerator title="SITUACIÓN MILITAR" data={editableGenerator("situacion_militar", data?.situacion_militar)}/>
             </Box>
         </>
     )
