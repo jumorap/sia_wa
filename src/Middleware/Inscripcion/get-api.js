@@ -1,17 +1,32 @@
 import apiUrl from "../api-url";
 import queryAsset from "../queryAsset";
-import { queryCursosByCodigoAsignatura } from "./queries";
+import {
+  queryCursosByCodigoAsignatura,
+  queryMateriasByPrograma,
+} from "./queries";
 
-export const getCursosByAsignatura = async (codigo_asignatura) => {
-  console.log("getCursosByAsignatura", codigo_asignatura);
-  console.log(
-    "Estructura Query",
-    queryCursosByCodigoAsignatura(codigo_asignatura)
-  );
-  return queryAsset(
-    queryCursosByCodigoAsignatura(codigo_asignatura),
-    apiUrl.Inscripciones.get
-  );
+export const getCursosByAsignaturas = async (asignaturas) => {
+  console.log("getCursosByAsignaturas: ", asignaturas);
+  let cursos = [];
+  await asignaturas.forEach(async (materia) => {
+    await queryAsset(
+      queryCursosByCodigoAsignatura(materia.codigo_asignatura),
+      apiUrl.Inscripciones.get
+    )
+      .then((response) => {
+        console.log(
+          "getCursosByAsignaturas: ",
+          response.cursosByCodigoAsignatura
+        );
+        cursos.push(...response?.cursosByCodigoAsignatura);
+      })
+
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
+  });
+  console.log("GET CURSOS POR FIN: ", cursos);
+  return cursos;
 
   // return [
   //   {
@@ -72,58 +87,39 @@ export const inscribirCurso = async () => {
   // return queryAsset(queries.inscribir, apiUrl.Inscripciones.get);
 };
 
-export const getCursoInscrito = async () => {
-  // return queryAsset(queries.cursoInscrito, apiUrl.Inscripciones.get);
-
-  return {
-    id_curso: "1",
-    codigo_asignatura: 1,
-    grupo: 1,
-    horarios: [
-      {
-        dia: 1,
-        hora_inicio: 8,
-        hora_fin: 10,
-        salon: "A-101",
-        documento_profesor: "123456789",
-        tipo: "teorica",
-      },
-    ],
-    cupos_disponibles: 10,
-    cupos_totales: 20,
-  };
-};
-
 export const getMateriasByPrograma = async (id_programa) => {
-  // return queryAsset(queries.materia, apiUrl.Inscripciones.get);
-  return [
-    {
-      codigo_asignatura: 1,
-      nombre_asignatura: "Arquitectura de Computadores",
-      creditos: 4,
-    },
-    {
-      codigo_asignatura: 2,
-      nombre_asignatura: "Arquitectura de Software",
-      creditos: 4,
-    },
-    {
-      codigo_asignatura: 3,
-      nombre_asignatura:
-        "Introducción a la Teoría de la Información y Sistemas de comunicación",
-      creditos: 3,
-    },
-    {
-      codigo_asignatura: 4,
-      nombre_asignatura: "Programación Orientada a Objetos",
-      creditos: 3,
-    },
-    {
-      codigo_asignatura: 5,
-      nombre_asignatura: "Ingeniería de Software",
-      creditos: 3,
-    },
-  ];
+  return await queryAsset(
+    queryMateriasByPrograma([1]),
+    apiUrl.BuscadorCursos.get
+  );
+  // return [
+  //   {
+  //     codigo_asignatura: 1,
+  //     nombre_asignatura: "Arquitectura de Computadores",
+  //     creditos: 4,
+  //   },
+  //   {
+  //     codigo_asignatura: 2,
+  //     nombre_asignatura: "Arquitectura de Software",
+  //     creditos: 4,
+  //   },
+  //   {
+  //     codigo_asignatura: 3,
+  //     nombre_asignatura:
+  //       "Introducción a la Teoría de la Información y Sistemas de comunicación",
+  //     creditos: 3,
+  //   },
+  //   {
+  //     codigo_asignatura: 4,
+  //     nombre_asignatura: "Programación Orientada a Objetos",
+  //     creditos: 3,
+  //   },
+  //   {
+  //     codigo_asignatura: 5,
+  //     nombre_asignatura: "Ingeniería de Software",
+  //     creditos: 3,
+  //   },
+  // ];
 };
 
 export const getMateriasLibreEleccion = async () => {

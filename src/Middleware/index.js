@@ -1,8 +1,7 @@
 import { getUser, updateUser } from "./InfoPersonal/get-api";
 import {
-  getCursosByAsignatura,
+  getCursosByAsignaturas,
   inscribirCurso,
-  getCursoInscrito,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
 } from "./Inscripcion/get-api";
@@ -10,9 +9,8 @@ import {
 export {
   getUser,
   updateUser,
-  getCursosByAsignatura,
+  getCursosByAsignaturas,
   inscribirCurso,
-  getCursoInscrito,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
 };

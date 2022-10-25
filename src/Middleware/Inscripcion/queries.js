@@ -101,3 +101,13 @@ export const queryIngresarProfesor = (args) => `
       }
     }
 `;
+
+export const queryMateriasByPrograma = (args) => `
+{
+  asignaturasInscribibles(codigosAsignaturas:${args}) {
+    codigo_asignatura
+    nombre_asignatura
+    creditos
+    descripcion
+  }
+}`;
