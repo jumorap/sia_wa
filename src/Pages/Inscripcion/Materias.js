@@ -34,27 +34,23 @@ function useForceUpdate() {
 }
 
 export const Materias = () => {
-  const [materias, setMaterias] = useState([]);
-  const [materiasLibreEleccion, setMateriasLibreEleccion] = useState([]);
-  let [cursos, setCursos] = useState(null);
+  const [materias, setMaterias] = useState(null);
+  const [materiasLibreEleccion, setMateriasLibreEleccion] = useState();
+  const [cursos, setCursos] = useState(null);
   const [open, setOpen] = useState(false);
 
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    const getMateriasYCursos = async () => {
-      let materias = await getMateriasByPrograma(["5"]);
-      materias = materias?.asignaturasInscribibles;
-      console.log("Materias Effect", materias);
-      const cursos = await getCursosByAsignaturas(materias);
-      console.log("Cursos Effect", cursos);
-      return { materias, cursos };
-    };
-    getMateriasYCursos().then((data) => {
-      setMaterias(data.materias);
-      setCursos(data.cursos);
-    });
-  }, []);
+    console.log("materias");
+    if (!materias) {
+      getMateriasByPrograma(["5"]).then((data) => {
+        setMaterias(data?.asignaturasInscribibles);
+      });
+    }
+    if (!cursos && materias)
+      getCursosByAsignaturas(materias).then((data) => setCursos(data));
+  });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -66,10 +62,11 @@ export const Materias = () => {
         })
       : []
   );
-  console.log("creditos", creditosAInscribir);
 
-  console.log("Cursos hook", cursos);
-  console.log("Materias hook", materias);
+  const mapMaterias = (m) => {
+    console.log("Materias", m);
+    return m ? m.map((materia) => materiaCard(materia)) : null;
+  };
 
   /*
   Tarjeta que muestra toda la materia con sus cursos
@@ -157,9 +154,7 @@ export const Materias = () => {
               >
                 {subtitleCard("Materias obligatorias")}
               </AccordionSummary>
-              <AccordionDetails>
-                {materias.map((materia) => materiaCard(materia))}
-              </AccordionDetails>
+              <AccordionDetails>{mapMaterias(materias)}</AccordionDetails>
             </Accordion>
           </div>
           <div>
@@ -171,7 +166,7 @@ export const Materias = () => {
                 {subtitleCard("Materias de libre elección")}
               </AccordionSummary>
               <AccordionDetails>
-                {materiasLibreEleccion.map((materia) => materiaCard(materia))}
+                {mapMaterias(materiasLibreEleccion)}
               </AccordionDetails>
             </Accordion>
           </div>
