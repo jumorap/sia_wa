@@ -19,4 +19,5 @@ export {
   getMateriasLibreEleccion,
 
   getHistoriaAcademica,
+  // gethorarioByDocumentoEstudiante
 };

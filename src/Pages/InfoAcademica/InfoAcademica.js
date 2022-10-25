@@ -188,3 +188,6 @@ const InfoAcademica = () => {
 }
 
 export default InfoAcademica
+
+
+
