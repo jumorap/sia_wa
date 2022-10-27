@@ -5,12 +5,15 @@ import Button from '@mui/material/Button';
 import { Container } from '@mui/system';
 import { DataGrid, GridCellModes } from '@mui/x-data-grid';
 import {
-  randomCreatedDate,
   randomTraderName,
-  randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 import { Typography } from '@mui/material';
-
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const styles = {
     table: {
@@ -36,6 +39,8 @@ const styles = {
 
 function EditToolbar(props) {
     const { selectedCellParams, cellMode, cellModesModel, setCellModesModel } = props;
+
+    
 
     const handleSaveOrEdit = () => {
         if (!selectedCellParams) {
@@ -82,28 +87,85 @@ function EditToolbar(props) {
             p: 1,
         }}
         >
-        <Button
-            onClick={handleSaveOrEdit}
-            onMouseDown={handleMouseDown}
-            disabled={!selectedCellParams}
-            variant="outlined"
-        >
-            {cellMode === 'edit' ? 'Save' : 'Edit'}
-        </Button>
-        <Button
-            onClick={handleCancel}
-            onMouseDown={handleMouseDown}
-            disabled={cellMode === 'view'}
-            variant="outlined"
-            sx={{ ml: 1 }}
-        >
-            Cancel
-        </Button>
+            <AddGrade></AddGrade>
+            <Button
+                onClick={handleSaveOrEdit}
+                onMouseDown={handleMouseDown}
+                disabled={!selectedCellParams}
+                variant="outlined"
+            >
+                {cellMode === 'edit' ? 'Guardar' : 'Editar'}
+            </Button>
+            <Button
+                onClick={handleCancel}
+                onMouseDown={handleMouseDown}
+                disabled={cellMode === 'view'}
+                variant="outlined"
+                sx={{ ml: 1 }}
+            >
+                Cancelar
+            </Button>
         </Box>
     );
 }
 
-const courseTable = (id_course, name, handleCellKeyDown, cellModesModel, setCellModesModel, cellMode, selectedCellParams, setSelectedCellParams, handleCellFocus) => {
+const AddGrade = () => {
+    const [open, setOpen] = React.useState(false);
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    return (
+        <>
+            <Button
+                variant="outlined"
+                sx={{ ml: 1, margin: "10px"}}
+                onClick={handleOpen}
+            >
+                Añadir
+            </Button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Nueva nota</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Ingrese los siguientes datos para la creación de una nueva nota:
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="name"
+                    label="Nombre de la nota"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                />
+                <TextField
+                    autoFocus
+                    required
+                    margin="dense"
+                    id="name"
+                    label="Porcentaje"
+                    type="email"
+                    fullWidth
+                    variant="standard"
+                />
+                </DialogContent>
+                <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose}>Subscribe</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+}
+
+const courseTable = (id_course, name, handleCellKeyDown, cellModesModel, setCellModesModel, cellMode, selectedCellParams, setSelectedCellParams, handleCellFocus, open, handleClose, handleOpen) => {
+    
     return (
         <>
             <Typography sx={[styles.header]}>{name}</Typography>
@@ -206,7 +268,7 @@ const columns = [
       def: 5
     },
     {
-      id: 2,
+      id: 3,
       name: randomTraderName(),
       grade1: 5,
       def: 5

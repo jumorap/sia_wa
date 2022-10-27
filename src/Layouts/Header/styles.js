@@ -30,7 +30,7 @@ const styles = {
                 display: 'none',
             },
         },
-    },
+    }
 }
 
 export default styles

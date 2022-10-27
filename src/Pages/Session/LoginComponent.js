@@ -1,17 +1,10 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-import Collapse from '@mui/material/Collapse';
+import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Container, Alert, IconButton, Collapse } from '@mui/material';
+import { Redirect } from "react-router-dom";
 
-import { auth } from '../../Middleware/Session/get-api';
+import { auth, auth_refresh} from '../../Middleware/Session/get-api';
+import { Loading } from "../../Components";
 
 /**
  * mui es una mierda :v solo bootstrap loks
@@ -35,12 +28,13 @@ const styles = {
         mt: 3,
         mb: 2,
         fontWeight: 'bold',
-        color: '#1F2D52',
+        color: 'var(--blueSeoul)',
         bgcolor: '#FFF',
+        border: 1,
         '&:hover': {
             border: 1,
             color: '#FFF',
-            bgcolor: '#1F2D52',
+            bgcolor: 'var(--blueSeoul)',
             marginColor: '#FFFFFF'
         }
     }
@@ -51,17 +45,44 @@ export default function Login(props) {
     const [passwordInput, setPasswordInput] = React.useState("");
     const [labesPasswordState, changeLabelSatus] = React.useState("Mostrar");
     const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(true); // set some state for loading
+    const [isUser, setUser] = React.useState(false); 
+
+    React.useEffect(() => {
+        auth_refresh({auth_token: sessionStorage.getItem('TOKEN')})
+            .then((new_token) => {
+                setLoading(false);
+                console.log(new_token);
+                if (new_token?.refreshToken?.auth_token) {
+                    sessionStorage.setItem('USER', new_token.refreshToken.nombre_usuario);
+                    sessionStorage.setItem('TOKEN', new_token.refreshToken.auth_token);
+                    setUser(true);
+                }
+            });
+    }, [])
+
+    if (loading) return <Loading />; // <-- render loading UI
+     
+    if(isUser){
+        return <Redirect to={'/info_personal'}/>
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const user = { nombre_usuario: data.get('nombre_usuario'), contrasena: data.get('password') };
-        const token = await auth(user);
-        if (token?.getToken?.auth_token) {
+        let token = await auth(user);
+
+        if (token?.getToken?.auth_token && token?.getToken?.rol) {
+            sessionStorage.setItem('USER', user.nombre_usuario);
             sessionStorage.setItem('TOKEN', token.getToken.auth_token);
+            token.getToken.rol.forEach(element => {
+                sessionStorage.setItem(element.tipo_rol, 'true');
+            });
             console.log(token.getToken);
-            //Redireccionar a otra ruta?
+            setUser(true);
         } else {
+            sessionStorage.clear();
             setOpen(true);
         }
     };
@@ -97,6 +118,7 @@ export default function Login(props) {
                         name="nombre_usuario"
                         variant='filled'
                         autoFocus
+                        error={open}
                     />
                     <TextField
                         sx={styles.textfield}
@@ -111,6 +133,7 @@ export default function Login(props) {
                         value={passwordInput}
                         onChange={handlePasswordChange}
                         autoComplete="current-password"
+                        error={open}
                     />
                     <FormControlLabel
                         sx={styles.controlLabel}
@@ -127,25 +150,25 @@ export default function Login(props) {
                         Iniciar sesión
                     </Button>
                     <Collapse in={open}>
-                    <Alert
-                        severity="error"
-                        action={
-                            <IconButton
-                                aria-label="close"
+                        <Alert
+                            severity="error"
+                            action={
+                                <IconButton
+                                    aria-label="close"
 
-                                size="small"
-                                onClick={() => {
-                                    setOpen(false);
-                                }}
-                            >
-                                <CloseIcon fontSize="inherit" />
-                            </IconButton>
-                        }
-                        sx={{ mb: 2 }}
-                    >
-                        Usuario y contraseña incorrectos
-                    </Alert>
-                </Collapse>
+                                    size="small"
+                                    onClick={() => {
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <CloseIcon fontSize="inherit" />
+                                </IconButton>
+                            }
+                            sx={{ mb: 2 }}
+                        >
+                            Usuario y contraseña incorrectos
+                        </Alert>
+                    </Collapse>
                 </Box>
             </Box>
         </Container>

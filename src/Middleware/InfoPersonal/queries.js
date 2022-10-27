@@ -1,7 +1,7 @@
 const queries = {
     user: `
         {
-          user(username: "jumorap") {
+          user(username: "test") {
             nombre_usuario
             nombre_completo
             documento_identidad
@@ -67,5 +67,41 @@ const queries = {
         }
     `,
 }
+
+export const updateUserQuery = (details) => {
+    return `
+      mutation {
+        updateUser(
+          nombre_usuario: "${details.nombre_usuario.trim()}",
+          lugar_expedicion: "${details.lugar_expedicion.trim()}",
+          email_personal: "${details.email_personal.trim()}",
+          telefono_movil: "${details.telefono_movil.trim()}",
+          eps: "${details.eps.trim()}",
+          situacion_militar: "${details.situacion_militar.trim()}",
+          vivienda: [
+              {
+                vivienda_tipo: ""
+                vivienda_direccion: ""
+                vivienda_departamento: ""
+                vivienda_codigo_postal: ""
+                vivienda_telefono: ""
+                vivienda_estrato: ""
+              },
+              {
+                vivienda_tipo: "a",
+                vivienda_direccion: "${details.vivienda_direccion.trim()}",
+                vivienda_departamento: "${details.vivienda_departamento.trim()}",
+                vivienda_codigo_postal: "${details.vivienda_codigo_postal.trim()}",
+                vivienda_telefono: "${details.vivienda_telefono.trim()}",
+                vivienda_estrato: "${details.vivienda_estrato.trim()}"
+              },
+          ]
+        ) {
+          message
+        }
+      }
+    `
+}
+
 
 export default queries

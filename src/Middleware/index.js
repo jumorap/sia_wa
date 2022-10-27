@@ -1,24 +1,25 @@
 import { getUser, updateUser } from "./InfoPersonal/get-api";
+import { updateUserQuery } from "./InfoPersonal/queries";
 import {
-  getCursosByMateria,
+  getCursosByAsignaturas,
   inscribirCurso,
-  getCursoInscrito,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
 } from "./Inscripcion/get-api";
 import { getCursos, getCurso, getSede, getFacultades } from './BuscadorCursos/get-api'
+import { getHistoriaAcademica } from "./InfoAcademica/get-api";
 
 export {
   getUser,
   updateUser,
-  getCursosByMateria,
+  updateUserQuery,
+  getCursosByAsignaturas,
   inscribirCurso,
-  getCursoInscrito,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
   getCursos,
   getCurso,
   getSede,
-  getFacultades
-
+  getFacultades,
+  getHistoriaAcademica,
 };
