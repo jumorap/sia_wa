@@ -1,11 +1,12 @@
 import { Box, Button, IconButton } from "@mui/material";
 import { minWidth } from "@mui/system";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Asignatura from "./Asignatura";
 import AutocompleteInput from "./Autocomplete";
 import SelectInput from "./SelectInput";
 import useStackChips from "./StackChips";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { getCursos, getCurso, getSede, getFacultades } from "../../Middleware";
 
 function getOptionLabelCourse(option) {
   return option.nombre_asignatura;
@@ -27,22 +28,78 @@ export default function BuscadorCursos() {
     id_sede: "",
   };
 
+  //state for the curses of the search bar
+  const [courses, setCourses] = useState([]);
+
+  //state for the Sedes of the search bar
+  const [sedes, setSedes] = useState([]);
+
+  //state for the facultades of the search bar
+  const [facultades, setFacultades] = useState([]);
+
+  //state to get the course selected by the user in the search bar
   const [selectedCourse, setSelectedCourse] = useState(initalValueCourse);
+
+  //data for the selected asignatura in the search bar
+  const [selectedCourseData, setSelectedCourseData] = useState(null);
+
   const [selectedSede, setSelectedSede] = useState(initalValueSede);
 
   const recentlyAdded = useStackChips(getOptionLabelCourse);
 
   const [openAdvancedOptions, setOpenAdvancedOptions] = useState(false);
 
+  useEffect(() => {
+    //get the inital courses to show in the search bar
+    async function getSearchCursos() {
+      getCursos().then((response) => console.log(response.asignaturas));
+    }
+    //get the initial SEDES to show in the search bar
+    async function getSearchSedes() {
+      getSede().then((response) => setSedes(response.sedes));
+    }
+    //get the initial FACULTADES to show in the search bar
+    async function getSearchFacultades() {
+      getFacultades().then((response) => console.log(response));
+    }
+
+    getSearchCursos();
+    //getSearchFacultades();
+    getSearchSedes();
+  }, []);
+
+
+
+  //when an user select a course featch its data.
+  useEffect(() => {
+    async function getDatosSelectedCurso() {
+      getCurso(selectedCourse.codigo_asignatura).then((response) =>
+        setSelectedCourseData(response.asignatura)
+      );
+    }
+    getDatosSelectedCurso();
+  }, [selectedCourse]);
+
   return (
-    <Box sx={{ m: 1 }} display={"flex"} flexDirection={"column"} gap={1}>
+    <Box
+      sx={{
+        m: 1,
+        backgroundColor: "white",
+        width: "100%",
+        minHeight: "60vh",
+        p: 1,
+      }}
+      display={"flex"}
+      flexDirection={"column"}
+      gap={1}
+    >
       <AutocompleteInput
         value={selectedCourse}
         onChange={(e, newValue) => {
           recentlyAdded.add(newValue);
           setSelectedCourse(newValue);
         }}
-        options={asignaturas}
+        options={courses}
         getOptionLabel={getOptionLabelCourse}
         label={"Buscador de cursos"}
       />
@@ -58,8 +115,10 @@ export default function BuscadorCursos() {
             getOptionValue={getOptionValueSede}
             label={"Sedes"}
             values={sedes}
-            handleChange={(e, newValue) => {
-              setSelectedSede(newValue);
+            value={selectedSede}
+            handleChange={(e) => {
+              console.log(e.target.value);
+              setSelectedSede(e.target.value)
             }}
           />
           <SelectInput
@@ -79,7 +138,7 @@ export default function BuscadorCursos() {
               setSelectedCourse(newValue);
             }}
             style={{ width: 300 }}
-            options={asignaturas}
+            options={facultades}
             getOptionLabel={getOptionLabelCourse}
             label={"Facultad"}
           />
@@ -90,7 +149,7 @@ export default function BuscadorCursos() {
               setSelectedCourse(newValue);
             }}
             style={{ width: 300 }}
-            options={asignaturas}
+            options={[]}
             getOptionLabel={getOptionLabelCourse}
             label={"Programa"}
           />
@@ -105,52 +164,13 @@ export default function BuscadorCursos() {
         <MoreHorizIcon fontSize="small" />
       </IconButton>
       {recentlyAdded.component}
-      <Asignatura asignatura={Asignatura1} />
+      <Asignatura asignatura={selectedCourseData} />
     </Box>
   );
 }
 
-const Asignatura1 = {
-  codigo_asignatura: "A001",
-  nombre_asignatura: "Ingenieria de software",
-  creditos: "3",
-  descripcion: "lorem30",
-  tipo: {
-    id_tipologia: "001",
-    nombre_tipologia: "Libre eleccion",
-  },
-};
 
-const sedes = [
-  {
-    id_sede: "1",
-    nombre_sede: "Bogota",
-  },
-  {
-    id_sede: "2",
-    nombre_sede: "Palmira",
-  },
-  {
-    id_sede: "3",
-    nombre_sede: "Medellin",
-  },
-];
 
-const asignaturas = [
-  {
-    nombre_asignatura: "matematicas",
-    codigo_asignatura: "101",
-  },
-  {
-    nombre_asignatura: "matematicas II",
-    codigo_asignatura: "102",
-  },
-  {
-    nombre_asignatura: "Calculo",
-    codigo_asignatura: "103",
-  },
-  {
-    nombre_asignatura: "Calculo integral",
-    codigo_asignatura: "104",
-  },
-];
+
+
+

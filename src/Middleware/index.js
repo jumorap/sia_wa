@@ -6,6 +6,7 @@ import {
   getMateriasByPrograma,
   getMateriasLibreEleccion,
 } from "./Inscripcion/get-api";
+import { getCursos, getCurso, getSede, getFacultades } from './BuscadorCursos/get-api'
 
 export {
   getUser,
@@ -15,4 +16,9 @@ export {
   getCursoInscrito,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
+  getCursos,
+  getCurso,
+  getSede,
+  getFacultades
+
 };

@@ -1,14 +1,14 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import React from 'react'
 
-export default function SelectInput({label, values, handleChange, getOptionValue, getOptionLabel, minWidth = 120}) {
+export default function SelectInput({label, values,value, handleChange, getOptionValue, getOptionLabel, minWidth = 120}) {
   return (
     <FormControl sx = {{minWidth:minWidth  }}>
         <InputLabel id="demo-simple-select-label">{label}</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={""}
+          value={value}
           label={label}
           onChange={handleChange}
         >
