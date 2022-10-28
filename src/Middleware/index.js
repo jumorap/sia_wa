@@ -5,6 +5,7 @@ import {
   inscribirCurso,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
+  getCursosInscritos,
 } from "./Inscripcion/get-api";
 import { getCursos, getCurso, getSede, getFacultades } from './BuscadorCursos/get-api'
 import { getHistoriaAcademica } from "./InfoAcademica/get-api";
@@ -21,5 +22,6 @@ export {
   getCurso,
   getSede,
   getFacultades,
+  getCursosInscritos,
   getHistoriaAcademica,
 };

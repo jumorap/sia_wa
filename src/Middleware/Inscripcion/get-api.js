@@ -2,20 +2,26 @@ import apiUrl from "../api-url";
 import queryAsset from "../queryAsset";
 import {
   queryCursosByCodigoAsignatura,
+  queryHorarioByDocumentoEstudiante,
+  queryInscribirEstudiante,
   queryMateriasByPrograma,
 } from "./queries";
 
 export const getCursosByAsignaturas = async (asignaturas) => {
   console.log("getCursosByAsignaturas: ", asignaturas);
 
-  return Promise.all(asignaturas.map(async (materia) => {
-    return queryAsset(queryCursosByCodigoAsignatura(materia.codigo_asignatura), apiUrl.Inscripciones.get)
-      .then((response) => {
+  return Promise.all(
+    asignaturas.map(async (materia) => {
+      return queryAsset(
+        queryCursosByCodigoAsignatura(materia.codigo_asignatura),
+        apiUrl.Inscripciones.get
+      ).then((response) => {
         for (const element of response.cursosByCodigoAsignatura) {
           return element;
         }
-      })
-  }))
+      });
+    })
+  );
 
   // return [
   //   {
@@ -72,8 +78,18 @@ export const getCursosByAsignaturas = async (asignaturas) => {
   // ];
 };
 
-export const inscribirCurso = async () => {
-  // return queryAsset(queries.inscribir, apiUrl.Inscripciones.get);
+export const inscribirCurso = async (id_curso, documento_estudiante) => {
+  return queryAsset(
+    queryInscribirEstudiante({ id_curso, documento_estudiante }),
+    apiUrl.Inscripciones.get
+  );
+};
+
+export const getCursosInscritos = async (documento_estudiante) => {
+  return queryAsset(
+    queryHorarioByDocumentoEstudiante({ documento_estudiante }),
+    apiUrl.Inscripciones.get
+  );
 };
 
 export const getMateriasByPrograma = async (id_programa) => {
