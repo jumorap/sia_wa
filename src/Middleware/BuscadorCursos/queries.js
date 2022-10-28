@@ -16,6 +16,20 @@ const queries = {
         nombre_asignatura
         creditos
         descripcion
+        cursos{
+          grupo
+          horarios{
+            dia
+            hora_inicio
+            hora_fin
+            salon
+            documento_profesor
+            profesor{
+              nombre_completo
+            }
+            tipo
+          }
+        }
       }
     }
     `,

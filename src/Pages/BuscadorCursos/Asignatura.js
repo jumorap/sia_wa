@@ -1,11 +1,14 @@
 import { Paper, Typography } from "@mui/material";
 import React from "react";
+import Curso from "./Curso";
 
 export default function Asignatura({ asignatura }) {
 
   if (!asignatura) {
     return null;
   }
+
+  console.log(asignatura);
 
   return (
     <Paper elevation={2} sx = {{p:1}}>
@@ -24,6 +27,11 @@ export default function Asignatura({ asignatura }) {
       {/* <Typography variant="h2" sx = {{fontSize: "1rem"}}>
         {asignatura.tipo.nombre_tipologia}
       </Typography> */}
+      {
+        asignatura.cursos.map((curso) => (
+          <Curso curso = {curso}/>
+        ))
+      }
     </Paper>
   );
 }
