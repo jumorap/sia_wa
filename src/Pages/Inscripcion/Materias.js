@@ -28,8 +28,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box } from "@mui/system";
 import { TitleCard, SubtitleCard } from "./components";
 import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
-const user = "JohanTest007";
+const user = "JohanTest011";
 const cursosYaInscritos = [];
 const materiasYaInscritas = [];
 export const Materias = () => {
@@ -231,20 +232,21 @@ export const Materias = () => {
                 ¿Está seguro que desea inscribir las materias seleccionadas?
               </Typography>
               <div sx={{ position: "absolute", left: "50%", top: "50%" }}>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    handleClose();
-                    colaDeCursos.forEach((curso) => {
-                      inscribirCurso(curso, user);
-                      removeCursoDeCola(curso, setCursos);
-                    });
-                    <Redirect to="/" />;
-                  }}
-                  sx={{ backgroundColor: "var(--blueSeoul)", mt: 2, mr: 1 }}
-                >
-                  aceptar
-                </Button>
+                <Link to={"/info_academica"}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      handleClose();
+                      colaDeCursos.forEach((curso) => {
+                        inscribirCurso(curso, user);
+                        removeCursoDeCola(curso, setCursos);
+                      });
+                    }}
+                    sx={{ backgroundColor: "var(--blueSeoul)", mt: 2, mr: 1 }}
+                  >
+                    aceptar
+                  </Button>
+                </Link>
                 <Button
                   variant="contained"
                   color="error"

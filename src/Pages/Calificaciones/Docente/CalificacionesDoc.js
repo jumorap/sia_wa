@@ -1,278 +1,283 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import React , { useState, useEffect, useRef } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { Button } from '@mui/material';
 import { Container } from '@mui/system';
-import { DataGrid, GridCellModes } from '@mui/x-data-grid';
-import {
-  randomTraderName,
-} from '@mui/x-data-grid-generator';
-import { Typography } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import styles from "./styles";
+import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import { createGrades, getGrades, updateGrades, getStudents, docAsignatures, listStudents } from "../../../Middleware/Calificaciones/get-api";
+import { createGradesQuery, getFormatStudents, getGradesQuery, updateGradesQuery } from '../../../Middleware/Calificaciones/queries';
 
-const styles = {
-    table: {
-        height: 500,
-        width: '100%',
-        background: "white",
-        borderRadius: "5px"
-    },
-
-    header: {
-        fontWeight: "bold",
-        color: "rgba(31, 45, 82)",
-        paddingLeft: "10px",
-    },
-
-    subheader: {
-        color: "rgba(31, 45, 82, 0.8)",
-        fontSize: "15px",
-        paddingBottom: "10px",
-        paddingLeft: "10px",
-    }
-}
-
-function EditToolbar(props) {
-    const { selectedCellParams, cellMode, cellModesModel, setCellModesModel } = props;
-
-    
-
-    const handleSaveOrEdit = () => {
-        if (!selectedCellParams) {
-        return;
-        }
-        const { id, field } = selectedCellParams;
-        if (cellMode === 'edit') {
-        setCellModesModel({
-            ...cellModesModel,
-            [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.View } },
-        });
-        } else {
-            setCellModesModel({
-                ...cellModesModel,
-                [id]: { ...cellModesModel[id], [field]: { mode: GridCellModes.Edit } },
-            });
-        }
-    };
-
-    const handleCancel = () => {
-        if (!selectedCellParams) {
-            return;
-        }
-        const { id, field } = selectedCellParams;
-        setCellModesModel({
-            ...cellModesModel,
-            [id]: {
-                ...cellModesModel[id],
-                [field]: { mode: GridCellModes.View, ignoreModifications: true },
-            },
-            });
-        };
-
-    const handleMouseDown = (event) => {
-        // Keep the focus in the cell
-        event.preventDefault();
-    };
-
-    return (
-        <Box
-        sx={{
-            borderBottom: 1,
-            borderColor: 'divider',
-            p: 1,
-        }}
-        >
-            <AddGrade></AddGrade>
-            <Button
-                onClick={handleSaveOrEdit}
-                onMouseDown={handleMouseDown}
-                disabled={!selectedCellParams}
-                variant="outlined"
-            >
-                {cellMode === 'edit' ? 'Guardar' : 'Editar'}
-            </Button>
-            <Button
-                onClick={handleCancel}
-                onMouseDown={handleMouseDown}
-                disabled={cellMode === 'view'}
-                variant="outlined"
-                sx={{ ml: 1 }}
-            >
-                Cancelar
-            </Button>
-        </Box>
-    );
-}
-
-const AddGrade = () => {
-    const [open, setOpen] = React.useState(false);
-  
-    const handleClose = () => {
-      setOpen(false);
-    };
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    return (
-        <>
-            <Button
-                variant="outlined"
-                sx={{ ml: 1, margin: "10px"}}
-                onClick={handleOpen}
-            >
-                Añadir
-            </Button>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Nueva nota</DialogTitle>
-                <DialogContent>
-                <DialogContentText>
-                    Ingrese los siguientes datos para la creación de una nueva nota:
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="name"
-                    label="Nombre de la nota"
-                    type="email"
-                    fullWidth
-                    variant="standard"
-                />
-                <TextField
-                    autoFocus
-                    required
-                    margin="dense"
-                    id="name"
-                    label="Porcentaje"
-                    type="email"
-                    fullWidth
-                    variant="standard"
-                />
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleClose}>Subscribe</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
-}
-
-const courseTable = (id_course, name, handleCellKeyDown, cellModesModel, setCellModesModel, cellMode, selectedCellParams, setSelectedCellParams, handleCellFocus, open, handleClose, handleOpen) => {
-    
-    return (
-        <>
-            <Typography sx={[styles.header]}>{name}</Typography>
-            <Typography sx={[styles.subheader]}>{"Código: " + id_course}</Typography>
-            <div style={styles.table}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    onCellKeyDown={handleCellKeyDown}
-                    cellModesModel={cellModesModel}
-                    onCellModesModelChange={(model) => setCellModesModel(model)}
-                    components={{
-                    Toolbar: EditToolbar,
-                    }}
-                    componentsProps={{
-                    toolbar: {
-                        cellMode,
-                        selectedCellParams,
-                        setSelectedCellParams,
-                        cellModesModel,
-                        setCellModesModel,
-                    },
-                    cell: {
-                        onFocus: handleCellFocus,
-                    },
-                    }}
-                    experimentalFeatures={{ newEditingApi: true }}
-                />
-            </div>
-        </>
-    );
-}
-
-EditToolbar.propTypes = {
-  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
-  cellModesModel: PropTypes.object.isRequired,
-  selectedCellParams: PropTypes.shape({
-    field: PropTypes.string.isRequired,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  }),
-  setCellModesModel: PropTypes.func.isRequired,
-};
 
 function CalificacionesDoc() {
-    const [data, setData] = useState(null);
-    const [selectedCellParams, setSelectedCellParams] = React.useState(null);
-    const [cellModesModel, setCellModesModel] = React.useState({});
+  const [data, setData] = useState(null);
+  const [students, setStudents] = useState(null);
+  const [asignature, setAsignature] = React.useState('');
+  const [asignatureArray, setAsignatureArray] = React.useState(null);
+  const valueName = useRef('');
+  const valuePer = useRef('');
+  const [open, setOpen] = React.useState(false);
+  const [confirmation, setConfirmation] = React.useState(false);
+  const [alertOpen, setAlertOpen] = React.useState(false);
 
-    const handleCellFocus = React.useCallback((event) => {
-        const row = event.currentTarget.parentElement;
-        const id = row.dataset.id;
-        const field = event.currentTarget.dataset.field;
-        setSelectedCellParams({ id, field });
-    }, []);
+  useEffect (() => {
+    if (!asignatureArray) docAsignatures().then((response) => {
+      setAsignatureArray(response)
+    })
+  }, [asignatureArray])
 
-    const cellMode = React.useMemo(() => {
-        if (!selectedCellParams) {
-        return 'view';
-        }
-        const { id, field } = selectedCellParams;
-        return cellModesModel[id]?.[field]?.mode || 'view';
-    }, [cellModesModel, selectedCellParams]);
+  const handleSave = () => {
+    let dict = {}
+    let saveData = {
+      id: data[data.length -1].id+100,
+      id_course: data[data.length -1].id_course,
+      name: valueName.current.value,
+      percentage: valuePer.current.value/100,
+      grades: ""
+    }
 
-    const handleCellKeyDown = React.useCallback(
-        (params, event) => {
-        if (cellMode === 'edit') {
-            // Prevents calling event.preventDefault() if Tab is pressed on a cell in edit mode
-            event.defaultMuiPrevented = true;
-        }
-        },
-        [cellMode],
-    );
+    students.map((grade) => {
+      dict[grade.id_student] = 0
+    })
 
-    return (
-        <Container sx={{padding: '20px', background: "var(--reallySoftGray)"}}>
-            {courseTable("2", "ARQUITECTURA DE SOFTWARE", handleCellKeyDown, cellModesModel, setCellModesModel, cellMode, selectedCellParams, setSelectedCellParams, handleCellFocus)}
-        </Container>
+    saveData['grades'] = JSON.stringify(dict)
+    saveData['grades'] = saveData['grades'] .replace(/"/g,"'");
     
+  
+    const query = createGradesQuery(saveData)
+    const getD = getGradesQuery(data[data.length -1].id_course)
+    const getS = getFormatStudents(data[data.length -1].id_course)
+
+    createGrades(query)
+      .then(() => setOpen(false))
+      .then(() => setConfirmation(true))
+      .then(() => getGrades(getD).then((response) => setData(response.listGrades)))
+      .then(() => getStudents(getS).then((response) => setStudents(response.formatStudents)))
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+      setOpen(true);
+  };
+
+  const handleConfClose = () => {
+    setConfirmation(false);
+  };
+  const handleChange = (event) => {
+    setAsignature(event.target.value);
+
+    const query1 = getGradesQuery(event.target.value)
+    const query2 = getFormatStudents(event.target.value)
+    getGrades(query1).then((response) => setData(response.listGrades))
+    getStudents(query2).then((response) => setStudents(response.formatStudents))
+
+  };
+
+  const handleCellEditCommit = React.useCallback(
+    ({ id, field, value }) => {
+      const updatedRows = students
+
+      updatedRows[id]['grades'][field][1] = parseInt(value)
+
+      let dict = {}
+      let saveData = {
+        id: data?.find( record => record.name === field).id,
+        id_course: data[data.length -1].id_course,
+        name: field,
+        percentage: data?.find( record => record.name === field).percentage,
+        grades: ""
+      }
+
+      updatedRows.map((grade) => {
+        dict[grade.id_student] = grade['grades'][field][1]
+      })
+
+      saveData['grades'] = JSON.stringify(dict)
+      saveData['grades'] = saveData['grades'] .replace(/"/g,"'");
+
+      const query = updateGradesQuery(saveData)
+
+      updateGrades(query)
+        .then(() => setStudents(updatedRows))
+        .then(() => setAlertOpen(true))
+    },
+    [students],
+  );
+
+  return (
+    <Container sx={{padding: '20px', background: "var(--reallySoftGray)"}}>
+      
+      <div sx={{background: 'white'}}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Asignatura</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={asignature}
+            label="Asignatura"
+            onChange={handleChange}
+            sx={{background: 'white'}}
+          >
+            {
+              asignatureArray?.map((asig) => {
+                return (
+                  <MenuItem value={asig.id_curso}>{asig.nameCourse+' | '+asig.id_curso}</MenuItem>
+                )
+              })
+            }
+          </Select>
+        </FormControl>
+      </div>
+      <div sx={{}}>
+        <Button
+              variant="outlined"
+              sx={[styles.button]}
+              onClick={handleOpen}
+          >
+              Añadir Calificación
+          </Button>
+          <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Nueva nota</DialogTitle>
+              <DialogContent>
+              <DialogContentText>
+                  Ingrese los siguientes datos para la creación de una nueva nota:
+              </DialogContentText>
+              <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="name"
+                  label="Nombre de la nota"
+                  fullWidth
+                  variant="outlined"
+                  inputRef={valueName}
+              />
+              <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="name"
+                  label="Porcentaje (e.j.: 30.5)"
+                  type="number"
+                  fullWidth
+                  variant="outlined"
+                  inputRef={valuePer}
+              />
+              </DialogContent>
+              <DialogActions>
+              <Button onClick={handleClose}>Cancelar</Button>
+              <Button onClick={handleSave}>Añadir</Button>
+              </DialogActions>
+          </Dialog>
+          <Dialog
+            open={confirmation}
+            onClose={handleConfClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Se ha guardado correctamente la información"}
+            </DialogTitle>
+            <DialogActions>
+              <Button onClick={handleConfClose}>Aceptar</Button>
+            </DialogActions>
+          </Dialog>
+      </div>
+      <div style={styles.table}>
+          <DataGrid
+            rows={formatRows(students)}
+            columns={formatColumn(data)}
+            onCellEditCommit={handleCellEditCommit}
+          />
+      </div>
+      <Collapse in={alertOpen}>
+        <Alert
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setAlertOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+          sx={{ mb: 2 }}
+        >
+          Se ha guardado correctamente la información.
+        </Alert>
+      </Collapse>
+    </Container>
   );
 }
 
-const columns = [
-    { field: 'id', headerName: 'Usuario', width: 180, editable: false },
-    { field: 'name', headerName: 'Nombres y Apellidos', width: 200, editable: false },
-    { field: 'grade1', headerName: 'Nota 1', editable: true},
-    { field: 'def', headerName: 'Definitiva', editable: true},
-  ];
-  
-  const rows = [
-    {
-      id: 1,
-      name: randomTraderName(),
-      grade1: 4.5,
-      def: 4.5
-    },
-    {
-      id: 2,
-      name: randomTraderName(),
-      grade1: 5,
-      def: 5
-    },
-    {
-      id: 3,
-      name: randomTraderName(),
-      grade1: 5,
-      def: 5
-    },
-  ];
+/**
+ * 
+ * Function that gets the information from grades and creates a JSON to fill the columns of the table
+ */
+ function formatColumn(data) {
+  let cols = [
+      //{ field: 'id', headerName: 'Usuario', width: 180, editable: false },
+      { field: 'name', headerName: 'Estudiante', width: 200, editable: false }
+  ]
 
-  export default CalificacionesDoc;
+  if (data) {
+      data.map((element) => {
+          cols.push({field: element.name, headerName: element.name+' ('+element.percentage*100+'%)', editable: true, width: 150})
+      })
+  }
+
+  cols.push({ field: 'Definitiva', headerName: 'Definitiva', editable: false})
+  return cols
+}
+
+/**
+* 
+* Function that gets the information from students and creates a JSON to fill the rows of the table
+*/
+function formatRows(students) {
+  let rows = []
+  let count = 0
+  if (students) {
+      students.map((student) => {
+        let def = 0
+          if (typeof student.grades === 'string') {
+            let gradesdata = student.grades;
+            var dict = JSON.parse(gradesdata.replace(/'/g,'"'));
+            student.grades = dict;
+          }
+          let std = {id: count, name: student['id_student']}
+          Object.keys(student['grades']).map((element) => {
+              std[element] = student['grades'][element][1]
+              def += student['grades'][element][1]*student['grades'][element][0]
+          })
+          count += 1;
+
+          std['Definitiva'] = def
+          rows.push(std)
+      })
+  }
+  else {
+
+  }
+  return rows
+}
+
+export default CalificacionesDoc;
