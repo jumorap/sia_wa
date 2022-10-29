@@ -1,4 +1,4 @@
-import { Box, Button, IconButton } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { minWidth } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import Asignatura from "./Asignatura";
@@ -8,6 +8,7 @@ import useStackChips from "./StackChips";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { getCursos, getCurso, getSede, getFacultades } from "../../Middleware";
 import SearchBarCourses from "./SearchBarCourses";
+import BuscadorAvanzado from "./BuscadorAvanzado";
 
 function getOptionLabelCourse(option) {
   return option.nombre_asignatura;
@@ -37,9 +38,14 @@ export default function BuscadorCursos() {
   //data for the selected asignatura in the search bar
   const [selectedCourseData, setSelectedCourseData] = useState(null);
 
+  //state for the list of curses to show
+  const [cursosList, setCursosList] = useState([]);
+
   const [selectedSede, setSelectedSede] = useState(initalValueSede);
 
-  const recentlyAdded = useStackChips(getOptionLabelCourse, (e)=>{setSelectedCourse(e)});
+  const recentlyAdded = useStackChips(getOptionLabelCourse, (e) => {
+    setSelectedCourse(e);
+  });
 
   const [openAdvancedOptions, setOpenAdvancedOptions] = useState(false);
 
@@ -61,8 +67,7 @@ export default function BuscadorCursos() {
   useEffect(() => {
     async function getDatosSelectedCurso() {
       getCurso(selectedCourse.codigo_asignatura).then((response) => {
-        console.log(response);
-        setSelectedCourseData(response.asignatura);
+        setCursosList([response?.asignatura]);
       });
     }
     getDatosSelectedCurso();
@@ -73,7 +78,6 @@ export default function BuscadorCursos() {
       sx={{
         m: 1,
         backgroundColor: "white",
-        width: "100%",
         minHeight: "60vh",
         p: 1,
       }}
@@ -89,56 +93,12 @@ export default function BuscadorCursos() {
       />
 
       {openAdvancedOptions && (
-        <Box
-          display={"flex"}
-          justifyContent={"flex-start"}
-          alignItems={"center"}
-          gap={1}
-        >
-          <SelectInput
-            getOptionLabel={getOptionLabelSede}
-            getOptionValue={getOptionValueSede}
-            label={"Sedes"}
-            values={sedes}
-            value={selectedSede}
-            handleChange={(e) => {
-              console.log(e.target.value);
-              setSelectedSede(e.target.value);
-            }}
-          />
-          <SelectInput
-            getOptionLabel={getOptionLabelSede}
-            getOptionValue={getOptionValueSede}
-            label={"Tipo de grado"}
-            values={sedes}
-            handleChange={(e, newValue) => {
-              setSelectedSede(newValue);
-            }}
-            minWidth={240}
-          />
-          <AutocompleteInput
-            value={selectedCourse}
-            onChange={(e, newValue) => {
-              recentlyAdded.add(newValue);
-              setSelectedCourse(newValue);
-            }}
-            style={{ width: 300 }}
-            options={facultades}
-            getOptionLabel={getOptionLabelCourse}
-            label={"Facultad"}
-          />
-          <AutocompleteInput
-            value={selectedCourse}
-            onChange={(e, newValue) => {
-              recentlyAdded.add(newValue);
-              setSelectedCourse(newValue);
-            }}
-            style={{ width: 300 }}
-            options={[]}
-            getOptionLabel={getOptionLabelCourse}
-            label={"Programa"}
-          />
-        </Box>
+        <>
+          <Typography variant="subtitle1" sx={{ fontSize: "0.8rem", color: "gray" }} textAlign = "center">
+            Buscador avanzado
+          </Typography>
+          <BuscadorAvanzado setCursos = {setCursosList}/>
+        </>
       )}
 
       <IconButton
@@ -151,6 +111,11 @@ export default function BuscadorCursos() {
       </IconButton>
       {recentlyAdded.component}
       <Asignatura asignatura={selectedCourseData} />
+      {
+        cursosList.map((curso) => (
+          <Asignatura asignatura={curso} />
+        ))
+      }
     </Box>
   );
 }

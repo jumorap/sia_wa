@@ -21,7 +21,7 @@ const Inscripciones = () => {
       <Grid item xs={12}>
         <div style={styles.container}>
           <div style={styles.cardsContainer}>
-            {/* <Materias /> */}
+            <Materias /> 
             <MateriasNew/>
           </div>
         </div>

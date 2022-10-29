@@ -1,7 +1,7 @@
 import { Autocomplete, TextField } from "@mui/material";
 import React from "react";
 
-export default function AutocompleteInput({value, onChange, options, getOptionLabel, label, style}) {
+export default function AutocompleteInput({value, onChange, options, getOptionLabel, label, styles, disabled}) {
   return (
     <Autocomplete
       freeSolo
@@ -11,7 +11,8 @@ export default function AutocompleteInput({value, onChange, options, getOptionLa
       disableClearable
       options={options}
       getOptionLabel={getOptionLabel}
-      sx = {style}
+      sx = {styles}
+      disabled = {disabled}
       renderInput={(params) => (
         <TextField
           {...params}

@@ -13,10 +13,22 @@ export const getCurso = async (codigo_asignatura) => {
 }
 
 export const getSede = async () => {
-    return queryAsset(queries.sede(), apiUrl.BuscadorCursos.get)
+    const data = await queryAsset(queries.sede(), apiUrl.BuscadorCursos.get)
+    return data.sedes
 }
 
 export const getFacultades = async () => {
-    return queryAsset(queries.facultades(), apiUrl.BuscadorCursos.get)
+    const data =  await queryAsset(queries.facultades(), apiUrl.BuscadorCursos.get)
+    return data.facultades
+}
+
+export const getProgramas = async () => {
+    const data =  await queryAsset(queries.programas(), apiUrl.BuscadorCursos.get)
+    return data.programas
+}
+
+export const getCursosCompletos = async () => {
+    const data =  await queryAsset(queries.cursos_completos(), apiUrl.BuscadorCursos.get)
+    return data.asignaturas
 }
 
