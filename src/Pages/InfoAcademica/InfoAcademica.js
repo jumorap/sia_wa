@@ -133,7 +133,7 @@ useEffect(() => {
 
   console.log(data)
 
-  let historiaAcademica = getData()
+  let historiaAcademica = data.history
 
     return (
     <>
