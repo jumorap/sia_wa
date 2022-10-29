@@ -133,14 +133,12 @@ useEffect(() => {
 
   console.log(data)
 
-  console.log(data.history)
+  //console.log(data.history)
 
-  let historiaAcademica
+  let historiaAcademica = getData()
 
-  if(data == null){
+  if(data){
     historiaAcademica = data
-  }else{
-    historiaAcademica = getData()
   }
 
     return (
