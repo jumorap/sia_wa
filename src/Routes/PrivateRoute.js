@@ -8,8 +8,8 @@ import styles from "./styles";
 import { Button } from "@mui/material";
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
-  const [loading, setLoading] = useState(true); // set some state for loading
-  const [isUser, setUser] = useState(false);
+  const [loading, setLoading] = useState(false); // set some state for loading
+  const [isUser, setUser] = useState(true);
 
   useEffect(() => {
     auth_refresh({ auth_token: sessionStorage.getItem("TOKEN") }).then(

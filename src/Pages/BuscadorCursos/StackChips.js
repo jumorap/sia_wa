@@ -3,9 +3,9 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import useArray from '../../Components/Utils/useArray';
 
-export default function useStackChips(getOptionLabel) {
-  const handleClick = () => {
-    console.info('You clicked the Chip.');
+export default function useStackChips(getOptionLabel, onClick) {
+  const handleClick = (e) => {
+    onClick(e);
   };
 
 
@@ -18,7 +18,7 @@ export default function useStackChips(getOptionLabel) {
           <Chip
             label={getOptionLabel(e)}
             variant="outlined"
-            onClick={handleClick}
+            onClick={()=>handleClick(e)}
             onDelete={()=>elementList.pop(i)}
             key = {i}
           />
