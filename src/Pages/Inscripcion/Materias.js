@@ -161,17 +161,6 @@ export const Materias = () => {
 
   return (
     <Grid item xs={12} sx={{ padding: "20px" }}>
-      <div>
-        <Button
-          variant="contained"
-          sx={styles.button}
-          onClick={() => {
-            forceUpdate();
-          }}
-        >
-          Refrescar
-        </Button>
-      </div>
       <Card sx={[styles.cards, { width: "100%" }]}>
         <CardContent>
           <div>
