@@ -18,7 +18,7 @@ const styles = {
     },
     contentBar: {
         '& a': {
-            width: '20vw',
+            width: '12.2vw',
             display: 'inline-block',
         },
         '& .logoType': {

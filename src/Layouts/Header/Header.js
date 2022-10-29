@@ -21,7 +21,6 @@ const Header = () => {//Missing to hide elements when session is no active
                         <Link to={"/inscripciones"}>INSCRIPCIONES</Link>
                         <Link to={"/buscador_cursos"}>BUSCADOR DE CURSOS</Link>
                         <Link to={"/mis_calificaciones"}>MIS CALIFICACIONES</Link>
-                        <Link to={"/ingreso_calificaciones"}>INGRESO CALIFICACIONES</Link>
                     </Box>
                 </center>
             </AppBar>
