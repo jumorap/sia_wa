@@ -7,7 +7,7 @@ import styles from "./styles";
 import { getHistoriaAcademica } from "../../Middleware";
 
 // simple request to API
-// if (!data) getUser().then((response) => setData(response.user))
+
 
 const globalPrograma = "Ingeniería de Sistemas y Computación"
 const globalFacultad = "Ingeniería"
@@ -92,6 +92,8 @@ const formatData = (data) => {
   return JSON.parse(data);
 }
 
+
+
 const cards = (asignatura) => {
   // let fgrades = formatData(grades);
   // let names = Object.keys(fgrades);
@@ -119,13 +121,17 @@ const cards = (asignatura) => {
   );
 }
 
-
+const [data, setData] = useState(null)
+useEffect(() => {
+  // Make a single request to the API
+  if (!data) getHistoriaAcademica().then((response) => setData(response.user))
+}, [data])
 
 const InfoAcademica = () => {
 
-  console.log(getHistoriaAcademica)
+  console.log(data)
 
-  let historiaAcademica = getData()
+  let historiaAcademica = data
 
     return (
     <>
@@ -188,3 +194,6 @@ const InfoAcademica = () => {
 }
 
 export default InfoAcademica
+
+
+
