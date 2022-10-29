@@ -121,13 +121,15 @@ const cards = (asignatura) => {
   );
 }
 
+
+const InfoAcademica = () => {
+
+  
 const [data, setData] = useState(null)
 useEffect(() => {
   // Make a single request to the API
   if (!data) getHistoriaAcademica().then((response) => setData(response.user))
 }, [data])
-
-const InfoAcademica = () => {
 
   console.log(data)
 
