@@ -94,7 +94,7 @@ const formatData = (data) => {
 
 
 
-const cards = (_) => {
+const cards = (asignatura) => {
   // let fgrades = formatData(grades);
   // let names = Object.keys(fgrades);
 
