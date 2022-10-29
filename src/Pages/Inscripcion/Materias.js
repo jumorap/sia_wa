@@ -30,7 +30,7 @@ import { TitleCard, SubtitleCard } from "./components";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
-const user = "JohanTest011";
+const user = "juan";
 const cursosYaInscritos = [];
 const materiasYaInscritas = [];
 export const Materias = () => {
@@ -39,24 +39,29 @@ export const Materias = () => {
   const [cursos, setCursos] = useState(null);
   const [open, setOpen] = useState(false);
 
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+
   useEffect(() => {
     console.log("materias");
     if (!materias)
-      getMateriasByPrograma(["5"]).then((data) =>
-        setMaterias(data?.asignaturasInscribibles)
-      );
-
-    if (!cursos && materias) {
-      console.log(materias, cursos);
-      getCursosByAsignaturas(materias).then((data) => {
-        console.log("cursos", data);
-        setCursos(data);
+      getMateriasByPrograma(["5"]).then((data) => {
+        setMaterias(data?.asignaturasInscribibles);
+        const newCursos = [];
+        data?.asignaturasInscribibles.forEach((materia) => {
+          materia.cursos?.forEach((curso) => {
+            newCursos.push(curso);
+          });
+        });
+        setCursos(newCursos);
+        console.log("materias final", data?.asignaturasInscribibles);
       });
-    }
   });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  console.log("Materias: ", materias);
+  console.log("Cursos: ", cursos);
 
   getCursosYMateriasInscritas(user).then((data) => {
     data.forEach((c) => {
