@@ -15,10 +15,12 @@ const Header = () => {//Missing to hide elements when session is no active
                 <center>
                     <Box sx={styles.contentBar}>
                         <Link to={"/info_personal"}>INFORMACIÓN PERSONAL</Link>
+                        <Link to={"/horario"}>MI HORARIO</Link>
                         <Link to={"/info_academica"}>INFORMACIÓN ACADÉMICA</Link>
                         <Link to={"/"} className={"logoType"}><img src={escudo} alt="Logo" style={styles.logo} /></Link>
                         <Link to={"/inscripciones"}>INSCRIPCIONES</Link>
                         <Link to={"/buscador_cursos"}>BUSCADOR DE CURSOS</Link>
+                        <Link to={"/mis_calificaciones"}>MIS CALIFICACIONES</Link>
                     </Box>
                 </center>
             </AppBar>

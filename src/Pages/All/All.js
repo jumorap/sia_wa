@@ -4,7 +4,7 @@ import { General } from "../../Components";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { PrivateRoute } from "../../Routes";
 import { Footer } from "../../Layouts";
-import { InfoPersonal, InfoAcademica, Login, Inscripciones, CalificacionesEst, CalificacionesDoc, BuscadorCursos, Error404 } from "../../Pages";
+import { InfoPersonal, InfoAcademica, Horario, Login, Inscripciones, CalificacionesEst, CalificacionesDoc, BuscadorCursos, Error404 } from "../../Pages";
 import styles from "./styles"
 
 
@@ -23,6 +23,7 @@ const All = () => {
                         <PrivateRoute path="/ingreso_calificaciones" component={ CalificacionesDoc }/>
                         <PrivateRoute path="/buscador_cursos" component={ BuscadorCursos }/>
                         <PrivateRoute path="/info_academica" component={ InfoAcademica} />
+                        <PrivateRoute path="/horario" component={ Horario} />
                         <Route path="/*" component={ Error404 }></Route>
                     </Switch>
                 </Box>

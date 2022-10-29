@@ -25,8 +25,8 @@ import {
 } from "../../Middleware";
 import styles from "./styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { titleCard, SubtitleCard } from "./Inscripciones";
 import { Box } from "@mui/system";
+import { TitleCard, SubtitleCard } from "./components";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -175,7 +175,7 @@ export const Materias = () => {
       <Card sx={[styles.cards, { width: "100%" }]}>
         <CardContent>
           <div>
-            <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
+            <div>{TitleCard(FaBookOpen, "Materias Disponibles")}</div>
 
             <div sx={{ textAlign: "right" }}>
               <p />

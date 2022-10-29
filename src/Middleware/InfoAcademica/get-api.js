@@ -3,6 +3,6 @@ import queryAsset from "../queryAsset"
 import queries from "./queries"
 
 
-export const getHistoriaAcademica = async () => {
-    return queryAsset(queries.history, apiUrl.InfoAcademica.get)
+export const getHistoriaAcademica = async (id_student) => {
+    return queryAsset(queries(id_student), apiUrl.InfoAcademica.get)
 }
