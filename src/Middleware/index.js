@@ -1,7 +1,6 @@
 import { getUser, updateUser } from "./InfoPersonal/get-api";
 import { updateUserQuery } from "./InfoPersonal/queries";
 import {
-  getCursosByAsignaturas,
   inscribirCurso,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
@@ -13,7 +12,6 @@ export {
   getUser,
   updateUser,
   updateUserQuery,
-  getCursosByAsignaturas,
   inscribirCurso,
   getMateriasByPrograma,
   getMateriasLibreEleccion,
