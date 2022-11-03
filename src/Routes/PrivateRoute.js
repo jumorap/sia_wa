@@ -9,10 +9,9 @@ import { Button } from "@mui/material";
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
   const [loading, setLoading] = useState(true);
-  const [isUser, setUser] = useState(false);
+  const [isUser, setUser] = useState(true);
 
   useEffect(() => {
-    if (!isUser) {
       auth_refresh({ auth_token: sessionStorage.getItem("TOKEN") }).then(
         (new_token) => {
           setLoading(false);
@@ -24,7 +23,6 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
 
         }
       );
-    }
   }, []);
 
   if (loading) return <Loading />; // <-- render loading UI
@@ -37,10 +35,11 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
           /*<RouteComponent {...routeProps} />*/
           <>
             <Link
-              onClick={() => {
-                sessionStorage.clear();
-              }}
-              to={"/"}
+                style={styles.linkCloseSession}
+                  onClick={() => {
+                    sessionStorage.clear();
+                  }}
+                  to={"/"}
             >
               <Button style={styles.closeSesion}>Cerrar sesión</Button>
             </Link>
