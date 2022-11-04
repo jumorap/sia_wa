@@ -1,54 +1,23 @@
-import * as React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Container, Alert, IconButton, Collapse } from '@mui/material';
 import { Redirect } from "react-router-dom";
 
+import { UserContext } from "../../Routes";
 import { auth, auth_refresh} from '../../Middleware/Session/get-api';
 import { Loading } from "../../Components";
+import styles from "./styles";
 
-/**
- * mui es una mierda :v solo bootstrap loks
- */
 
-const styles = {
-    form: {
-        mt: 1,
-    },
-    textoHead: { color: '#FFF' },
-    textfield: { bgcolor: '#FFF', borderRadius: '10px' },
-    controlLabel: { color: '#FFF' },
-    container: { bgcolor: 'rgb(31, 45, 82,0.8)', borderRadius: '20px' },
-    box: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: 8
-    },
-    button: {
-        mt: 3,
-        mb: 2,
-        fontWeight: 'bold',
-        color: 'var(--blueSeoul)',
-        bgcolor: '#FFF',
-        border: 1,
-        '&:hover': {
-            border: 1,
-            color: '#FFF',
-            bgcolor: 'var(--blueSeoul)',
-            marginColor: '#FFFFFF'
-        }
-    }
-}
+export default function Login() {
+    const [passwordType, setPasswordType] = useState("password");
+    const [passwordInput, setPasswordInput] = useState("");
+    const [labelPasswordState, changeLabelStatus] = useState("Mostrar");
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(true); // set some state for loading
+    const [isUser, setUser] = useContext(UserContext); 
 
-export default function Login(props) {
-    const [passwordType, setPasswordType] = React.useState("password");
-    const [passwordInput, setPasswordInput] = React.useState("");
-    const [labesPasswordState, changeLabelSatus] = React.useState("Mostrar");
-    const [open, setOpen] = React.useState(false);
-    const [loading, setLoading] = React.useState(true); // set some state for loading
-    const [isUser, setUser] = React.useState(false); 
-
-    React.useEffect(() => {
+    useEffect(() => {
         auth_refresh({auth_token: sessionStorage.getItem('TOKEN')})
             .then((new_token) => {
                 setLoading(false);
@@ -59,7 +28,7 @@ export default function Login(props) {
                     setUser(true);
                 }
             });
-    }, [])
+    }, [setUser])
 
     if (loading) return <Loading />; // <-- render loading UI
      
@@ -89,11 +58,11 @@ export default function Login(props) {
 
     const showPassword = () => {
         if (passwordType === "password") {
-            changeLabelSatus("Ocultar");
+            changeLabelStatus("Ocultar");
             setPasswordType("text");
             return;
         }
-        changeLabelSatus("Mostrar");
+        changeLabelStatus("Mostrar");
         setPasswordType("password");
     };
 
@@ -104,24 +73,25 @@ export default function Login(props) {
     return (
         <Container sx={styles.container} component="main" maxWidth="sm">
             <Box sx={styles.box}>
-                <Typography sx={styles.textoHead} component="h1" variant="h5">
-                    Ingrese su usuario y contraseña
+                <Typography sx={styles.textHead} component="h1" variant="h5">
+                    Iniciar Sesión
                 </Typography>
                 <Box sx={styles.form} component="form" onSubmit={handleSubmit} noValidate>
                     <TextField
-                        sx={styles.textfield}
+                        sx={styles.textField}
                         margin="normal"
                         required
                         fullWidth
                         id="nombre_usuario"
-                        label="Nombre usuario"
+                        label="Usuario"
                         name="nombre_usuario"
                         variant='filled'
                         autoFocus
                         error={open}
+                        size={'small'}
                     />
                     <TextField
-                        sx={styles.textfield}
+                        sx={styles.textField}
                         margin="normal"
                         required
                         fullWidth
@@ -134,12 +104,13 @@ export default function Login(props) {
                         onChange={handlePasswordChange}
                         autoComplete="current-password"
                         error={open}
+                        size={'small'}
                     />
                     <FormControlLabel
                         sx={styles.controlLabel}
                         control={<Checkbox value="remember" color="primary" />}
                         onChange={showPassword}
-                        label={labesPasswordState + " contraseña"}
+                        label={labelPasswordState + " contraseña"}
                     />
                     <Button
                         sx={styles.button}
@@ -166,7 +137,7 @@ export default function Login(props) {
                             }
                             sx={{ mb: 2 }}
                         >
-                            Usuario y contraseña incorrectos
+                            Usuario o contraseña incorrectos
                         </Alert>
                     </Collapse>
                 </Box>

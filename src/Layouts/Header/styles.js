@@ -74,7 +74,7 @@ const styles = {
     burgerMenu: {
         transition: 'all 0.5s ease',
         position: 'absolute',
-        top: '4.8vh',
+        top: '5.5vh',
         left: '4vh',
         fontSize: '2rem',
         cursor: 'pointer',

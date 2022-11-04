@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Route, Redirect, Link } from "react-router-dom";
-import Box from "@mui/material/Box";
+import { Box, Button } from "@mui/material";
 
+import { UserContext } from "./";
 import { auth_refresh } from "../Middleware/Session/get-api";
 import { Loading } from "../Components";
 import styles from "./styles";
-import { Button } from "@mui/material";
+
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
   const [loading, setLoading] = useState(true);
-  const [isUser, setUser] = useState(true);
+  const [isUser, setUser] = useContext(UserContext);
+
 
   useEffect(() => {
       auth_refresh({ auth_token: sessionStorage.getItem("TOKEN") }).then(
@@ -18,28 +20,29 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
           if (new_token?.refreshToken?.auth_token) {
             sessionStorage.setItem("USER", new_token.refreshToken.nombre_usuario);
             sessionStorage.setItem("TOKEN", new_token.refreshToken.auth_token);
-            setUser(true);
+              setUser(true);
           }
 
         }
       );
-  }, []);
+  }, [setUser]);
 
   if (loading) return <Loading />; // <-- render loading UI
 
   return (
     <Route
       {...rest}
-      render={(routeProps) =>
+      render={() =>
         isUser ? (
           /*<RouteComponent {...routeProps} />*/
           <>
             <Link
                 style={styles.linkCloseSession}
-                  onClick={() => {
+                onClick={() => {
                     sessionStorage.clear();
-                  }}
-                  to={"/"}
+                    setUser(false);
+                }}
+                to={"/"}
             >
               <Button style={styles.closeSesion}>Cerrar sesión</Button>
             </Link>
