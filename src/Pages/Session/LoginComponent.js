@@ -5,7 +5,6 @@ import { Redirect } from "react-router-dom";
 
 import { UserContext } from "../../Routes";
 import { auth, auth_refresh} from '../../Middleware/Session/get-api';
-import { Loading } from "../../Components";
 import styles from "./styles";
 
 
@@ -14,13 +13,11 @@ export default function Login() {
     const [passwordInput, setPasswordInput] = useState("");
     const [labelPasswordState, changeLabelStatus] = useState("Mostrar");
     const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(true); // set some state for loading
     const [isUser, setUser] = useContext(UserContext); 
 
     useEffect(() => {
         auth_refresh({auth_token: sessionStorage.getItem('TOKEN')})
             .then((new_token) => {
-                setLoading(false);
                 console.log(new_token);
                 if (new_token?.refreshToken?.auth_token) {
                     sessionStorage.setItem('USER', new_token.refreshToken.nombre_usuario);
@@ -30,8 +27,6 @@ export default function Login() {
             });
     }, [setUser])
 
-    if (loading) return <Loading />; // <-- render loading UI
-     
     if(isUser){
         return <Redirect to={'/info_personal'}/>
     }
