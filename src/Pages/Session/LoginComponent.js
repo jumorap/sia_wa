@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, TextField, FormControlLabel, Checkbox, Box, Typography, Container, Alert, IconButton, Collapse } from '@mui/material';
 import { Redirect } from "react-router-dom";
-
+import tokenAsset from '../../Middleware/tokenAsset';
 import { UserContext } from "../../Routes";
-import { auth, auth_refresh} from '../../Middleware/Session/get-api';
+import { auth, auth_refresh } from '../../Middleware/Session/get-api';
 import styles from "./styles";
 
 
@@ -13,22 +13,14 @@ export default function Login() {
     const [passwordInput, setPasswordInput] = useState("");
     const [labelPasswordState, changeLabelStatus] = useState("Mostrar");
     const [open, setOpen] = useState(false);
-    const [isUser, setUser] = useContext(UserContext); 
+    const [loading, setLoading] = useState(true);
+    const [isUser, setUser] = useContext(UserContext);
 
-    useEffect(() => {
-        auth_refresh({auth_token: sessionStorage.getItem('TOKEN')})
-            .then((new_token) => {
-                console.log(new_token);
-                if (new_token?.refreshToken?.auth_token) {
-                    sessionStorage.setItem('USER', new_token.refreshToken.nombre_usuario);
-                    sessionStorage.setItem('TOKEN', new_token.refreshToken.auth_token);
-                    setUser(true);
-                }
-            });
-    }, [setUser])
 
-    if(isUser){
-        return <Redirect to={'/info_personal'}/>
+    tokenAsset(useEffect, auth_refresh,setLoading, setUser, loading);
+
+    if (isUser) {
+        return <Redirect to={'/info_personal'} />
     }
 
     const handleSubmit = async (event) => {

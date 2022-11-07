@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Route, Redirect, Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
-
+import tokenAsset from "../Middleware/tokenAsset";
 import { UserContext } from "./";
 import { auth_refresh } from "../Middleware/Session/get-api";
 import { Loading } from "../Components";
@@ -12,20 +12,7 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
   const [loading, setLoading] = useState(true);
   const [isUser, setUser] = useContext(UserContext);
 
-
-  useEffect(() => {
-      auth_refresh({ auth_token: sessionStorage.getItem("TOKEN") }).then(
-        (new_token) => {
-          setLoading(false);
-          if (new_token?.refreshToken?.auth_token) {
-            sessionStorage.setItem("USER", new_token.refreshToken.nombre_usuario);
-            sessionStorage.setItem("TOKEN", new_token.refreshToken.auth_token);
-              setUser(true);
-          }
-
-        }
-      );
-  }, [setUser]);
+  tokenAsset(useEffect, auth_refresh,setLoading, setUser);
 
   if (loading) return <Loading />; // <-- render loading UI
 
