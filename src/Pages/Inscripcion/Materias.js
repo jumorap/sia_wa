@@ -11,68 +11,101 @@ import {
   Modal,
   Accordion,
   AccordionDetails,
-  AccordionSummary
+  AccordionSummary,
 } from "@mui/material";
 
-import {FaBookOpen} from "react-icons/fa";
+import { FaBookOpen } from "react-icons/fa";
 
 import {
   getMateriasByPrograma,
   getMateriasLibreEleccion,
   getCursosByAsignaturas,
+  inscribirCurso,
+  getCursosInscritos,
 } from "../../Middleware";
 import styles from "./styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { titleCard, SubtitleCard } from "./Inscripciones";
 import { Box } from "@mui/system";
+import { TitleCard, SubtitleCard } from "./components";
+import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
-
+const user = "juan";
+const cursosYaInscritos = [];
+const materiasYaInscritas = [];
 export const Materias = () => {
   const [materias, setMaterias] = useState(null);
   const [materiasLibreEleccion, setMateriasLibreEleccion] = useState();
   const [cursos, setCursos] = useState(null);
   const [open, setOpen] = useState(false);
 
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+
   useEffect(() => {
     console.log("materias");
-    if (!materias) getMateriasByPrograma(["5"]).then((data) => setMaterias(data?.asignaturasInscribibles))
-
-    if (!cursos && materias) {
-      console.log(materias, cursos);
-      getCursosByAsignaturas(materias).then((data) => {
-        console.log("cursos", data);
-        setCursos(data)
-      })
-    }
-  })
+    if (!materias)
+      getMateriasByPrograma(["5"]).then((data) => {
+        setMaterias(data?.asignaturasInscribibles);
+        const newCursos = [];
+        data?.asignaturasInscribibles.forEach((materia) => {
+          materia.cursos?.forEach((curso) => {
+            newCursos.push(curso);
+          });
+        });
+        setCursos(newCursos);
+        console.log("materias final", data?.asignaturasInscribibles);
+      });
+  });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  console.log("Materias: ", materias);
+  console.log("Cursos: ", cursos);
+
+  getCursosYMateriasInscritas(user).then((data) => {
+    data.forEach((c) => {
+      const { id_curso, codigo_asignatura } = c;
+
+      if (!cursosYaInscritos.includes(id_curso)) {
+        cursosYaInscritos.push(id_curso);
+        materiasYaInscritas.push(codigo_asignatura);
+      }
+      console.log("Cursos ya inscritos: ", cursosYaInscritos);
+      console.log("Materias ya inscritas: ", materiasYaInscritas);
+    });
+  });
 
   let creditosAInscribir = calcularCreditos(
     materias
       ? materias?.filter((materia) => {
-          return materiasAInscribir.includes(materia.codigo_asignatura)
+          return materiasAInscribir.includes(materia.codigo_asignatura);
         })
       : []
-  )
+  );
 
   const mapMaterias = (m) => {
-    return m ? m.map((materia) => <MateriaCard mat={materia} />) : null
-  }
+    return m ? m.map((materia) => <MateriaCard mat={materia} />) : null;
+  };
 
   const mapCursos = (c, m) => {
-    return c ? c.map((curso) => {
-      if (curso.codigo_asignatura === m.codigo_asignatura) return cursoCard(curso, setCursos)
-      return null;
-    }) : null
-  }
+    return c
+      ? c.map((curso) => {
+          if (curso.codigo_asignatura === m.codigo_asignatura)
+            return cursoCard(curso, setCursos);
+          return null;
+        })
+      : null;
+  };
 
   /*
   Tarjeta que muestra toda la materia con sus cursos
   */
   const MateriaCard = (props) => {
-    const isInscrita = materiasAInscribir.includes(props.mat.codigo_asignatura);
+    const isAñadida = materiasAInscribir.includes(props.mat.codigo_asignatura);
+    const isYaInscrita = materiasYaInscritas.includes(
+      props.mat.codigo_asignatura
+    );
     return (
       <Grid key={props.mat.codigo_asignatura} item md={12}>
         <Accordion
@@ -82,11 +115,15 @@ export const Materias = () => {
           <AccordionSummary
             expandIcon={
               <ExpandMoreIcon
-                sx={!isInscrita ? { color: "gray" } : { color: "white" }}
+                sx={
+                  !isAñadida || isYaInscrita
+                    ? { color: "gray" }
+                    : { color: "white" }
+                }
               />
             }
             aria-controls="panel1bh-content"
-            sx={isInscrita ? styles.materiaInscrita : {}}
+            sx={isAñadida || isYaInscrita ? styles.materiaInscrita : {}}
           >
             <Typography
               variant="body1"
@@ -98,12 +135,12 @@ export const Materias = () => {
               variant="body1"
               sx={{ width: "10%", "font-style": "italic" }}
             >
-              {isInscrita ? "Añadida" : ""}
+              {isAñadida || isYaInscrita ? "Añadida" : ""}
             </Typography>
             <Typography
               variant="body1"
               sx={
-                isInscrita
+                isAñadida || isYaInscrita
                   ? styles.creditosInscritos
                   : styles.creditosDisponibles
               }
@@ -112,10 +149,9 @@ export const Materias = () => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
+            {labelMateriaInscrita(isYaInscrita)}
             <div>
-              <Grid container>
-                {mapCursos(cursos, props.mat)}
-              </Grid>
+              <Grid container>{mapCursos(cursos, props.mat)}</Grid>
             </div>
           </AccordionDetails>
         </Accordion>
@@ -128,19 +164,19 @@ export const Materias = () => {
       <Card sx={[styles.cards, { width: "100%" }]}>
         <CardContent>
           <div>
-            <div>{titleCard(FaBookOpen, "Materias Disponibles")}</div>
+            <div>{TitleCard(FaBookOpen, "Materias Disponibles")}</div>
 
             <div sx={{ textAlign: "right" }}>
               <p />
               <Typography variant="body3" sx={{ fontWeight: "bold" }}>
-                Créditos totales seleccionados: {creditosAInscribir}
+                Créditos seleccionados: {creditosAInscribir}
               </Typography>
             </div>
           </div>
           <br />
 
           <div>
-            <Accordion sx={ styles.acordionPerMateria }>
+            <Accordion sx={styles.acordionPerMateria}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1bh-content"
@@ -151,7 +187,7 @@ export const Materias = () => {
             </Accordion>
           </div>
           <div>
-            <Accordion sx={ styles.acordionPerMateria }>
+            <Accordion sx={styles.acordionPerMateria}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1bh-content"
@@ -201,13 +237,21 @@ export const Materias = () => {
                 ¿Está seguro que desea inscribir las materias seleccionadas?
               </Typography>
               <div sx={{ position: "absolute", left: "50%", top: "50%" }}>
-                <Button
-                  variant="contained"
-                  onClick={handleClose}
-                  sx={{ backgroundColor: "var(--blueSeoul)", mt: 2, mr: 1 }}
-                >
-                  aceptar
-                </Button>
+                <Link to={"/info_academica"}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      handleClose();
+                      colaDeCursos.forEach((curso) => {
+                        inscribirCurso(curso, user);
+                        removeCursoDeCola(curso, setCursos);
+                      });
+                    }}
+                    sx={{ backgroundColor: "var(--blueSeoul)", mt: 2, mr: 1 }}
+                  >
+                    aceptar
+                  </Button>
+                </Link>
                 <Button
                   variant="contained"
                   color="error"
@@ -227,6 +271,12 @@ export const Materias = () => {
       </Card>
     </Grid>
   );
+};
+
+const getCursosYMateriasInscritas = async (documento_estudiante) => {
+  const response = await getCursosInscritos(documento_estudiante);
+  console.log("Cursos ya inscritos: ", response);
+  return response.horarioByDocumentoEstudiante;
 };
 
 //----------------------------Funciones para setear estados iniciales----------------------------//
@@ -335,25 +385,28 @@ const cursoCard = (curso, setCursos) => {
           <div>{horarioCard(curso.horarios)}</div>
         </CardContent>
 
-
         <Button
-            disabled={
-                curso.cupos_disponibles === 0 ||
-                curso.cupos_disponibles === null ||
-                curso.cupos_disponibles === undefined ||
-                (!curso.inscrito &&
-                    materiasAInscribir.includes(curso.codigo_asignatura))
+          disabled={
+            curso.cupos_disponibles === 0 ||
+            curso.cupos_disponibles === null ||
+            curso.cupos_disponibles === undefined ||
+            materiasYaInscritas.includes(curso.codigo_asignatura) ||
+            (!curso.inscrito &&
+              materiasAInscribir.includes(curso.codigo_asignatura))
+          }
+          variant="contained"
+          color={curso.inscrito ? "error" : "primary"}
+          sx={[
+            styles.buttonActionAdd,
+            curso.inscrito ? styles.buttonEliminar : styles.buttonInscribir,
+          ]}
+          onClick={() => {
+            if (curso.inscrito) {
+              removeCursoDeCola(curso, setCursos);
+            } else {
+              addCursoACola(curso, setCursos);
             }
-            variant="contained"
-            color={curso.inscrito ? "error" : "primary"}
-            sx={[styles.buttonActionAdd, curso.inscrito ? styles.buttonEliminar : styles.buttonInscribir]}
-            onClick={() => {
-              if (curso.inscrito) {
-                removeCursoDeCola(curso, setCursos);
-              } else {
-                addCursoACola(curso, setCursos);
-              }
-            }}
+          }}
         >
           {!curso.inscrito ? "Añadir" : "Eliminar"}
         </Button>
@@ -455,4 +508,17 @@ const calcularCreditos = (materias) => {
     creditos += materia.creditos;
   });
   return creditos;
+};
+
+const labelMateriaInscrita = (isInscrita) => {
+  return (
+    <div>
+      <Typography>
+        {isInscrita
+          ? "La materia ya se encuentra inscrita, por lo cual no puede modificar su selección."
+          : "Seleccione el grupo al que desea inscribirse."}
+      </Typography>
+      <br />
+    </div>
+  );
 };

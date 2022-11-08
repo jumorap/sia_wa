@@ -1,11 +1,14 @@
 import './App.css';
 import React from "react";
 import All from './Pages/All'
+import UserContextProvider from "./Routes/UserProvider";
 
 
 function App() {
     return (
-        <All />
+        <UserContextProvider>
+            <All />
+        </UserContextProvider>
     );
 }
 

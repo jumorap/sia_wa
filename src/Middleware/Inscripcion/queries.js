@@ -19,20 +19,9 @@ export const queryObtenerProfesor = (args) => `
 
 export const queryHorarioByDocumentoEstudiante = (args) => `
     {
-      horarioByDocumentoEstudiante(documento_estudiante: "${args.documento_estudiante}") {
-        horarios{
-          dia
-          hora_inicio
-          hora_fin
-          salon
-          documento_profesor
-          tipo
-        }
+      horarioByDocumentoEstudiante(documento_estudiante: "${args.documento_estudiante}") {  
         id_curso
         codigo_asignatura
-        grupo
-        cupos_disponibles
-        cupos_totales
       }
     }
 `;
@@ -104,10 +93,24 @@ export const queryIngresarProfesor = (args) => `
 
 export const queryMateriasByPrograma = (args) => `
 {
-  asignaturasInscribibles(codigosAsignaturas:${args}) {
+  asignaturasInscribibles(codigosAsignaturas: ${args}) {
     codigo_asignatura
     nombre_asignatura
     creditos
-    descripcion
+    cursos{ 
+    	id_curso
+   		codigo_asignatura
+    	grupo
+      cupos_disponibles
+      cupos_totales
+    	horarios {
+      	dia
+      	hora_inicio
+      	hora_fin
+      	salon
+      	tipo
+    	}
+  	}
   }
-}`;
+}
+`;

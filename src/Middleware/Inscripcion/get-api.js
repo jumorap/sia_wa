@@ -2,78 +2,77 @@ import apiUrl from "../api-url";
 import queryAsset from "../queryAsset";
 import {
   queryCursosByCodigoAsignatura,
+  queryHorarioByDocumentoEstudiante,
+  queryInscribirEstudiante,
   queryMateriasByPrograma,
 } from "./queries";
 
-export const getCursosByAsignaturas = async (asignaturas) => {
-  console.log("getCursosByAsignaturas: ", asignaturas);
+// return [
+//   {
+//     id_curso: "1",
+//     codigo_asignatura: 1,
+//     grupo: 1,
+//     horarios: [
+//       {
+//         dia: 1,
+//         hora_inicio: 8,
+//         hora_fin: 10,
+//         salon: "Salón 401-204 - Facultad de Ingeniería",
+//         documento_profesor: "123456789",
+//         tipo: "Clase teórica",
+//       },
+//       {
+//         dia: 3,
+//         hora_inicio: 8,
+//         hora_fin: 10,
+//         salon: "Salón 401-204 - Facultad de Ingeniería",
+//         documento_profesor: "123456789",
+//         tipo: "Clase teórica",
+//       },
+//     ],
+//     cupos_disponibles: 10,
+//     cupos_totales: 20,
+//   },
 
-  return Promise.all(asignaturas.map(async (materia) => {
-    return queryAsset(queryCursosByCodigoAsignatura(materia.codigo_asignatura), apiUrl.Inscripciones.get)
-      .then((response) => {
-        for (const element of response.cursosByCodigoAsignatura) {
-          return element;
-        }
-      })
-  }))
+//   {
+//     id_curso: "2",
+//     codigo_asignatura: 1,
+//     grupo: 2,
+//     horarios: [
+//       {
+//         dia: 3,
+//         hora_inicio: 15,
+//         hora_fin: 17,
+//         salon: "Salón 404-404 - Facultad de Arquitectura",
+//         documento_profesor: "123456789",
+//         tipo: "Clase teórica",
+//       },
+//       {
+//         dia: 5,
+//         hora_inicio: 15,
+//         hora_fin: 17,
+//         salon: "Salón 404-404 - Facultad de Arquitectura",
+//         documento_profesor: "123456789",
+//         tipo: "Laboratorio",
+//       },
+//     ],
+//     cupos_disponibles: 10,
+//     cupos_totales: 20,
+//   },
+// ];
 
-  // return [
-  //   {
-  //     id_curso: "1",
-  //     codigo_asignatura: 1,
-  //     grupo: 1,
-  //     horarios: [
-  //       {
-  //         dia: 1,
-  //         hora_inicio: 8,
-  //         hora_fin: 10,
-  //         salon: "Salón 401-204 - Facultad de Ingeniería",
-  //         documento_profesor: "123456789",
-  //         tipo: "Clase teórica",
-  //       },
-  //       {
-  //         dia: 3,
-  //         hora_inicio: 8,
-  //         hora_fin: 10,
-  //         salon: "Salón 401-204 - Facultad de Ingeniería",
-  //         documento_profesor: "123456789",
-  //         tipo: "Clase teórica",
-  //       },
-  //     ],
-  //     cupos_disponibles: 10,
-  //     cupos_totales: 20,
-  //   },
-
-  //   {
-  //     id_curso: "2",
-  //     codigo_asignatura: 1,
-  //     grupo: 2,
-  //     horarios: [
-  //       {
-  //         dia: 3,
-  //         hora_inicio: 15,
-  //         hora_fin: 17,
-  //         salon: "Salón 404-404 - Facultad de Arquitectura",
-  //         documento_profesor: "123456789",
-  //         tipo: "Clase teórica",
-  //       },
-  //       {
-  //         dia: 5,
-  //         hora_inicio: 15,
-  //         hora_fin: 17,
-  //         salon: "Salón 404-404 - Facultad de Arquitectura",
-  //         documento_profesor: "123456789",
-  //         tipo: "Laboratorio",
-  //       },
-  //     ],
-  //     cupos_disponibles: 10,
-  //     cupos_totales: 20,
-  //   },
-  // ];
+export const inscribirCurso = async (id_curso, documento_estudiante) => {
+  return queryAsset(
+    queryInscribirEstudiante({ id_curso, documento_estudiante }),
+    apiUrl.Inscripciones.get
+  );
 };
 
-export const inscribirCurso = async () => {
-  // return queryAsset(queries.inscribir, apiUrl.Inscripciones.get);
+export const getCursosInscritos = async (documento_estudiante) => {
+  return queryAsset(
+    queryHorarioByDocumentoEstudiante({ documento_estudiante }),
+    apiUrl.Inscripciones.get
+  );
 };
 
 export const getMateriasByPrograma = async (id_programa) => {

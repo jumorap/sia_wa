@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { getCursos } from "../../Middleware";
+import { getCursos, getSede } from "../../Middleware";
 import AutocompleteInput from "./Autocomplete";
 
-const initalValueCourse = {
-  nombre_asignatura: "",
-  codigo_asignatura: "",
-};
-
-function getOptionLabelCourse(option) {
-  return option.nombre_asignatura;
-}
 
 /**
  *
  * @param {function}  setCourse function to handle when the user select an option of the search bar
  * @returns
  */
-export default function SearchBarCourses({ onChange }) {
+export default function Buscador({
+  onChange,
+  styles,
+  disabled,
+  getOptions,
+  label,
+  getOptionLabel,
+  initalValue
+}) {
   //state to get the course selected by the user in the search bar
-  const [selectedCourse, setSelectedCourse] = useState(initalValueCourse);
+  const [selectedCourse, setSelectedCourse] = useState(initalValue);
 
   //state for the curses of the search bar
   const [courses, setCourses] = useState([]);
@@ -26,7 +26,10 @@ export default function SearchBarCourses({ onChange }) {
   useEffect(() => {
     //get the inital courses to show in the search bar
     async function getSearchCursos() {
-      getCursos().then((response) => setCourses(response.asignaturas));
+      getOptions().then((response) => {
+        console.log("label", response);
+        setCourses(response);
+      });
     }
     getSearchCursos();
   }, []);
@@ -38,9 +41,12 @@ export default function SearchBarCourses({ onChange }) {
         setSelectedCourse(newValue);
         onChange(newValue);
       }}
+      styles={styles}
       options={courses}
-      getOptionLabel={getOptionLabelCourse}
-      label={"Buscador de cursos"}
+      getOptionLabel={getOptionLabel}
+      label={label}
+      disabled={disabled}
+      s
     />
   );
 }
