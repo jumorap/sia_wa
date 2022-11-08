@@ -36,3 +36,5 @@ const queries = {
                 id_programa
     `,
 }
+
+export default queries;
