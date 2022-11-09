@@ -6,8 +6,14 @@ import {
   getMateriasLibreEleccion,
   getCursosInscritos,
 } from "./Inscripcion/get-api";
-import { getCursos, getCurso, getSede, getFacultades } from './BuscadorCursos/get-api'
+import {
+  getCursos,
+  getCurso,
+  getSede,
+  getFacultades,
+} from "./BuscadorCursos/get-api";
 import { getHistoriaAcademica } from "./InfoAcademica/get-api";
+import { getMateriasExternas } from "./2DSubjects/get-api";
 
 export {
   getUser,
@@ -22,5 +28,6 @@ export {
   getFacultades,
   getCursosInscritos,
   getHistoriaAcademica,
+  getMateriasExternas,
   // gethorarioByDocumentoEstudiante
 };

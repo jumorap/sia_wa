@@ -7,10 +7,6 @@ import { FaBook } from "react-icons/fa";
 import { Materias } from "./Materias";
 import styles from "./styles";
 import { TitleCard } from "./components";
-import MateriasNew from "./MateriasNew";
-
-
-
 
 const Inscripciones = () => {
   return (
@@ -21,8 +17,7 @@ const Inscripciones = () => {
       <Grid item xs={12}>
         <div style={styles.container}>
           <div style={styles.cardsContainer}>
-            <Materias /> 
-            <MateriasNew/>
+            <Materias />
           </div>
         </div>
       </Grid>
