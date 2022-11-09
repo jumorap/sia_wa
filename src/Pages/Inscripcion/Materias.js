@@ -22,6 +22,7 @@ import {
   getCursosByAsignaturas,
   inscribirCurso,
   getCursosInscritos,
+  getMateriasExternas,
 } from "../../Middleware";
 import styles from "./styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -35,7 +36,7 @@ const cursosYaInscritos = [];
 const materiasYaInscritas = [];
 export const Materias = () => {
   const [materias, setMaterias] = useState(null);
-  const [materiasLibreEleccion, setMateriasLibreEleccion] = useState();
+  const [materiasExternas, setMateriasExternas] = useState();
   const [cursos, setCursos] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -55,6 +56,15 @@ export const Materias = () => {
         });
         setCursos(newCursos);
         console.log("materias final", data?.asignaturasInscribibles);
+      });
+  });
+
+  useEffect(() => {
+    console.log("materias externas");
+    if (!materiasExternas)
+      getMateriasExternas().then((data) => {
+        setMateriasExternas(data?.listExtAsignatures);
+        console.log("materias externas final", data?.listExtAsignatures);
       });
   });
 
@@ -96,6 +106,29 @@ export const Materias = () => {
           return null;
         })
       : null;
+  };
+
+  const materiaExternaCard = (materia) => {
+    return (
+      <Grid key={materia?.code_Subject} item md={3} sx={{ padding: "7px" }}>
+        <Card sx={[styles.cards, styles.groupsContainer, { width: "100%" }]}>
+          <CardContent>
+            <div>
+              <Typography variant="body3" fontWeight={"bold"}>
+                {materia?.Code_Subject} - {materia?.Name_Subject}
+              </Typography>
+            </div>
+            <div sx={styles.groupsCard}>
+              <Typography variant="body3">
+                Creditos: {materia?.Credits}
+                <br />
+                {materia?.Typology}
+              </Typography>
+            </div>
+          </CardContent>
+        </Card>
+      </Grid>
+    );
   };
 
   /*
@@ -192,10 +225,14 @@ export const Materias = () => {
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1bh-content"
               >
-                <SubtitleCard subtitle={"Materias de libre elección"} />
+                <SubtitleCard subtitle={"Materias de oferta externa"} />
               </AccordionSummary>
               <AccordionDetails>
-                {mapMaterias(materiasLibreEleccion)}
+                <Grid container>
+                  {materiasExternas?.map((materia) => {
+                    return materiaExternaCard(materia);
+                  })}
+                </Grid>
               </AccordionDetails>
             </Accordion>
           </div>
