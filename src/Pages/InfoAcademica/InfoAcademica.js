@@ -131,11 +131,14 @@ useEffect(() => {
   if (!data) getHistoriaAcademica().then((response) => setData(response))
 }, [data])
 
-  console.log(data)
+  console.log("HISTORIA ACADEMICA REQUEST" + getHistoriaAcademica())
+  console.log("data" + data)
 
   //console.log(data.history)
 
   let historiaAcademica = getData()
+  
+  
 
   if(data){
     historiaAcademica = data
