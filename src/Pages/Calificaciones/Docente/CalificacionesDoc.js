@@ -18,7 +18,7 @@ import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { createGrades, getGrades, updateGrades, getStudents, docAsignatures, listStudents } from "../../../Middleware/Calificaciones/get-api";
-import { createGradesQuery, getFormatStudents, getGradesQuery, updateGradesQuery } from '../../../Middleware/Calificaciones/queries';
+import { createGradesQuery, getDocAsignaturesQuery, getFormatStudents, getGradesQuery, updateGradesQuery } from '../../../Middleware/Calificaciones/queries';
 
 
 function CalificacionesDoc() {
@@ -32,9 +32,13 @@ function CalificacionesDoc() {
   const [confirmation, setConfirmation] = React.useState(false);
   const [alertOpen, setAlertOpen] = React.useState(false);
 
+  const user = sessionStorage.getItem("USER");
+
   useEffect (() => {
-    if (!asignatureArray) docAsignatures().then((response) => {
-      setAsignatureArray(response)
+    const query = getDocAsignaturesQuery(user);
+    if (!asignatureArray) docAsignatures(query).then((response) => {
+
+      setAsignatureArray(response.getDocAsignatures)
     })
   }, [asignatureArray])
 
@@ -83,6 +87,7 @@ function CalificacionesDoc() {
 
     const query1 = getGradesQuery(event.target.value)
     const query2 = getFormatStudents(event.target.value)
+
     getGrades(query1).then((response) => setData(response.listGrades))
     getStudents(query2).then((response) => setStudents(response.formatStudents))
 

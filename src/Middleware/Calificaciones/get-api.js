@@ -95,8 +95,8 @@ export const deleteGrades = async () => {
     return queryAsset(queries.deleteGrades, apiUrl.Calificaciones.get)
 }
 
-export const asignaturesStudents = async () => {
-    return [
+export const asignaturesStudents = async (query=queries.formatStudents) => {
+    /*return [
         {
             id: 1,
             id_student: 'jlizarazoa',
@@ -122,31 +122,32 @@ export const asignaturesStudents = async () => {
             grades: '{"Parcial 1": [0.2, 4.5], "Parcial 2": [0.3,5], "Parcial 3": [0.3,4], "Parcial 4": [0.3,4], "Parcial 5": [0.3,4], "Parcial 6": [0.3,4], "Parcial 7": [0.3,4], "Parcial 8": [0.3,4]}',
         },
           
-    ];
-    //return queryAsset(queries.formatStudents, apiUrl.Calificaciones.get)
+    ];*/
+    return queryAsset(query, apiUrl.Calificaciones.get)
 }
 
-export const docAsignatures = async () => {
-    return [
+export const docAsignatures = async (query=queries.getDocAsignatures) => {
+    return queryAsset(query, apiUrl.Calificaciones.get)
+    /*return [
         {
-            id_curso: 1234456,
+            id_curso: "001",
             documento_profesor: '2134455656',
-            codigo_asignatura: '001', 
+            codigo_asignatura: 1, 
             nameCourse: 'ARQUITECTURA DE SOFTWARE'
         },
         {
-            id_curso: 123456,
+            id_curso: "002",
             documento_profesor: '2134455656',
-            codigo_asignatura: '001', 
+            codigo_asignatura: 1, 
             nameCourse: 'ARQUITECTURA DE SOFTWARE'
         },
         {
-            id_curso: 1234567,
+            id_curso: "003",
             documento_profesor: '2134455656',
-            codigo_asignatura: '002', 
+            codigo_asignatura: 2, 
             nameCourse: 'INGENIERÍA DE SOFTWARE I'
         },
-    ]
+    ]*/
 }
 
 export const listStudents = async () => {

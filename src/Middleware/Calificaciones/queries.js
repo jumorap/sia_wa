@@ -1,7 +1,7 @@
 const queries = {
     listGrades: `
             {
-                listGrades(id: null, course: 1234456) {
+                listGrades(id: null, course: "1234456") {
                         id
                         id_course
                         name
@@ -18,7 +18,7 @@ const queries = {
         mutation {
             createGrades(
                 id: 1
-                id_course: 1234456
+                id_course: "1234456"
                 name: ""
                 percentage: 0.2
                 grades: "{'jlizarazoa': 5}"
@@ -31,7 +31,7 @@ const queries = {
         mutation {
             updateGrades(
                 id: 1
-                id_course: 1234456
+                id_course: "1234456"
                 name: ""
                 percentage: 0.2
                 grades: "{'jlizarazoa': 5}"
@@ -50,13 +50,23 @@ const queries = {
     `,
     formatStudents:`
         {
-            formatStudents(student: null, course: 1234456) {
+            formatStudents(student: null, course: "1234456") {
             id
             id_student
             id_course
             grades
             }
         }
+    `,
+    getDocAsignatures:`
+    {
+        getDocAsignatures(documento_identidad: "juan") {
+            id_curso
+            documento_profesor
+            codigo_asignatura
+            nameCourse
+        }
+    }
     `
 }
 
@@ -65,7 +75,7 @@ export const updateGradesQuery = (data) => {
         mutation {
             updateGrades(
                 id: ${data.id}
-                id_course: ${data.id_course}
+                id_course: "${data.id_course}"
                 name: "${data.name}"
                 percentage: ${data.percentage}
                 grades: "${data.grades}"
@@ -82,7 +92,7 @@ export const createGradesQuery = (data) => {
     mutation {
         createGrades(
             id: ${data.id}
-            id_course: ${data.id_course}
+            id_course: "${data.id_course}"
             name: "${data.name}"
             percentage: ${data.percentage}
             grades: "${data.grades}"
@@ -96,7 +106,7 @@ export const createGradesQuery = (data) => {
 export const getGradesQuery = (data) => {
     return `
     {
-        listGrades(id: null, course: ${data}) {
+        listGrades(id: null, course: "${data}") {
                 id
                 id_course
                 name
@@ -109,7 +119,7 @@ export const getGradesQuery = (data) => {
 export const getFormatStudents = (data) => {
     return `
     {
-        formatStudents(student: null, course: ${data}) {
+        formatStudents(student: null, course: "${data}") {
         id
         id_student
         id_course
@@ -119,5 +129,30 @@ export const getFormatStudents = (data) => {
     `
 }
 
+export const getFormatToStudents = (data) => {
+    return `
+    {
+        formatStudents(student: "${data}", course: null) {
+        id
+        id_student
+        id_course
+        grades
+        }
+    }
+    `
+}
+
+export const getDocAsignaturesQuery = (data) => {
+    return `
+    {
+        getDocAsignatures(documento_identidad: "${data}") {
+            id_curso
+            documento_profesor
+            codigo_asignatura
+            nameCourse
+        }
+    }
+    `
+}
 
 export default queries

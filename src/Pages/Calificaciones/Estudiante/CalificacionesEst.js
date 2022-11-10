@@ -13,6 +13,8 @@ import { ListItem } from "@mui/material";
 import styles from "./styles";
 import { asignaturesStudents } from "../../../Middleware/Calificaciones/get-api";
 import { gridColumnGroupsLookupSelector } from "@mui/x-data-grid";
+import { getFormatToStudents } from "../../../Middleware/Calificaciones/queries";
+import getUserData from "../../../Middleware/sessionAsset";
 
 
 const formatData = (data) => {
@@ -47,13 +49,23 @@ function CalificacionesEst() {
     setOpen((prevState) => ({ ...prevState, [id]: !prevState[id] }));
   };
 
+  const user = sessionStorage.getItem("USER");
+
   useEffect (() => {
-    if (!data) asignaturesStudents().then((response) => /*setData(response.formatStudents)*/ setData(response))
+    if (!data) {
+      const query = getFormatToStudents(user)
+      asignaturesStudents(query)
+        .then((response) => /*setData(response.formatStudents)*/ 
+          {
+            setData(response)
+          }
+        )
+    }
   }, [data])
 
   let items = [];
   if (data) {
-    items = data
+    items = data.formatStudents
   }
   return (
 
@@ -63,7 +75,7 @@ function CalificacionesEst() {
           <>
             <ListItem>
               <ListItemButton onClick={() => handleClick(item.id)} sx={[styles.list]}>
-                  <ListItemText primaryTypographyProps={{fontWeight: "bold", color: "var(--darkBlueSeoul)"}} secondaryTypographyProps={{color: "rgba(31, 45, 82)"}} primary={item.id_course} secondary={"Código: "+item.id}/>
+                  <ListItemText primaryTypographyProps={{fontWeight: "bold", color: "var(--darkBlueSeoul)"}} secondaryTypographyProps={{color: "rgba(31, 45, 82)"}} primary={item.name_asignature} secondary={"Código: "+item.id_course}/>
                   {open[item.id] ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
