@@ -20,7 +20,7 @@ export default function Login() {
     tokenAsset(useEffect, auth_refresh,setLoading, setUser, loading);
 
     if (isUser) {
-        return <Redirect to={'/info_personal'} />
+        return <Redirect to={'/'} />
     }
 
     const handleSubmit = async (event) => {
