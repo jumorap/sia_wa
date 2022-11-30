@@ -1,7 +1,15 @@
+let user
+
+try {
+    user = sessionStorage.getItem('USER');
+} catch (error) {
+    user = "juan";
+}
+
 const queries = {
     user: `
         {
-          user(username: "test") {
+          user(username: "${user}") {
             nombre_usuario
             nombre_completo
             documento_identidad
@@ -37,7 +45,7 @@ const queries = {
     updateUser: `
         mutation {
           updateUser(
-            nombre_usuario: "test"
+            nombre_usuario: "${user}"
             lugar_expedicion: "NEW PLACE"
             email_personal: "NEW EMAIL"
             telefono_movil: "NEW PHONE"
