@@ -103,15 +103,15 @@ const cards = (asignatura) => {
         <Card sx={[styles.card]}>
           <CardContent sx={[styles.CardContent]}>
             <Container sx={[styles.card_left]}>
-                <Typography sx={{fontWeight: "bold"}}> {asignatura._nombre + "  (" + asignatura._codigo + ")  "}</Typography>
-                <Typography >{"Creditos: " + asignatura._creditos}</Typography>
-                <Typography >{"Tipo: " + asignatura._tipo}</Typography>
-                <Typography >{"Periodo cursado: " + asignatura._periodo}</Typography>
+                <Typography sx={{fontWeight: "bold"}}> {asignatura?._nombre + "  (" + asignatura?._codigo + ")  "}</Typography>
+                <Typography >{"Creditos: " + asignatura?._creditos}</Typography>
+                <Typography >{"Tipo: " + asignatura?._tipo}</Typography>
+                <Typography >{"Periodo cursado: " + asignatura?._periodo}</Typography>
 
             </Container>
             <Container sx={[styles.card_right]}>
-                <Typography sx={{fontWeight: "bold"}}>{asignatura._definitiva}</Typography>
-                <Typography >{asignatura._esAprobada ? "Aprobada" : "Reprobada"}</Typography>
+                <Typography sx={{fontWeight: "bold"}}>{asignatura?._definitiva}</Typography>
+                <Typography >{asignatura?._esAprobada ? "Aprobada" : "Reprobada"}</Typography>
               
 
             </Container>
@@ -161,20 +161,20 @@ useEffect(() => {
           <Paper elevation={1}>
           <Container sx={[styles.infoBasica_right]}>
               <Container sx={[styles.infoBasica_right_card]}>
-                  <Typography sx={{fontWeight: "bold"}}>{historiaAcademica._pa}</Typography>
+                  <Typography sx={{fontWeight: "bold"}}>{historiaAcademica?._pa}</Typography>
                   <Typography sx={{}}>{" PA "}</Typography>
               </Container>
             
             
               <Container sx={[styles.infoBasica_right_card]}>
-                <Typography sx={{fontWeight: "bold"}}>{historiaAcademica._papa}</Typography>
+                <Typography sx={{fontWeight: "bold"}}>{historiaAcademica?._papa}</Typography>
                 <Typography sx={{}}>{"PAPA"}</Typography>
               </Container>
               
 
               
               <Container sx={[styles.infoBasica_right_card]}>
-                <Typography sx={{fontWeight: "bold"}}>{historiaAcademica._pappi}</Typography>
+                <Typography sx={{fontWeight: "bold"}}>{historiaAcademica?._pappi}</Typography>
                 <Typography sx={{}}>{"PAPPI"}</Typography>
               </Container>
           </Container>
