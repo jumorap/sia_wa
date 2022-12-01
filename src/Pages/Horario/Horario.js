@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from "react";
 import { Card, CardContent, List, ListItem, Box, TableContainer, Table , TableBody , TableHead , TableRow, TableCell, Typography, TextField, Button, Paper, Container, Divider } from '@mui/material';
 import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHouseUser } from 'react-icons/fa';
+import { getCurso } from "../../Middleware";
 
 
 
@@ -134,6 +135,8 @@ const getData = () => {
 
 const horarioHandler = (Cursos) => {
 
+  // cursos array de objetos asignatura
+
     const vistaCursos = []
 
     var pos_col = "-"
@@ -183,7 +186,58 @@ const horarioHandler = (Cursos) => {
     return vistaCursos
 }
 
+const horarioHandlerFetch = (Cursos) => {
 
+  // cursos array de objetos asignatura
+
+    const vistaCursos = []
+
+    var pos_col = "-"
+    var pos_row = "-"
+
+    var pos_id = 0
+
+    var salon = "-"
+    var profesor = "-"
+    var tipo = "-"
+
+    var id_curso = "-"
+    var grupo = "-"
+
+
+    Cursos.map((curso) => {
+
+        id_curso = curso.nombre_asignatura
+        grupo = curso.cursos[0].grupo
+        
+        curso.cursos[0].horarios[0].map((horario) => {
+            
+            pos_col = horario.dia
+            pos_row = horario.hora_inicio
+
+            salon = horario.salon
+            profesor = horario.documento_profesor
+            tipo = horario.tipo
+            
+            pos_id = pos_row + pos_col
+
+            vistaCursos.push({
+                pos_id,
+                pos_col,
+                pos_row,
+                salon,
+                profesor,
+                tipo,   
+                id_curso,
+                grupo, 
+            })
+        })
+        
+        
+    })
+
+    return vistaCursos
+}
   
 const createCard = (vistaCursos, row, dia,asignatura) => {
 
@@ -208,7 +262,7 @@ var finded = false
                 console.log(vistaCurso.pos_id)
 
 
-                id_curso = asignatura?._nombre
+                id_curso = vistaCurso.id_curso
                 grupo = vistaCurso.grupo
                 salon = vistaCurso.salon
                 profesor = vistaCurso.profesor
@@ -231,21 +285,56 @@ var finded = false
 
 const Horario = () => {
 
-   
+
+//fetch historia academica
 const [data, setData] = useState(null)
 useEffect(() => {
-  // Make a single request to the API
+
   if (!data) getHistoriaAcademica().then((response) => setData(response))
+
 }, [data])
+
+
+
+//fetch cursos
+const [cursos, setCursos] = useState([])
+useEffect(() => {
+ 
+data?._asignaturasInscritas.forEach(asignatura => {
+  if (asignatura) {
+
+    getCurso(asignatura._codigo).then((response) => {
+    console.log("peticion a cursos")
+    console.log(response)
+
+    cursos.push(response)
+    setCursos(cursos)
+    })
+
+  }else{
+    console.log("no hay asignaturas inscritas")
+  }
+
+});
+
+}, [cursos])
+
 
 
   console.log("data: " + data)
 
   //console.log(data.history)
  
+let vistaCursos
+
+if(cursos){
+  vistaCursos = horarioHandlerFetch(cursos)
+
+}else{
+  vistaCursos = horarioHandler(getData())
+}
 
 
-    const vistaCursos = horarioHandler(getData())
     console.log(vistaCursos)
 
       return (
@@ -271,13 +360,13 @@ useEffect(() => {
               key={row.hora}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row">{row.hora}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "1",data?._asignaturasInscritas[0])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "2",data?._asignaturasInscritas[1])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "3",data?._asignaturasInscritas[0])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "4",data?._asignaturasInscritas[1])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "5",data?._asignaturasInscritas[0])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "6",data?._asignaturasInscritas[1])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "7",data?._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "1")}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "2")}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "3")}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "4")}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "5")}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "6")}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "7")}</TableCell>
             </TableRow>
           ))}
         </TableBody>
