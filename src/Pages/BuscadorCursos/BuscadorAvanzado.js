@@ -2,7 +2,7 @@ import { Search, SendAndArchiveOutlined } from "@mui/icons-material";
 import { Box, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { getFacultades, getSede } from "../../Middleware";
-import { getCursosCompletos, getProgramas } from "../../Middleware/BuscadorCursos/get-api";
+import { getAsignaturasByPrograma, getCursosCompletos, getPorgramasByFacultad, getProgramas } from "../../Middleware/BuscadorCursos/get-api";
 import AutocompleteInput from "./Autocomplete";
 import Buscador from "./Buscador";
 
@@ -15,80 +15,94 @@ const styles = {
   },
 };
 
-const initalValueCourse = {
-  nombre_sede: "",
-  codigo_sede: "",
-};
 
-const initalValueFacultad = {
-  nombre_facultad: "",
-  codigo_facultad: "",
-};
-
-const initalValuePrograma = {
-  nombre_programa : "",
-  id_programa: "",
-};
-
+const initalValues = {
+  sede: {
+    nombre_sede: "",
+    codigo_sede: "",
+  },
+  facultad: {
+    nombre_facultad: "",
+    codigo_facultad: "",
+  },
+  programa: {
+    nombre_programa : "",
+    id_programa: "",
+  },
+}
 
 
 
 export default function BuscadorAvanzado({setCursos}) {
-  const [values, setValues] = useState({
-    sede: {
-      disabled: false,
-      options: [],
-    },
-    facultad: {
-      disabled: false,
-      options: [],
-    },
-    programa: {
-      disabled: false,
-      options: [],
-    },
+
+
+  //state used for save the values of "buscador avanzado"
+  const [selectedOptions, setSelectedOptions] = useState({
+    sede : "",
+    facultad : "",
+    programa : "",
+  });
+
+  //disabled options
+  const [disabledOptions, setDisabledOptions] = useState({
+    sede : false,
+    facultad : true,
+    programa : true,
   });
 
 
-
   function onChangeSede(newValue) {
-    console.log(newValue);
+    setDisabledOptions(prev => ({...prev, facultad: false, programa: true}));
+    setSelectedOptions(prev => ({...prev, sede: newValue.id_sede}));
+  }
+
+  function onChangeFacultad(newValue){
+    setDisabledOptions(prev => ({...prev, programa: false}));
+    setSelectedOptions(prev => ({...prev, facultad: newValue.id_facultad}));
+  }
+
+  async function onChangePrograma(newValue){
+    //setSelectedOptions(prev => ({...prev, programa: newValue.id_programa}));
+    console.log("programa", newValue);
+    const data = await getAsignaturasByPrograma(newValue.id_programa)
+    console.log("data progroma", data);
   }
 
   async function onSearch(){
     //get all the cursos
     const cursos = await getCursosCompletos();
-    setCursos(cursos);
+    console.log("estos son los cursos", cursos.data.asignaturas)
+    setCursos(cursos.data.asignaturas);
   }
 
   return (
     <Box sx={styles.container}>
       <Buscador
         styles={styles.search}
-        disabled={values.sede.disabled}
+        disabled={disabledOptions.sede}
         getOptions={getSede}
         label="Sede"
         getOptionLabel={(o) => o.nombre_sede}
         onChange={onChangeSede}
-        initalValue={initalValueCourse}
+        initalValue={initalValues.sede}
       />
       <Buscador
         styles={styles.search}
-        disabled={values.facultad.disabled}
+        disabled={disabledOptions.facultad}
         getOptions={getFacultades}
         label="Facultades"
         getOptionLabel={(o) => o.nombre_facultad}
-        onChange={(newValue) => console.log(newValue)}
-        initalValue={initalValueFacultad}
+        onChange={onChangeFacultad}
+        initalValue={initalValues.facultad}
       />
       <Buscador
         styles={styles.search}
-        disabled={values.programa.disabled}
-        getOptions={getProgramas}
+        disabled={disabledOptions.programa}
+        getOptions={()=> getPorgramasByFacultad(selectedOptions.facultad)}
         label="Programas"
         getOptionLabel={(o) => o.nombre_programa}
-        onChange={(newValue) => console.log(newValue)}
-        initalValue={initalValuePrograma}
+        onChange={onChangePrograma}
+        initalValue={initalValues.programa}
       />
       <IconButton aria-label="delete" onClick={onSearch}>
         <Search />

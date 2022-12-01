@@ -23,14 +23,23 @@ export default function SearchBarCourses({ onChange }) {
   //state for the curses of the search bar
   const [courses, setCourses] = useState([]);
 
+  //error course state
+  const [errorCourse, setErrorCourse] = useState(false);
+
   useEffect(() => {
     //get the inital courses to show in the search bar
     async function getSearchCursos() {
-      getCursos().then((response) => setCourses(response.asignaturas));
+      const {data, error} = await getCursos()
+      if (error || !data) {
+        setErrorCourse(true);
+        return;
+      }
+      console.log(data)
+      setCourses(data.asignaturas);
     }
     getSearchCursos();
   }, []);
-
+  
   return (
     <AutocompleteInput
       value={selectedCourse}

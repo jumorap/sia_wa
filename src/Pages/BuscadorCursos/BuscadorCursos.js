@@ -9,6 +9,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { getCursos, getCurso, getSede, getFacultades } from "../../Middleware";
 import SearchBarCourses from "./SearchBarCourses";
 import BuscadorAvanzado from "./BuscadorAvanzado";
+import { Loading } from "../../Components";
 
 function getOptionLabelCourse(option) {
   return option.nombre_asignatura;
@@ -35,6 +36,9 @@ export default function BuscadorCursos() {
   //state to get the course selected by the user in the search bar
   const [selectedCourse, setSelectedCourse] = useState({});
 
+  //loading state when a course is selected
+  const [loadingSelectedCourse, setLoadingSelectedCourse] = useState(false);
+
   //data for the selected asignatura in the search bar
   const [selectedCourseData, setSelectedCourseData] = useState(null);
 
@@ -49,14 +53,18 @@ export default function BuscadorCursos() {
 
   const [openAdvancedOptions, setOpenAdvancedOptions] = useState(false);
 
+
+
   useEffect(() => {
     //get the initial SEDES to show in the search bar
     async function getSearchSedes() {
-      getSede().then((response) => setSedes(response.sedes));
+      getSede().then((response) => setSedes(response.sedes))
+      .catch((error) => console.log(error));
     }
     //get the initial FACULTADES to show in the search bar
     async function getSearchFacultades() {
-      getFacultades().then((response) => console.log(response));
+      getFacultades().then((response) => console.log(response))
+      .catch((error) => console.log(error));
     }
 
     //getSearchFacultades();
@@ -66,9 +74,15 @@ export default function BuscadorCursos() {
   //when an user select a course featch its data.
   useEffect(() => {
     async function getDatosSelectedCurso() {
-      getCurso(selectedCourse.codigo_asignatura).then((response) => {
-        setCursosList([response?.asignatura]);
-      });
+      setLoadingSelectedCourse(true);
+      const {data, error} = await getCurso(selectedCourse.codigo_asignatura)
+      if (error || !data) {
+        console.log(error);
+        return;
+      }
+      setLoadingSelectedCourse(false);
+      console.log("here is the asignatura", data.asignatura);
+      setCursosList([data?.asignatura])
     }
     getDatosSelectedCurso();
   }, [selectedCourse]);
@@ -97,7 +111,7 @@ export default function BuscadorCursos() {
           <Typography variant="subtitle1" sx={{ fontSize: "0.8rem", color: "gray" }} textAlign = "center">
             Buscador avanzado
           </Typography>
-          <BuscadorAvanzado setCursos = {setCursosList}/>
+          <BuscadorAvanzado setCursos = {setCursosList} />
         </>
       )}
 
@@ -112,10 +126,11 @@ export default function BuscadorCursos() {
       {recentlyAdded.component}
       <Asignatura asignatura={selectedCourseData} />
       {
-        cursosList.map((curso) => (
+        loadingSelectedCourse? <></> : cursosList.map((curso) => (
           <Asignatura asignatura={curso} />
         ))
       }
+
     </Box>
   );
 }
