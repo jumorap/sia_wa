@@ -208,7 +208,7 @@ var finded = false
                 console.log(vistaCurso.pos_id)
 
 
-                id_curso = asignatura._nombre
+                id_curso = asignatura?._nombre
                 grupo = vistaCurso.grupo
                 salon = vistaCurso.salon
                 profesor = vistaCurso.profesor
@@ -271,13 +271,13 @@ useEffect(() => {
               key={row.hora}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row">{row.hora}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "1",data._asignaturasInscritas[0])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "2",data._asignaturasInscritas[1])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "3",data._asignaturasInscritas[0])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "4",data._asignaturasInscritas[1])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "5",data._asignaturasInscritas[0])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "6",data._asignaturasInscritas[1])}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "7",data._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "1",data?._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "2",data?._asignaturasInscritas[1])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "3",data?._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "4",data?._asignaturasInscritas[1])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "5",data?._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "6",data?._asignaturasInscritas[1])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "7",data?._asignaturasInscritas[0])}</TableCell>
             </TableRow>
           ))}
         </TableBody>
