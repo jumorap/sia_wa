@@ -1,12 +1,9 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import { minWidth } from "@mui/system";
+import { Box, IconButton, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Asignatura from "./Asignatura";
-import AutocompleteInput from "./Autocomplete";
-import SelectInput from "./SelectInput";
 import useStackChips from "./StackChips";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { getCursos, getCurso, getSede, getFacultades } from "../../Middleware";
+import { getCurso } from "../../Middleware";
 import SearchBarCourses from "./SearchBarCourses";
 import BuscadorAvanzado from "./BuscadorAvanzado";
 import { Loading } from "../../Components";
@@ -22,16 +19,7 @@ function getOptionValueSede(option) {
 }
 
 export default function BuscadorCursos() {
-  const initalValueSede = {
-    nombre_sede: "",
-    id_sede: "",
-  };
 
-  //state for the Sedes of the search bar
-  const [sedes, setSedes] = useState([]);
-
-  //state for the facultades of the search bar
-  const [facultades, setFacultades] = useState([]);
 
   //state to get the course selected by the user in the search bar
   const [selectedCourse, setSelectedCourse] = useState({});
@@ -45,8 +33,6 @@ export default function BuscadorCursos() {
   //state for the list of curses to show
   const [cursosList, setCursosList] = useState([]);
 
-  const [selectedSede, setSelectedSede] = useState(initalValueSede);
-
   const recentlyAdded = useStackChips(getOptionLabelCourse, (e) => {
     setSelectedCourse(e);
   });
@@ -55,21 +41,7 @@ export default function BuscadorCursos() {
 
 
 
-  useEffect(() => {
-    //get the initial SEDES to show in the search bar
-    async function getSearchSedes() {
-      getSede().then((response) => setSedes(response.sedes))
-      .catch((error) => console.log(error));
-    }
-    //get the initial FACULTADES to show in the search bar
-    async function getSearchFacultades() {
-      getFacultades().then((response) => console.log(response))
-      .catch((error) => console.log(error));
-    }
 
-    //getSearchFacultades();
-    getSearchSedes();
-  }, []);
 
   //when an user select a course featch its data.
   useEffect(() => {
@@ -78,10 +50,10 @@ export default function BuscadorCursos() {
       const {data, error} = await getCurso(selectedCourse.codigo_asignatura)
       if (error || !data) {
         console.log(error);
+        setLoadingSelectedCourse(false);
         return;
       }
       setLoadingSelectedCourse(false);
-      console.log("here is the asignatura", data.asignatura);
       setCursosList([data?.asignatura])
     }
     getDatosSelectedCurso();
@@ -126,7 +98,7 @@ export default function BuscadorCursos() {
       {recentlyAdded.component}
       <Asignatura asignatura={selectedCourseData} />
       {
-        loadingSelectedCourse? <></> : cursosList.map((curso) => (
+        loadingSelectedCourse? <></> : cursosList?.map((curso) => (
           <Asignatura asignatura={curso} />
         ))
       }

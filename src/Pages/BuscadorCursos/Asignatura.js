@@ -28,7 +28,7 @@ export default function Asignatura({ asignatura }) {
         {asignatura.tipo.nombre_tipologia}
       </Typography> */}
       {
-        asignatura.cursos.map((curso) => (
+        asignatura?.cursos?.map((curso) => (
           <Curso curso = {curso}/>
         ))
       }

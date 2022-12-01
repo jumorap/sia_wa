@@ -1,9 +1,8 @@
-import { Search, SendAndArchiveOutlined } from "@mui/icons-material";
-import { Box, IconButton, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Search } from "@mui/icons-material";
+import { Box, IconButton } from "@mui/material";
+import React, { useState } from "react";
 import { getFacultades, getSede } from "../../Middleware";
-import { getAsignaturasByPrograma, getCursosCompletos, getPorgramasByFacultad, getProgramas } from "../../Middleware/BuscadorCursos/get-api";
-import AutocompleteInput from "./Autocomplete";
+import { getAsignaturasByPrograma, getCursosCompletos, getPorgramasByFacultad } from "../../Middleware/BuscadorCursos/get-api";
 import Buscador from "./Buscador";
 
 const styles = {
@@ -71,8 +70,8 @@ export default function BuscadorAvanzado({setCursos}) {
   async function onSearch(){
     //get all the cursos
     const cursos = await getCursosCompletos();
-    console.log("estos son los cursos", cursos.data.asignaturas)
-    setCursos(cursos.data.asignaturas);
+    console.log("estos son los cursos", cursos?.data?.asignaturas)
+    setCursos(cursos?.data?.asignaturas);
   }
 
   return (

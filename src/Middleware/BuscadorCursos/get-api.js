@@ -28,7 +28,7 @@ export const getSede = async () => {
     .catch((err) => {
         error = err;
     });
-    return {data : data.sedes, error};
+    return {data : data?.sedes, error};
 }
 
 export const getFacultades = async () => {
@@ -37,7 +37,7 @@ export const getFacultades = async () => {
     .catch((err) => {
         error = err;
     });
-    return {data: data.facultades, error};
+    return {data: data?.facultades, error};
 }
 
 export const getPorgramasByFacultad = async (id_facultad) => {
@@ -47,7 +47,7 @@ export const getPorgramasByFacultad = async (id_facultad) => {
         error = err;
     });
     console.log(data);
-    return {data: data.facultad.programas, error};
+    return {data: data?.facultad.programas, error};
 }
 
 export const getAsignaturasByPrograma = async (id_programa) => {
@@ -56,7 +56,7 @@ export const getAsignaturasByPrograma = async (id_programa) => {
     .catch((err) => {
         error = err;
     });
-    return {data: data.programa.asignaturas, error};
+    return {data: data?.programa.asignaturas, error};
 }
 
 export const getProgramas = async () => {
@@ -65,7 +65,7 @@ export const getProgramas = async () => {
     .catch((err) => {
         error = err;
     });
-    return {data : data.programas, error};
+    return {data : data?.programas, error};
 }
 
 export const getCursosCompletos = async () => {
