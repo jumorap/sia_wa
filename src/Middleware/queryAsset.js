@@ -15,8 +15,19 @@ const queryAsset = async (query, url) => {
       query,
     }),
   })
-    .then((response) => response.json())
-    .then((response) => response.data);
-};
+    .then(async response => {
+      const isJson = response.headers.get('content-type')?.includes('application/json');
+      const data = isJson ? await response.json() : null;
+
+      // check for error response
+      if (!response.ok) {
+          // get error message from body or default to response status
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+      }
+      return data;
+  })
+    .then((response) => response.data)}
+
 
 export default queryAsset;

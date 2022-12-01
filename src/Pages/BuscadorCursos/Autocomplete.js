@@ -5,7 +5,7 @@ export default function AutocompleteInput({value, onChange, options, getOptionLa
   return (
     <Autocomplete
       freeSolo
-      value={value}
+      value={value || null} 
       onChange={onChange}
       id="free-solo-2-demo"
       disableClearable

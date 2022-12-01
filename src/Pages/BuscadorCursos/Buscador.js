@@ -17,36 +17,41 @@ export default function Buscador({
   getOptionLabel,
   initalValue
 }) {
-  //state to get the course selected by the user in the search bar
-  const [selectedCourse, setSelectedCourse] = useState(initalValue);
+  //state to get the option selected by the user in the search bar
+  const [selectedOption, setSelectedOption] = useState(initalValue);
 
-  //state for the curses of the search bar
-  const [courses, setCourses] = useState([]);
+  //state for the list of options at the search bar
+  const [options, setOptions] = useState([]);
+
+  //error course state
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     //get the inital courses to show in the search bar
-    async function getSearchCursos() {
-      getOptions().then((response) => {
-        console.log("label", response);
-        setCourses(response);
-      });
+    async function getOptionsLabels() {
+      if (disabled) return; //if the search bar is disabled, don't do anything
+      const {data, error} = await getOptions()
+      if (error || !data) {
+        setError(true);
+        return;
+      }
+      setOptions(data);
     }
-    getSearchCursos();
-  }, []);
+    getOptionsLabels();
+  }, [disabled]);
 
   return (
     <AutocompleteInput
-      value={selectedCourse}
+      value={selectedOption}
       onChange={(e, newValue) => {
-        setSelectedCourse(newValue);
+        setSelectedOption(newValue);
         onChange(newValue);
       }}
       styles={styles}
-      options={courses}
+      options={options}
       getOptionLabel={getOptionLabel}
       label={label}
       disabled={disabled}
-      s
     />
   );
 }

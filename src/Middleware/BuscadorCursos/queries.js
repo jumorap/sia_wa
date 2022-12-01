@@ -33,6 +33,35 @@ const queries = {
       }
     }
     `,
+  cursosByPrograma: (id_programa) =>
+    `
+    {
+      programa(id_programa:${id_programa}){
+          asignaturas{
+            codigo_asignatura
+            nombre_asignatura
+            nombre_asignatura
+            creditos
+            descripcion
+            cursos{
+              grupo
+              horarios{
+                dia
+                hora_inicio
+                hora_fin
+                salon
+                documento_profesor
+                profesor{
+                  nombre_completo
+                }
+                tipo
+              }
+            }
+          }
+      }
+    }
+    `,
+
   curso: (codigo_asignatura) =>
     `
     {
@@ -86,6 +115,17 @@ const queries = {
       }
     }
       `,
+    programasByFacultad: (id_sede) =>
+    `
+    {
+      facultad(id_facultad :${id_sede}){
+        programas{
+          id_programa
+          nombre_programa
+        }
+      }
+    } 
+    `,
 };
 
 export default queries;
