@@ -185,7 +185,7 @@ const horarioHandler = (Cursos) => {
 
 
   
-const createCard = (vistaCursos, row, dia) => {
+const createCard = (vistaCursos, row, dia,asignatura) => {
 
 var id_curso  = null
 var grupo = null
@@ -208,7 +208,7 @@ var finded = false
                 console.log(vistaCurso.pos_id)
 
 
-                id_curso = vistaCurso.id_curso
+                id_curso = asignatura._nombre
                 grupo = vistaCurso.grupo
                 salon = vistaCurso.salon
                 profesor = vistaCurso.profesor
@@ -230,6 +230,20 @@ var finded = false
 }
 
 const Horario = () => {
+
+   
+const [data, setData] = useState(null)
+useEffect(() => {
+  // Make a single request to the API
+  if (!data) getHistoriaAcademica().then((response) => setData(response))
+}, [data])
+
+
+  console.log("data: " + data)
+
+  //console.log(data.history)
+ 
+
 
     const vistaCursos = horarioHandler(getData())
     console.log(vistaCursos)
@@ -257,13 +271,13 @@ const Horario = () => {
               key={row.hora}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component="th" scope="row">{row.hora}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "1")}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "2")}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "3")}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "4")}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "5")}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "6")}</TableCell>
-              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "7")}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "1",data._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "2",data._asignaturasInscritas[1])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "3",data._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "4",data._asignaturasInscritas[1])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "5",data._asignaturasInscritas[0])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "6",data._asignaturasInscritas[1])}</TableCell>
+              <TableCell sx={[styles.dia]} >{createCard(vistaCursos, row, "7",data._asignaturasInscritas[0])}</TableCell>
             </TableRow>
           ))}
         </TableBody>
