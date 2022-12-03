@@ -73,9 +73,9 @@ const InfoPersonal = () => {
     const [details, setDetails] = useState({})
 
     useEffect(() => {
-        // Make a single request to the API
-        if (!data) getUser().then((response) => setData(response.user))
-    }, [data])
+        // Make a request to the API
+        getUser().then((response) => setData(response.user))
+    }, [])
 
     /**
      * Get the user information from the API and set the data state

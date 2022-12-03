@@ -70,7 +70,7 @@ function CalificacionesEst() {
   return (
 
     <List sx={{padding: "30px"}}>
-      {items.map((item) => {
+      {items?.map((item) => {
         return (
           <>
             <ListItem>
