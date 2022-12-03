@@ -53,6 +53,7 @@ const queries = {
             formatStudents(student: null, course: "1234456") {
             id
             id_student
+            name_asignature
             id_course
             grades
             }
@@ -122,6 +123,7 @@ export const getFormatStudents = (data) => {
         formatStudents(student: null, course: "${data}") {
         id
         id_student
+        name_asignature
         id_course
         grades
         }
@@ -135,6 +137,7 @@ export const getFormatToStudents = (data) => {
         formatStudents(student: "${data}", course: null) {
         id
         id_student
+        name_asignature
         id_course
         grades
         }
