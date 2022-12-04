@@ -300,6 +300,7 @@ useEffect(() => {
 const [cursos, setCursos] = useState([])
 useEffect(() => {
  
+  console.log(data)
 data?._asignaturasInscritas.forEach(asignatura => {
   if (asignatura) {
 
