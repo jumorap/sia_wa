@@ -5,6 +5,7 @@ import {
   getMateriasByPrograma,
   getMateriasLibreEleccion,
   getCursosInscritos,
+  getCursosByCodigoAsignatura,
 } from "./Inscripcion/get-api";
 import {
   getCursos,
@@ -27,6 +28,7 @@ export {
   getSede,
   getFacultades,
   getCursosInscritos,
+  getCursosByCodigoAsignatura,
   getHistoriaAcademica,
   getMateriasExternas,
   // gethorarioByDocumentoEstudiante

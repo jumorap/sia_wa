@@ -7,6 +7,15 @@ import {
   queryMateriasByPrograma,
 } from "./queries";
 
+
+export const getCursosByCodigoAsignatura = async (id_asignature) => {
+  return queryAsset(
+    queryCursosByCodigoAsignatura({ id_asignature }),
+    apiUrl.Inscripciones.get
+  );
+};
+
+
 // return [
 //   {
 //     id_curso: "1",

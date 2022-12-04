@@ -11,7 +11,7 @@ import {
     Typography
 } from '@mui/material';
 
-import {getCurso, getHistoriaAcademica} from "../../Middleware";
+import {getHistoriaAcademica, getCursosByCodigoAsignatura} from "../../Middleware";
 import styles from "./styles";
 
 
@@ -161,7 +161,7 @@ const horarioHandler = (Cursos) => {
     return vistaCursos
 }
 
-const horarioHandlerFetch = (Cursos) => {
+const horarioHandlerFetch = (Cursos,Asignaturas) => {
 
   // cursos array de objetos asignatura
 
@@ -179,13 +179,15 @@ const horarioHandlerFetch = (Cursos) => {
     let id_curso = "-"
     let grupo = "-"
 
-
+    let i = 0;
     Cursos.map((curso) => {
 
-        id_curso = curso.nombre_asignatura
-        grupo = curso.cursos[0].grupo
+        id_curso = Asignaturas[i]._nombre
+        i++
+
+        grupo = curso.grupo
         
-        curso.cursos[0].horarios[0].map((horario) => {
+        curso.horarios.map((horario) => {
             
             pos_col = horario.dia
             pos_row = horario.hora_inicio
@@ -265,7 +267,10 @@ const Horario = () => {
 const [data, setData] = useState(null)
 useEffect(() => {
 
-  if (!data) getHistoriaAcademica().then((response) => setData(response))
+  getHistoriaAcademica(sessionStorage.USER).then((response) => {
+    console.log(response)
+    setData(response)
+  })
 
 }, [data])
 
@@ -273,42 +278,59 @@ useEffect(() => {
 
 //fetch cursos
 const [cursos, setCursos] = useState([])
+const [asignaturas, setAsignaturas] = useState([])
+
 useEffect(() => {
  
   console.log(data)
-data?._asignaturasInscritas.forEach(asignatura => {
-  if (asignatura) {
 
-    getCurso(asignatura._codigo).then((response) => {
-    console.log("peticion a cursos")
+  data?._asignaturasInscritas.forEach(asignatura => {
+
+
+    //obtener _id_asignature: Int por cada asignatura y extraer cursos == a asignatura._codigo
+
+    // getCursosByCodigoAsignatura  asignatura._codigo
+    
+  
+    getCursosByCodigoAsignatura(asignatura._id_asignature).then((response) => {
+    console.log("peticion a asignatura x para obener cursos")
     console.log(response)
+    let cursosdeAsignatura_i = response
 
-    cursos.push(response)
-    setCursos(cursos)
+    cursosdeAsignatura_i.forEach(cursito => {
+        //buscar id curso
+        console.log(cursito)
+        if(cursito.id_curso == asignatura._codigo){
+          cursos.push(cursito)
+          setCursos(cursos)
+          asignaturas.push(asignatura)
+          setAsignaturas(asignaturas)
+        }
+    });
+    
     })
+    
 
-  }else{
-    console.log("no hay asignaturas inscritas")
-  }
+}
 
-});
+
+);
 
 }, [cursos])
 
 
 
   console.log("data: " + data)
+  console.log("cursos: " + cursos)
 
   //console.log(data.history)
  
 let vistaCursos
 
-if(cursos){
-  vistaCursos = horarioHandlerFetch(cursos)
 
-}else{
-  vistaCursos = horarioHandler(getData())
-}
+  vistaCursos = horarioHandlerFetch(cursos,asignaturas)
+
+
 
 
     console.log(vistaCursos)
