@@ -62,12 +62,11 @@ function CalificacionesEst() {
 
     <List sx={{padding: "30px"}}>
       {items?.map((item) => {
-        let name = item?.name_asignature?.toUpperCase();
         return (
           <>
             <ListItem>
               <ListItemButton onClick={() => handleClick(item.id)} sx={[styles.list]}>
-                  <ListItemText primaryTypographyProps={{fontWeight: "bold", color: "var(--darkBlueSeoul)"}} secondaryTypographyProps={{color: "rgba(31, 45, 82)"}} primary={name} secondary={"Código: "+item.id_course}/>
+                  <ListItemText primaryTypographyProps={{fontWeight: "bold", color: "var(--darkBlueSeoul)"}} secondaryTypographyProps={{color: "rgba(31, 45, 82)"}} primary={"CÓDIGO: "+item.id_course}/>
                   {open[item.id] ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
