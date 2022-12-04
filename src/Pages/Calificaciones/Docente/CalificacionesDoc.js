@@ -140,8 +140,9 @@ function CalificacionesDoc() {
           >
             {
               asignatureArray?.map((asig) => {
+                let name = asig.nameCourse.toUpperCase();
                 return (
-                  <MenuItem value={asig.id_curso}>{asig.nameCourse+' | '+asig.id_curso}</MenuItem>
+                  <MenuItem value={asig.id_curso}>{name+' | '+asig.id_curso}</MenuItem>
                 )
               })
             }
