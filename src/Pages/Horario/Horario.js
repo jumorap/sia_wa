@@ -1,21 +1,18 @@
-import React, {useState, useEffect, useRef} from "react";
-import { Card, CardContent, List, ListItem, Box, TableContainer, Table , TableBody , TableHead , TableRow, TableCell, Typography, TextField, Button, Paper, Container, Divider } from '@mui/material';
-import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHouseUser } from 'react-icons/fa';
-import { getCurso } from "../../Middleware";
+import React, {useEffect, useState} from "react";
+import {
+    Container,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography
+} from '@mui/material';
 
-
-
+import {getCurso, getHistoriaAcademica} from "../../Middleware";
 import styles from "./styles";
-
-
-
-import { getHistoriaAcademica } from "../../Middleware";
-
-// simple request to API
-// if (!data) getUser().then((response) => setData(response.user))
-
-const globalPrograma = "Ingeniería de Sistemas y Computación"
-const globalFacultad = "Ingeniería"
 
 
 function createData(hora, lunes, martes, miercoles, jueves, viernes, sabado, domingo) {
@@ -82,54 +79,32 @@ const getData = () => {
           tipo: "Practica",
         },
       ]
-
-      const Horario3 = [
-        {
-          dia: "3",
-          hora_inicio: "14",
-          hora_fin: "16",
-          salon: "453-303",
-          documento_profesor: "Daenerys Targarien",
-          tipo: "Practica",
-        },
-        {
-          dia: "5",
-          hora_inicio: "14",
-          hora_fin: "16",
-          salon: "453-303",
-          documento_profesor: "Daenerys Targarien",
-          tipo: "Practica",
-        },
-      ]
-    
-      const Cursos = [
+    return [
         { //arquisoft
-        id_curso: "Arquitecura de software",
-        codigo_asignatura: 123,
-        grupo: 2,
-        horarios: [Horario1],
-        cupos_disponibles: 0,
-        cupos_totales: 30,
-      },
-      { //calculo diferencial
-        id_curso: "Calculo Diferencial",
-        codigo_asignatura: 456,
-        grupo: 3,
-        horarios: [Horario2],
-        cupos_disponibles: 0,
-        cupos_totales: 25,
-      },
-    //   { //arquitics
-    //     id_curso: "Computación visual",
-    //     codigo_asignatura: 545,
-    //     grupo: 1,
-    //     horarios: [Horario3],
-    //     cupos_disponibles: 0,
-    //     cupos_totales: 25,
-    //   },
-    ]
-    
-      return Cursos;
+              id_curso: "Arquitecura de software",
+              codigo_asignatura: 123,
+              grupo: 2,
+              horarios: [Horario1],
+              cupos_disponibles: 0,
+              cupos_totales: 30,
+          },
+          { //calculo diferencial
+              id_curso: "Calculo Diferencial",
+              codigo_asignatura: 456,
+              grupo: 3,
+              horarios: [Horario2],
+              cupos_disponibles: 0,
+              cupos_totales: 25,
+          },
+          //   { //arquitics
+          //     id_curso: "Computación visual",
+          //     codigo_asignatura: 545,
+          //     grupo: 1,
+          //     horarios: [Horario3],
+          //     cupos_disponibles: 0,
+          //     cupos_totales: 25,
+          //   },
+      ];
     };
 
 
@@ -139,17 +114,17 @@ const horarioHandler = (Cursos) => {
 
     const vistaCursos = []
 
-    var pos_col = "-"
-    var pos_row = "-"
+    let pos_col = "-"
+    let pos_row = "-"
 
-    var pos_id = 0
+    let pos_id = 0
 
-    var salon = "-"
-    var profesor = "-"
-    var tipo = "-"
+    let salon = "-"
+    let profesor = "-"
+    let tipo = "-"
 
-    var id_curso = "-"
-    var grupo = "-"
+    let id_curso = "-"
+    let grupo = "-"
 
 
     Cursos.map((curso) => {
@@ -192,17 +167,17 @@ const horarioHandlerFetch = (Cursos) => {
 
     const vistaCursos = []
 
-    var pos_col = "-"
-    var pos_row = "-"
+    let pos_col = "-"
+    let pos_row = "-"
 
-    var pos_id = 0
+    let pos_id = 0
 
-    var salon = "-"
-    var profesor = "-"
-    var tipo = "-"
+    let salon = "-"
+    let profesor = "-"
+    let tipo = "-"
 
-    var id_curso = "-"
-    var grupo = "-"
+    let id_curso = "-"
+    let grupo = "-"
 
 
     Cursos.map((curso) => {
@@ -241,23 +216,23 @@ const horarioHandlerFetch = (Cursos) => {
   
 const createCard = (vistaCursos, row, dia,asignatura) => {
 
-var id_curso  = null
-var grupo = null
-var salon = null
-var profesor = null
-var tipo = null
+let id_curso  = null
+let grupo = null
+let salon = null
+let profesor = null
+let tipo = null
 
-var finded = false
+let finded = false
     
     
     vistaCursos.map((vistaCurso) => {
-         if ((vistaCurso.pos_id == row.lunes ||
-             vistaCurso.pos_id == row.martes ||
-             vistaCurso.pos_id == row.miercoles ||
-             vistaCurso.pos_id == row.jueves ||
-             vistaCurso.pos_id == row.viernes||
-             vistaCurso.pos_id == row.sabado ||
-             vistaCurso.pos_id == row.domingo) && vistaCurso.pos_col == dia) {
+         if ((vistaCurso.pos_id === row.lunes ||
+             vistaCurso.pos_id === row.martes ||
+             vistaCurso.pos_id === row.miercoles ||
+             vistaCurso.pos_id === row.jueves ||
+             vistaCurso.pos_id === row.viernes||
+             vistaCurso.pos_id === row.sabado ||
+             vistaCurso.pos_id === row.domingo) && vistaCurso.pos_col === dia) {
                 finded = true
                 console.log(vistaCurso.pos_id)
 

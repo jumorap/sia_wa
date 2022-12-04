@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
+import { ListItemText, ListItem, ListItemButton, List, CardContent, Typography, Card } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import { ListItem } from "@mui/material";
 import styles from "./styles";
 import { asignaturesStudents } from "../../../Middleware/Calificaciones/get-api";
-import { gridColumnGroupsLookupSelector } from "@mui/x-data-grid";
 import { getFormatToStudents } from "../../../Middleware/Calificaciones/queries";
-import getUserData from "../../../Middleware/sessionAsset";
 
 
 const formatData = (data) => {
@@ -27,7 +18,7 @@ const cards = (grades) => {
 
   return (
     <List sx={[styles.flexContainer]}>
-    {names.map((name) => {
+    {names?.map((name) => {
       return (
         <Card sx={[styles.card]}>
           <CardContent>
@@ -71,7 +62,7 @@ function CalificacionesEst() {
 
     <List sx={{padding: "30px"}}>
       {items?.map((item) => {
-        let name = item.name_asignature.toUpperCase();
+        let name = item?.name_asignature?.toUpperCase();
         return (
           <>
             <ListItem>
