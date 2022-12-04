@@ -1,9 +1,7 @@
-import React, {useState, useEffect, useRef} from "react";
-import { Card, CardContent, List, ListItem, Box, Typography, TextField, Button, Paper, Container, Divider } from '@mui/material';
-import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHouseUser } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, List, ListItem, Typography, Paper, Container, Divider } from '@mui/material';
 
 import styles from "./styles";
-
 import { getHistoriaAcademica } from "../../Middleware";
 
 // simple request to API

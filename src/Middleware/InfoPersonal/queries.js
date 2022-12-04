@@ -1,15 +1,9 @@
-let user
+const queries = (username, typ) => {
+    console.log({username, typ})
 
-try {
-    user = sessionStorage.getItem('USER');
-} catch (error) {
-    user = "juan";
-}
-
-const queries = {
-    user: `
+    const user = (username) => `
         {
-          user(username: "${user}") {
+          user(username: "${username}") {
             nombre_usuario
             nombre_completo
             documento_identidad
@@ -41,11 +35,12 @@ const queries = {
             }
           }
         }
-    `,
-    updateUser: `
+    `
+
+    const updateUser = (username) => `
         mutation {
           updateUser(
-            nombre_usuario: "${user}"
+            nombre_usuario: "${username}"
             lugar_expedicion: "NEW PLACE"
             email_personal: "NEW EMAIL"
             telefono_movil: "NEW PHONE"
@@ -73,7 +68,9 @@ const queries = {
             message
           }
         }
-    `,
+    `
+
+    return eval(typ)(username)
 }
 
 export const updateUserQuery = (details) => {
