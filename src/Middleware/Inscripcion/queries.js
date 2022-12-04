@@ -28,7 +28,7 @@ export const queryHorarioByDocumentoEstudiante = (args) => `
 
 export const queryCursosByCodigoAsignatura = (args) => `
     {
-      cursosByCodigoAsignatura(codigo_asignatura: ${args}) {
+      cursosByCodigoAsignatura(codigo_asignatura: "${args}") {
         id_curso
         codigo_asignatura
         grupo
