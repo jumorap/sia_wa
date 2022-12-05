@@ -39,127 +39,6 @@ function createData(hora, lunes, martes, miercoles, jueves, viernes, sabado, dom
     createData('22:00', 221, 222, 223, 224, 225, 226, 227),
   ];
 
- 
-const getData = () => {
-
-    const Horario1 = [
-      {
-        dia: "2",
-        hora_inicio: "7",
-        hora_fin: "11",
-        salon: "401-201",
-        documento_profesor: "Astaiza Gerardo",
-        tipo: "Magistral",
-      },
-      {
-        dia: "4",
-        hora_inicio: "7",
-        hora_fin: "11",
-        salon: "401-201",
-        documento_profesor: "Astaiza Gerardo",
-        tipo: "Magistral",
-      },
-    ]
-
-    const Horario2 = [
-        {
-          dia: "1",
-          hora_inicio: "9",
-          hora_fin: "13",
-          salon: "453-303",
-          documento_profesor: "Jorge Triviño",
-          tipo: "Practica",
-        },
-        {
-          dia: "3",
-          hora_inicio: "9",
-          hora_fin: "13",
-          salon: "453-303",
-          documento_profesor: "Jorge Triviño",
-          tipo: "Practica",
-        },
-      ]
-    return [
-        { //arquisoft
-              id_curso: "Arquitecura de software",
-              codigo_asignatura: 123,
-              grupo: 2,
-              horarios: [Horario1],
-              cupos_disponibles: 0,
-              cupos_totales: 30,
-          },
-          { //calculo diferencial
-              id_curso: "Calculo Diferencial",
-              codigo_asignatura: 456,
-              grupo: 3,
-              horarios: [Horario2],
-              cupos_disponibles: 0,
-              cupos_totales: 25,
-          },
-          //   { //arquitics
-          //     id_curso: "Computación visual",
-          //     codigo_asignatura: 545,
-          //     grupo: 1,
-          //     horarios: [Horario3],
-          //     cupos_disponibles: 0,
-          //     cupos_totales: 25,
-          //   },
-      ];
-    };
-
-
-const horarioHandler = (Cursos) => {
-
-  // cursos array de objetos asignatura
-
-    const vistaCursos = []
-
-    let pos_col = "-"
-    let pos_row = "-"
-
-    let pos_id = 0
-
-    let salon = "-"
-    let profesor = "-"
-    let tipo = "-"
-
-    let id_curso = "-"
-    let grupo = "-"
-
-
-    Cursos.map((curso) => {
-
-        id_curso = curso.id_curso
-        grupo = curso.grupo
-        
-        curso.horarios[0].map((horario) => {
-            
-            pos_col = horario.dia
-            pos_row = horario.hora_inicio
-
-            salon = horario.salon
-            profesor = horario.documento_profesor
-            tipo = horario.tipo
-            
-            pos_id = pos_row + pos_col
-
-            vistaCursos.push({
-                pos_id,
-                pos_col,
-                pos_row,
-                salon,
-                profesor,
-                tipo,   
-                id_curso,
-                grupo, 
-            })
-        })
-        
-        
-    })
-
-    return vistaCursos
-}
 
 const horarioHandlerFetch = (Cursos,Asignaturas) => {
 
@@ -216,7 +95,7 @@ const horarioHandlerFetch = (Cursos,Asignaturas) => {
 
     return vistaCursos
 }
-  
+
 const createCard = (vistaCursos, row, dia) => {
 
 let id_curso  = null
@@ -229,9 +108,6 @@ let finded = false
     //dia col | hora inicio fila
     
     vistaCursos.map((vistaCurso) => {
-      
-        
-
          if ((vistaCurso.pos_id == row.lunes ||
              vistaCurso.pos_id == row.martes ||
              vistaCurso.pos_id == row.miercoles ||
@@ -240,16 +116,11 @@ let finded = false
              vistaCurso.pos_id == row.sabado ||
              vistaCurso.pos_id == row.domingo) && vistaCurso.pos_col == dia) {
                 finded = true
-                
-
-
                 id_curso = vistaCurso.id_curso
                 grupo = vistaCurso.grupo
                 salon = vistaCurso.salon
                 profesor = vistaCurso.profesor
                 tipo = vistaCurso.tipo
-                
-                
              }
      })
 
@@ -271,7 +142,7 @@ const Horario = () => {
 const [data, setData] = useState(null)
 useEffect(() => {
 
-  if(data == null || data == undefined){
+  if(!data){
   getHistoriaAcademica(sessionStorage.USER).then((response) => {
     
     setData(response.getHistory[0])
@@ -289,19 +160,10 @@ const [vistaCursos,setVistaCursos] = useState([])
 
 useEffect(() => {
   
-    if(data != null || data != undefined){
+    if(data){
      
       data?._asignaturasInscritas.forEach(asignatura => {
-  
-  
-      //obtener _id_asignature: Int por cada asignatura y extraer cursos == a asignatura._codigo
-  
-      // getCursosByCodigoAsignatura  asignatura._codigo
-      
-    
-      // console.log(asignatura._id_asignature)
-      // console.log(asignatura._codigo)
-  
+
       getCursosByCodigoAsignatura(asignatura._id_asignature).then((response) => {
       
       let cursosdeAsignatura_i = response.cursosByCodigoAsignatura
@@ -309,45 +171,22 @@ useEffect(() => {
       cursosdeAsignatura_i.map(cursito => {
           //buscar id curso
           
-          if(cursito.id_curso == asignatura._codigo){
-            
+          if(cursito.id_curso === asignatura._codigo){
               cursos.push(cursito)
               setCursos(cursos)
               asignaturas.push(asignatura)
               setAsignaturas(asignaturas)
-            
-            
           }
       });
-      
 
       setVistaCursos(horarioHandlerFetch(cursos,asignaturas))
       console.log("vistacursos: ")
       console.log(vistaCursos)
 
-
       })
-      
-    }
-
-
-  
-  
-    );
-    
-    
-  
-  
-}
+      }
+    )}
   }, [cursos,data,asignaturas])
-
-
-
-
-console.log("cursos: ")
-  console.log(cursos)
- 
-
 
       return (
       <>
