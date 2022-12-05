@@ -22,20 +22,20 @@ function createData(hora, lunes, martes, miercoles, jueves, viernes, sabado, dom
   const rows = [
     // createData('6:00', 61, 62, 63, 64, 65, 66, 77),
     createData('7:00', 71, 72, 73, 74, 75, 76, 77),
-    // createData('8:00', 81, 82, 83, 84, 85, 86, 87),
+    //createData('8:00', 81, 82, 83, 84, 85, 86, 87),
     createData('9:00', 91, 92, 93, 94, 95, 96, 97),
-    // createData('10:00', 101, 102, 103, 104, 105, 106, 107),
+    //createData('10:00', 101, 102, 103, 104, 105, 106, 107),
     createData('11:00', 111, 112, 113, 114, 115, 116, 117),
-    // createData('12:00', 121, 122, 123, 124, 125, 126, 127),
-    // createData('13:00', 131, 132, 133, 134, 135, 136, 137),
+    //createData('12:00', 121, 122, 123, 124, 125, 126, 127),
+    createData('13:00', 131, 132, 133, 134, 135, 136, 137),
     createData('14:00', 141, 142, 143, 144, 145, 146, 147),
-    // createData('15:00', 151, 152, 153, 154, 155, 156, 157),
+    //createData('15:00', 151, 152, 153, 154, 155, 156, 157),
     createData('16:00', 161, 162, 163, 164, 165, 166, 167),
-    // createData('17:00', 171, 172, 173, 174, 175, 176, 177),
+    //createData('17:00', 171, 172, 173, 174, 175, 176, 177),
     createData('18:00', 181, 182, 183, 184, 185, 186, 187),
-    // createData('19:00', 191, 192, 193, 194, 195, 196, 197),
+   // createData('19:00', 191, 192, 193, 194, 195, 196, 197),
     createData('20:00', 201, 202, 203, 204, 205, 206, 207),
-    // createData('21:00', 211, 212, 213, 214, 215, 216, 217),
+    //createData('21:00', 211, 212, 213, 214, 215, 216, 217),
     createData('22:00', 221, 222, 223, 224, 225, 226, 227),
   ];
 
@@ -196,7 +196,8 @@ const horarioHandlerFetch = (Cursos,Asignaturas) => {
             profesor = horario.documento_profesor
             tipo = horario.tipo
             
-            pos_id = pos_row + pos_col
+            
+            pos_id = (pos_row*10) + pos_col
 
             vistaCursos.push({
                 pos_id,
@@ -216,7 +217,7 @@ const horarioHandlerFetch = (Cursos,Asignaturas) => {
     return vistaCursos
 }
   
-const createCard = (vistaCursos, row, dia,asignatura) => {
+const createCard = (vistaCursos, row, dia) => {
 
 let id_curso  = null
 let grupo = null
@@ -225,18 +226,21 @@ let profesor = null
 let tipo = null
 
 let finded = false
-    
+    //dia col | hora inicio fila
     
     vistaCursos.map((vistaCurso) => {
-         if ((vistaCurso.pos_id === row.lunes ||
-             vistaCurso.pos_id === row.martes ||
-             vistaCurso.pos_id === row.miercoles ||
-             vistaCurso.pos_id === row.jueves ||
-             vistaCurso.pos_id === row.viernes||
-             vistaCurso.pos_id === row.sabado ||
-             vistaCurso.pos_id === row.domingo) && vistaCurso.pos_col === dia) {
+      
+        
+
+         if ((vistaCurso.pos_id == row.lunes ||
+             vistaCurso.pos_id == row.martes ||
+             vistaCurso.pos_id == row.miercoles ||
+             vistaCurso.pos_id == row.jueves ||
+             vistaCurso.pos_id == row.viernes||
+             vistaCurso.pos_id == row.sabado ||
+             vistaCurso.pos_id == row.domingo) && vistaCurso.pos_col == dia) {
                 finded = true
-                console.log(vistaCurso.pos_id)
+                
 
 
                 id_curso = vistaCurso.id_curso
@@ -281,67 +285,69 @@ useEffect(() => {
 //fetch cursos
 const [cursos, setCursos] = useState([])
 const [asignaturas, setAsignaturas] = useState([])
+const [vistaCursos,setVistaCursos] = useState([])
 
 useEffect(() => {
- 
- 
   
+    if(data != null || data != undefined){
+     
+      data?._asignaturasInscritas.forEach(asignatura => {
+  
+  
+      //obtener _id_asignature: Int por cada asignatura y extraer cursos == a asignatura._codigo
+  
+      // getCursosByCodigoAsignatura  asignatura._codigo
+      
+    
+      // console.log(asignatura._id_asignature)
+      // console.log(asignatura._codigo)
+  
+      getCursosByCodigoAsignatura(asignatura._id_asignature).then((response) => {
+      
+      let cursosdeAsignatura_i = response.cursosByCodigoAsignatura
+  
+      cursosdeAsignatura_i.map(cursito => {
+          //buscar id curso
+          
+          if(cursito.id_curso == asignatura._codigo){
+            
+              cursos.push(cursito)
+              setCursos(cursos)
+              asignaturas.push(asignatura)
+              setAsignaturas(asignaturas)
+            
+            
+          }
+      });
+      
 
-  data?._asignaturasInscritas.forEach(asignatura => {
+      setVistaCursos(horarioHandlerFetch(cursos,asignaturas))
+      console.log("vistacursos: ")
+      console.log(vistaCursos)
 
 
-    //obtener _id_asignature: Int por cada asignatura y extraer cursos == a asignatura._codigo
+      })
+      
+    }
 
-    // getCursosByCodigoAsignatura  asignatura._codigo
+
+  
+  
+    );
+    
     
   
-    console.log(asignatura._id_asignature)
-    console.log(asignatura._codigo)
-
-    getCursosByCodigoAsignatura(asignatura._id_asignature).then((response) => {
-    
-    let cursosdeAsignatura_i = response.cursosByCodigoAsignatura
-
-    cursosdeAsignatura_i.forEach(cursito => {
-        //buscar id curso
-        
-        if(cursito.id_curso == asignatura._codigo){
-          cursos.push(cursito)
-          setCursos(cursos)
-          asignaturas.push(asignatura)
-          setAsignaturas(asignaturas)
-        }
-    });
-    
-    })
-    
-
+  
 }
+  }, [cursos,data,asignaturas])
 
 
-);
-  
-  
+
+
 console.log("cursos: ")
   console.log(cursos)
-}, [cursos])
-
-
-
  
-  
 
-  //console.log(data.history)
- 
-let vistaCursos
-
-
-  vistaCursos = horarioHandlerFetch(cursos,asignaturas)
-
-
-
-
-    console.log(vistaCursos)
 
       return (
       <>
