@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ListItemText, ListItem, ListItemButton, List, CardContent, Typography, Card } from "@mui/material";
+import { ListItemText, ListItem, ListItemButton, List, CardContent, Typography, Card, Button, Box } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
@@ -35,6 +35,7 @@ const cards = (grades) => {
 function CalificacionesEst() {
   const [data, setData] = useState(null);
   const [open, setOpen] = useState({});
+  const prof = sessionStorage.getItem("profesor")
 
   const handleClick = (id) => {
     setOpen((prevState) => ({ ...prevState, [id]: !prevState[id] }));
@@ -59,28 +60,30 @@ function CalificacionesEst() {
     items = data.formatStudents
   }
   return (
-
-    <List sx={{padding: "30px"}}>
-      {items?.map((item) => {
-        return (
-          <>
-            <ListItem>
-              <ListItemButton onClick={() => handleClick(item.id)} sx={[styles.list]}>
-                  <ListItemText primaryTypographyProps={{fontWeight: "bold", color: "var(--darkBlueSeoul)"}} secondaryTypographyProps={{color: "rgba(31, 45, 82)"}} primary={"CÓDIGO: "+item.id_course}/>
-                  {open[item.id] ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-            </ListItem>
-            <Collapse in={open[item.id]} timeout="auto" unmountOnExit>
-              <List component="div" justify="center">
-                <ListItem className="pl-4" sx={{overflow: 'auto'}}>
-                  {cards(item.grades)}
-                </ListItem>
-              </List>
-            </Collapse>
-          </>
-        );
-      })}
-    </List>
+    <>
+      {prof? <Box textAlign='center'><Button variant="outlined" href="/ingreso_calificaciones">INGRESO NOTAS</Button> </Box>: null}
+      <List sx={{padding: "30px"}}>
+        {items?.map((item) => {
+          return (
+            <>
+              <ListItem>
+                <ListItemButton onClick={() => handleClick(item.id)} sx={[styles.list]}>
+                    <ListItemText primaryTypographyProps={{fontWeight: "bold", color: "var(--darkBlueSeoul)"}} secondaryTypographyProps={{color: "rgba(31, 45, 82)"}} primary={"CÓDIGO: "+item.id_course}/>
+                    {open[item.id] ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+              </ListItem>
+              <Collapse in={open[item.id]} timeout="auto" unmountOnExit>
+                <List component="div" justify="center">
+                  <ListItem className="pl-4" sx={{overflow: 'auto'}}>
+                    {cards(item.grades)}
+                  </ListItem>
+                </List>
+              </Collapse>
+            </>
+          );
+        })}
+      </List>
+    </>
   );
 }
 

@@ -31,7 +31,7 @@ import { TitleCard, SubtitleCard } from "./components";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 
-const user = sessionStorage.getItem("USER");
+let user = sessionStorage.getItem("USER");
 console.log("user desde materias ", user);
 const cursosYaInscritos = [];
 const materiasYaInscritas = [];
@@ -281,6 +281,7 @@ export const Materias = () => {
                     onClick={() => {
                       handleClose();
                       colaDeCursos.forEach((curso) => {
+                        user = sessionStorage.getItem("USER");
                         inscribirCurso(curso, user);
                         removeCursoDeCola(curso, setCursos);
                       });
