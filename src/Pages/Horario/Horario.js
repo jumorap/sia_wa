@@ -267,10 +267,12 @@ const Horario = () => {
 const [data, setData] = useState(null)
 useEffect(() => {
 
+  if(data == null || data == undefined){
   getHistoriaAcademica(sessionStorage.USER).then((response) => {
-    console.log(response)
-    setData(response)
+    
+    setData(response.getHistory[0])
   })
+}
 
 }, [data])
 
@@ -282,8 +284,8 @@ const [asignaturas, setAsignaturas] = useState([])
 
 useEffect(() => {
  
-  console.log(data)
-  if(data == null || data == undefined){
+ 
+  
 
   data?._asignaturasInscritas.forEach(asignatura => {
 
@@ -293,14 +295,16 @@ useEffect(() => {
     // getCursosByCodigoAsignatura  asignatura._codigo
     
   
+    console.log(asignatura._id_asignature)
+    console.log(asignatura._codigo)
+
     getCursosByCodigoAsignatura(asignatura._id_asignature).then((response) => {
-    console.log("peticion a asignatura x para obener cursos")
-    console.log(response)
-    let cursosdeAsignatura_i = response
+    
+    let cursosdeAsignatura_i = response.cursosByCodigoAsignatura
 
     cursosdeAsignatura_i.forEach(cursito => {
         //buscar id curso
-        console.log(cursito)
+        
         if(cursito.id_curso == asignatura._codigo){
           cursos.push(cursito)
           setCursos(cursos)
@@ -316,15 +320,16 @@ useEffect(() => {
 
 
 );
-  }
   
-
+  
+console.log("cursos: ")
+  console.log(cursos)
 }, [cursos])
 
 
 
-  console.log("data: " + data)
-  console.log("cursos: " + cursos)
+ 
+  
 
   //console.log(data.history)
  

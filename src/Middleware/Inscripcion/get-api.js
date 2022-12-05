@@ -10,7 +10,7 @@ import {
 
 export const getCursosByCodigoAsignatura = async (id_asignature) => {
   return queryAsset(
-    queryCursosByCodigoAsignatura({ id_asignature }),
+    queryCursosByCodigoAsignatura( id_asignature ),
     apiUrl.Inscripciones.get
   );
 };

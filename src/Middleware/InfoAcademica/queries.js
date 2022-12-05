@@ -1,6 +1,6 @@
 export const queries = (args) => `
 {
-    getHistory(id: "${args.id}") {
+    getHistory(id: "${args}") {
       _documento_identidad
   _id_historia
   _id_programa

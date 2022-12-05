@@ -129,14 +129,15 @@ useEffect(() => {
   //id historia de juan sessionStorage.USER
   if(data == null || data == undefined){
       getHistoriaAcademica(sessionStorage.USER).then((response) => { 
-      setData(response)
-      console.log(response)
+      setData(response.getHistory[0])
+      console.log(response.getHistory[0])
       })
   
     }
 }, [data])
 
   //console.log(data.history)
+  console.log(data?._asignaturas)
 
     return (
     <>
