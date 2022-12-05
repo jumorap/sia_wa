@@ -283,6 +283,7 @@ const [asignaturas, setAsignaturas] = useState([])
 useEffect(() => {
  
   console.log(data)
+  if(data == null || data == undefined){
 
   data?._asignaturasInscritas.forEach(asignatura => {
 
@@ -315,6 +316,8 @@ useEffect(() => {
 
 
 );
+  }
+  
 
 }, [cursos])
 

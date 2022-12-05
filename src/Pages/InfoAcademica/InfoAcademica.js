@@ -127,12 +127,13 @@ const [data, setData] = useState(null)
 useEffect(() => {
   // Make a single request to the API
   //id historia de juan sessionStorage.USER
-    getHistoriaAcademica(sessionStorage.USER).then((response) => { 
+  if(data == null || data == undefined){
+      getHistoriaAcademica(sessionStorage.USER).then((response) => { 
       setData(response)
       console.log(response)
       })
   
-  
+    }
 }, [data])
 
   //console.log(data.history)

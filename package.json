@@ -2,7 +2,7 @@
   "name": "sia_wa",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://sia-general-ag:4000",
+  "proxy": "http://34.170.78.8:4000",
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
