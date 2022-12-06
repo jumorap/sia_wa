@@ -49,6 +49,9 @@ export default function BuscadorAvanzado({setCursos}) {
     programa : true,
   });
 
+  //state used to search the cursos
+  const [search, setSearch] = useState(null);
+
 
   function onChangeSede(newValue) {
     setDisabledOptions(prev => ({...prev, facultad: false, programa: true}));
@@ -62,16 +65,20 @@ export default function BuscadorAvanzado({setCursos}) {
 
   async function onChangePrograma(newValue){
     //setSelectedOptions(prev => ({...prev, programa: newValue.id_programa}));
-    console.log("programa", newValue);
-    const data = await getAsignaturasByPrograma(newValue.id_programa)
-    console.log("data progroma", data);
+    setSearch(newValue.id_programa);
+
   }
 
   async function onSearch(){
+    if (search === null) {
+      return;
+    }
+    
     //get all the cursos
-    const cursos = await getCursosCompletos();
-    console.log("estos son los cursos", cursos?.data?.asignaturas)
-    setCursos(cursos?.data?.asignaturas);
+    const data = await getAsignaturasByPrograma(search)
+    const cursos = data?.data;
+
+    setCursos(cursos);
   }
 
   return (
@@ -93,6 +100,7 @@ export default function BuscadorAvanzado({setCursos}) {
         getOptionLabel={(o) => o.nombre_facultad}
         onChange={onChangeFacultad}
         initalValue={initalValues.facultad}
+        selectedParentOption = {selectedOptions.sede}
       />
       <Buscador
         styles={styles.search}
@@ -102,6 +110,7 @@ export default function BuscadorAvanzado({setCursos}) {
         getOptionLabel={(o) => o.nombre_programa}
         onChange={onChangePrograma}
         initalValue={initalValues.programa}
+        selectedParentOption = {selectedOptions.facultad}
       />
       <IconButton aria-label="delete" onClick={onSearch}>
         <Search />

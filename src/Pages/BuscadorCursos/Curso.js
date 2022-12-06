@@ -3,6 +3,13 @@ import React from 'react'
 import Horario from './Horario'
 
 export default function Curso({curso}) {
+
+  if (!curso) {
+    return null;
+  }
+
+  const horarios = curso.horarios;
+
   return (
     <Paper
         sx = {{
@@ -15,8 +22,8 @@ export default function Curso({curso}) {
         Grupo {curso.grupo}
       </Typography>
       {
-        curso.horarios.map((horario) => (
-            <Horario horario = {horario}/>
+        horarios?.map((horario, idx ) => (
+            <Horario horario = {horario} key = {idx}/>
         ))
       }
 

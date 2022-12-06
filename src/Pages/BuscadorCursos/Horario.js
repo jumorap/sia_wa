@@ -16,15 +16,27 @@ const mapNumberToDay = (number) => {
   return days[number];
 };
 
-export default function Horario({ horario }) {
+export default function Horario({ horario, key  }) {
+
+  if (!horario) {
+    return null;
+  }
+
+
+  const nombre_profesor = horario.profesor?.nombre_completo;
+
   return (
-    <div>
+    <div key = {key}>
       <Box>
         {mapNumberToDay(horario.dia)} {horario.hora_inicio} - {horario.hora_fin}
       </Box>
-      <Box>
-        Docente: {horario.profesor.nombre_completo}
-      </Box>
+      {
+        nombre_profesor ? (
+          <Box>
+            Profesor: {nombre_profesor}
+          </Box>
+        ) : null
+      }
       <Divider light />
     </div>
   );

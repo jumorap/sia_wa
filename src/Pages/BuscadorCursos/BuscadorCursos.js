@@ -98,8 +98,8 @@ export default function BuscadorCursos() {
       {recentlyAdded.component}
       <Asignatura asignatura={selectedCourseData} />
       {
-        loadingSelectedCourse? <></> : cursosList?.map((curso) => (
-          <Asignatura asignatura={curso} />
+        loadingSelectedCourse? <></> : cursosList?.map((curso, idx) => (
+          <Asignatura asignatura={curso} key = {idx}/>
         ))
       }
 

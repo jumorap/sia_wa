@@ -15,7 +15,8 @@ export default function Buscador({
   getOptions,
   label,
   getOptionLabel,
-  initalValue
+  initalValue,
+  selectedParentOption = null
 }) {
   //state to get the option selected by the user in the search bar
   const [selectedOption, setSelectedOption] = useState(initalValue);
@@ -29,7 +30,10 @@ export default function Buscador({
   useEffect(() => {
     //get the inital courses to show in the search bar
     async function getOptionsLabels() {
-      if (disabled) return; //if the search bar is disabled, don't do anything
+      if (disabled) {
+        return;
+      }; //if the search bar is disabled, don't do anything
+      setSelectedOption(initalValue);
       const {data, error} = await getOptions()
       if (error || !data) {
         setError(true);
@@ -38,7 +42,7 @@ export default function Buscador({
       setOptions(data);
     }
     getOptionsLabels();
-  }, [disabled]);
+  }, [disabled, selectedParentOption]);
 
   return (
     <AutocompleteInput
