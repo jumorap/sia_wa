@@ -1,24 +1,26 @@
+const dns = ""
+
 const apiUrl = {
   Session: {
-    get: `/session`,
+    get: `${dns}/session`,
   },
   InfoPersonal: {
-    get: `/info_personal`,
+    get: `${dns}/info_personal`,
   },
   InfoAcademica: {
-    get: `/fetch_info_academica`,
+    get: `${dns}/fetch_info_academica`,
   },
   Calificaciones: {
-    get: `/fetch_calificaciones`,
+    get: `${dns}/fetch_calificaciones`,
   },
   BuscadorCursos: {
-    get: `/fetch_buscador_cursos`,
+    get: `${dns}/fetch_buscador_cursos`,
   },
   Inscripciones: {
-    get: `/fetch_inscripciones`,
+    get: `${dns}/fetch_inscripciones`,
   },
   ComponenteExterno: {
-    get: `/ext_component`,
+    get: `${dns}/ext_component`,
   },
 };
 

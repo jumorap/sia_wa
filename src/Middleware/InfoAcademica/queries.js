@@ -1,6 +1,6 @@
 export const queries = (args) => `
 {
-    getHistory(id: ${args.id}) {
+    getHistory(id: "${args}") {
       _documento_identidad
   _id_historia
   _id_programa
@@ -11,6 +11,7 @@ export const queries = (args) => `
   _pappi
   _asignaturasInscritas {
     _codigo
+    _id_asignature
     _nombre
     _creditos
     _tipo
@@ -21,6 +22,7 @@ export const queries = (args) => `
   }
   _asignaturas{
     _codigo
+    _id_asignature
   _nombre
   _creditos
   _tipo

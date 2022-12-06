@@ -1,9 +1,7 @@
-import React, {useState, useEffect, useRef} from "react";
-import { Card, CardContent, List, ListItem, Box, Typography, TextField, Button, Paper, Container, Divider } from '@mui/material';
-import { FaUserAlt, FaBirthdayCake, FaFileMedical, FaAward, FaPeopleArrows, FaHouseUser } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, List, ListItem, Typography, Paper, Container, Divider } from '@mui/material';
 
 import styles from "./styles";
-
 import { getHistoriaAcademica } from "../../Middleware";
 
 // simple request to API
@@ -128,23 +126,18 @@ const InfoAcademica = () => {
 const [data, setData] = useState(null)
 useEffect(() => {
   // Make a single request to the API
-  if (!data) getHistoriaAcademica().then((response) => setData(response))
+  //id historia de juan sessionStorage.USER
+  if(data == null || data == undefined){
+      getHistoriaAcademica(sessionStorage.USER).then((response) => { 
+      setData(response.getHistory[0])
+      console.log(response.getHistory[0])
+      })
+  
+    }
 }, [data])
 
-
-  console.log("data: " + data)
-
   //console.log(data.history)
-
- 
-  let historiaAcademica;
-  
-
-  if(data){
-    historiaAcademica = data
-  }else{
-    historiaAcademica = getData()
-  }
+  console.log(data?._asignaturas)
 
     return (
     <>
@@ -161,20 +154,20 @@ useEffect(() => {
           <Paper elevation={1}>
           <Container sx={[styles.infoBasica_right]}>
               <Container sx={[styles.infoBasica_right_card]}>
-                  <Typography sx={{fontWeight: "bold"}}>{historiaAcademica?._pa}</Typography>
+                  <Typography sx={{fontWeight: "bold"}}>{data?._pa}</Typography>
                   <Typography sx={{}}>{" PA "}</Typography>
               </Container>
             
             
               <Container sx={[styles.infoBasica_right_card]}>
-                <Typography sx={{fontWeight: "bold"}}>{historiaAcademica?._papa}</Typography>
+                <Typography sx={{fontWeight: "bold"}}>{data?._papa}</Typography>
                 <Typography sx={{}}>{"PAPA"}</Typography>
               </Container>
               
 
               
               <Container sx={[styles.infoBasica_right_card]}>
-                <Typography sx={{fontWeight: "bold"}}>{historiaAcademica?._pappi}</Typography>
+                <Typography sx={{fontWeight: "bold"}}>{data?._pappi}</Typography>
                 <Typography sx={{}}>{"PAPPI"}</Typography>
               </Container>
           </Container>
@@ -189,7 +182,7 @@ useEffect(() => {
       <Typography sx={{fontWeight: "bold", marginBottom: "20px"}}>Asignaturas</Typography>
     
     <List sx={[styles.list]}>
-    {historiaAcademica._asignaturas.map((asignatura) => {
+    {data?._asignaturas.map((asignatura) => {
         return (
           <>
               <List component="div" justify="center" width="100%">
@@ -210,3 +203,67 @@ export default InfoAcademica
 
 
 
+/*
+
+
+query  {
+  getHistory(id: "juan"){
+    _documento_identidad
+_id_historia
+_id_programa
+_porcentaje_avance
+_papa
+_pa
+_semestreActual
+_pappi
+_asignaturasInscritas {
+  _codigo
+  _id_asignature
+  _nombre
+  _creditos
+  _tipo
+  _periodo
+  _esConsolidada
+  _definitiva
+  _esAprobada
+}
+_asignaturas{
+  _codigo
+  _id_asignature
+_nombre
+_creditos
+_tipo
+_periodo
+_esConsolidada
+_definitiva
+_esAprobada
+_calificaciones{
+  _nombre
+_porcentaje
+_nota
+}
+}
+    }
+  
+}
+
+{
+      cursosByCodigoAsignatura(codigo_asignatura: ${args}) {
+        id_curso
+        codigo_asignatura
+        grupo
+        horarios{
+          dia
+          hora_inicio
+          hora_fin
+          salon
+          documento_profesor
+          tipo
+        }
+        cupos_disponibles
+        cupos_totales
+      }
+    }
+
+
+*/

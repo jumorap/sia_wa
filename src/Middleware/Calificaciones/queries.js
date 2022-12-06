@@ -53,6 +53,7 @@ const queries = {
             formatStudents(student: null, course: "1234456") {
             id
             id_student
+            name_asignature
             id_course
             grades
             }
@@ -149,7 +150,6 @@ export const getDocAsignaturesQuery = (data) => {
             id_curso
             documento_profesor
             codigo_asignatura
-            nameCourse
         }
     }
     `

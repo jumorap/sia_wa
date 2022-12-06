@@ -141,7 +141,7 @@ function CalificacionesDoc() {
             {
               asignatureArray?.map((asig) => {
                 return (
-                  <MenuItem value={asig.id_curso}>{asig.nameCourse+' | '+asig.id_curso}</MenuItem>
+                  <MenuItem value={asig.id_curso}>{'CÓDIGO: '+asig.id_curso}</MenuItem>
                 )
               })
             }
