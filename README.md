@@ -75,7 +75,9 @@
 ### Componentes y Conectores:![](readmeImages/Componentes y Conectores.png)
 ### Descomposición:![](readmeImages/Descomposicion.png)
 ### Despliegue:![](readmeImages/Despliegue.png)
-### Modelo de Datos:![](readmeImages/Model Datos 1.png)![](readmeImages/Modelo Datos 2.png)![](readmeImages/Modelo Datos 3.png)
+### Modelo de Datos:![](readmeImages/Model Datos 1.png)
+![](readmeImages/Modelo Datos 2.png)
+![](readmeImages/Modelo Datos 3.png)
 
 ## GCP
 ### Ingress and Services:![](readmeImages/ingress_services.png)
