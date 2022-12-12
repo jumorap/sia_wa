@@ -72,12 +72,12 @@
 
 ## Architecture
 ### Capas:![](readmeImages/Capas.png)
-### Componentes y Conectores:![](readmeImages/Componentes y Conectores.png)
+### Componentes y Conectores:![](readmeImages/Componentes%20y%20Conectores.png)
 ### Descomposición:![](readmeImages/Descomposicion.png)
 ### Despliegue:![](readmeImages/Despliegue.png)
-### Modelo de Datos:![](readmeImages/Model Datos 1.png)
-![](readmeImages/Modelo Datos 2.png)
-![](readmeImages/Modelo Datos 3.png)
+### Modelo de Datos:![](readmeImages/Model%20Datos%201.png)
+![](readmeImages/Modelo%20Datos%202.png)
+![](readmeImages/Modelo%20Datos%203.png)
 
 ## GCP
 ### Ingress and Services:![](readmeImages/ingress_services.png)
